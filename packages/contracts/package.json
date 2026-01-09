@@ -1,0 +1,29 @@
+{
+  "name": "@harken/contracts",
+  "version": "0.0.0",
+  "description": "Harken API contracts and TypeScript types",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "openapi.yaml"
+  ],
+  "scripts": {
+    "generate": "openapi-typescript openapi.yaml -o src/types.ts",
+    "build": "pnpm run generate && tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "openapi-typescript": "^7.4.4",
+    "typescript": "^5.7.2"
+  }
+}
