@@ -420,7 +420,9 @@ export interface components {
         };
         FeedbackUpdateRequest: {
             /** @description New status for the feedback item. */
-            status: components["schemas"]["FeedbackStatus"];
+            status?: components["schemas"]["FeedbackStatus"];
+            /** @description Tags to assign to the feedback item. */
+            tags?: string[];
         };
         ErrorResponse: {
             error: {
@@ -741,6 +743,8 @@ export interface operations {
                 user_key?: string;
                 /** @description Search in message content. */
                 search?: string;
+                /** @description Filter by tag (exact match). */
+                tag?: string;
                 /** @description Page number (1-indexed). */
                 page?: number;
                 /** @description Number of items per page. */
