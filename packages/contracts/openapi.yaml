@@ -378,6 +378,50 @@ components:
           type: integer
           description: Number of items per page.
 
+    App:
+      type: object
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the app.
+        name:
+          type: string
+          description: Display name of the app.
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the app was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the app was last updated.
+
+    AppsListResponse:
+      type: object
+      required:
+        - apps
+      properties:
+        apps:
+          type: array
+          items:
+            $ref: "#/components/schemas/App"
+          description: List of apps for the tenant.
+
+    FeedbackUpdateRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          $ref: "#/components/schemas/FeedbackStatus"
+          description: New status for the feedback item.
+
     # === Errors ===
     ErrorResponse:
       type: object
@@ -748,5 +792,69 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /v1/console/apps:
+    get:
+      operationId: listApps
+      summary: List apps
+      description: List all apps for the authenticated user's tenant.
+      tags:
+        - Console
+      security:
+        - ConsoleAuth: []
+      responses:
+        "200":
+          description: List of apps.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppsListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /v1/console/feedback/{id}:
+    patch:
+      operationId: updateFeedback
+      summary: Update feedback
+      description: Update a feedback item's status.
+      tags:
+        - Console
+      security:
+        - ConsoleAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Feedback item ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FeedbackUpdateRequest"
+      responses:
+        "200":
+          description: Feedback updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeedbackItem"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalError"

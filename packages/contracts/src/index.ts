@@ -27,7 +27,10 @@ export type AttachmentUrls = components["schemas"]["AttachmentUrls"];
 // Console
 export type FeedbackItem = components["schemas"]["FeedbackItem"];
 export type FeedbackListResponse = components["schemas"]["FeedbackListResponse"];
+export type FeedbackUpdateRequest = components["schemas"]["FeedbackUpdateRequest"];
 export type AttachmentInfo = components["schemas"]["AttachmentInfo"];
+export type App = components["schemas"]["App"];
+export type AppsListResponse = components["schemas"]["AppsListResponse"];
 
 // Errors
 export type ErrorResponse = components["schemas"]["ErrorResponse"];

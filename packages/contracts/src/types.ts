@@ -128,6 +128,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/console/apps": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List apps
+         * @description List all apps for the authenticated user's tenant.
+         */
+        get: operations["listApps"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/console/feedback/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update feedback
+         * @description Update a feedback item's status.
+         */
+        patch: operations["updateFeedback"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -354,6 +394,33 @@ export interface components {
             page: number;
             /** @description Number of items per page. */
             page_size: number;
+        };
+        App: {
+            /**
+             * Format: uuid
+             * @description Unique identifier for the app.
+             */
+            id: string;
+            /** @description Display name of the app. */
+            name: string;
+            /**
+             * Format: date-time
+             * @description Timestamp when the app was created.
+             */
+            created_at: string;
+            /**
+             * Format: date-time
+             * @description Timestamp when the app was last updated.
+             */
+            updated_at: string;
+        };
+        AppsListResponse: {
+            /** @description List of apps for the tenant. */
+            apps: components["schemas"]["App"][];
+        };
+        FeedbackUpdateRequest: {
+            /** @description New status for the feedback item. */
+            status: components["schemas"]["FeedbackStatus"];
         };
         ErrorResponse: {
             error: {
@@ -697,6 +764,61 @@ export interface operations {
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    listApps: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of apps. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AppsListResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    updateFeedback: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Feedback item ID. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FeedbackUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Feedback updated successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FeedbackItem"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
             500: components["responses"]["InternalError"];
         };
     };
