@@ -16,6 +16,11 @@ export interface paths {
         /**
          * Submit feedback
          * @description Submit user feedback from a mobile app.
+         *
+         *     **Attachments:** If `attachment_ids` are provided, they will be linked to
+         *     this feedback and their status will be updated from 'pending' to 'uploaded'.
+         *     Only attachments in 'pending' or 'uploaded' status that are not already
+         *     linked to other feedback can be used.
          */
         post: operations["submitFeedback"];
         delete?: never;
@@ -36,6 +41,19 @@ export interface paths {
         /**
          * Create attachment upload
          * @description Get a presigned URL for uploading an attachment.
+         *
+         *     **Upload Flow:**
+         *     1. Call this endpoint to get a presigned upload URL
+         *     2. Upload the file directly to the presigned URL (PUT request)
+         *     3. Include the `attachment_id` in your feedback submission
+         *
+         *     **Important:** The presigned URL expires in 2 hours. The attachment record
+         *     is created immediately with status 'pending'.
+         *
+         *     **Cleanup Policy:** Attachments not linked to submitted feedback are
+         *     automatically cleaned up after a server-configured period (typically
+         *     7 days). Ensure you submit the feedback with the attachment_ids to
+         *     complete the lifecycle.
          */
         post: operations["createAttachmentUpload"];
         delete?: never;
@@ -188,14 +206,26 @@ export interface components {
          */
         Platform: "ios" | "android" | "web";
         /**
-         * @description Upload lifecycle status:
-         *     - pending: Presign created, awaiting upload
-         *     - processing: Upload confirmed, generating thumbnails
-         *     - completed: Ready to use
-         *     - failed: Upload or processing failed
+         * @description Attachment lifecycle status:
+         *     - pending: Presign created, awaiting upload and feedback submission
+         *     - uploaded: Attachment successfully linked to submitted feedback
+         *     - failed: Upload failed (client-reported)
+         *
+         *     **Lifecycle:**
+         *     1. SDK calls presign → status becomes 'pending'
+         *     2. SDK uploads file to presigned URL
+         *     3. SDK submits feedback with attachment_ids → status becomes 'uploaded'
+         *
+         *     **Cleanup Policy:**
+         *     Attachments that remain in 'pending' status (not linked to feedback)
+         *     are automatically deleted after a server-configured cleanup period
+         *     (typically 7 days). This handles cases where:
+         *     - User abandons the feedback form
+         *     - Network failure prevents feedback submission
+         *     - App crashes after upload but before submission
          * @enum {string}
          */
-        AttachmentStatus: "pending" | "processing" | "completed" | "failed";
+        AttachmentStatus: "pending" | "uploaded" | "failed";
         DeviceMetadata: {
             /**
              * @description Version of the host application.
@@ -302,10 +332,9 @@ export interface components {
             error?: string;
             /**
              * @description Available URLs. Presence depends on status:
-             *     - pending: not present
-             *     - processing: original available, thumbnails generating
-             *     - completed: all sizes available
-             *     - failed: original may be present
+             *     - pending: not present (file may not be uploaded yet)
+             *     - uploaded: original URL available
+             *     - failed: not present
              */
             urls?: components["schemas"]["AttachmentUrls"];
         };
@@ -313,10 +342,9 @@ export interface components {
          * @description URLs for accessing attachment at different sizes.
          *     If this object is present, original is always included.
          *     Availability of the urls object depends on status:
-         *     - pending: urls not present
-         *     - processing: urls.original available, thumbnail/medium generating
-         *     - completed: all URLs available
-         *     - failed: urls may be present if upload succeeded before failure
+         *     - pending: urls not present (file may not be uploaded yet)
+         *     - uploaded: original URL available
+         *     - failed: urls not present
          */
         AttachmentUrls: {
             /**
@@ -324,16 +352,6 @@ export interface components {
              * @description URL to original uploaded file.
              */
             original: string;
-            /**
-             * Format: uri
-             * @description URL to thumbnail (150x150). Available when processing complete.
-             */
-            thumbnail?: string;
-            /**
-             * Format: uri
-             * @description URL to medium size (800px width). Available when processing complete.
-             */
-            medium?: string;
         };
         FeedbackItem: {
             /** Format: uuid */
@@ -362,7 +380,8 @@ export interface components {
         };
         /**
          * @description Attachment metadata and URLs for console display.
-         *     Attachments in any status may appear in feedback lists.
+         *     Only attachments with status 'uploaded' will typically appear in feedback lists,
+         *     as 'pending' attachments are not yet linked to feedback.
          */
         AttachmentInfo: {
             /** Format: uuid */
@@ -374,10 +393,9 @@ export interface components {
             status: components["schemas"]["AttachmentStatus"];
             /**
              * @description Available URLs. Presence depends on status:
-             *     - pending: not present
-             *     - processing: original available, thumbnail/medium generating
-             *     - completed: all sizes available
-             *     - failed: original may be present
+             *     - pending: not present (file may not be uploaded yet)
+             *     - uploaded: original URL available
+             *     - failed: not present
              */
             urls?: components["schemas"]["AttachmentUrls"];
             /**
