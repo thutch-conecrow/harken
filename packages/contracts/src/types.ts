@@ -126,66 +126,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/console/feedback": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List feedback
-         * @description List feedback items for the authenticated user's apps.
-         */
-        get: operations["listFeedback"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/console/apps": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List apps
-         * @description List all apps for the authenticated user's tenant.
-         */
-        get: operations["listApps"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/console/feedback/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * Update feedback
-         * @description Update a feedback item's status.
-         */
-        patch: operations["updateFeedback"];
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -195,11 +135,6 @@ export interface components {
          * @enum {string}
          */
         FeedbackCategory: "bug" | "idea" | "ux" | "other";
-        /**
-         * @description Status of feedback item.
-         * @enum {string}
-         */
-        FeedbackStatus: "open" | "triaged" | "closed";
         /**
          * @description Client platform.
          * @enum {string}
@@ -352,95 +287,6 @@ export interface components {
              * @description URL to original uploaded file.
              */
             original: string;
-        };
-        FeedbackItem: {
-            /** Format: uuid */
-            id: string;
-            /** Format: uuid */
-            app_id: string;
-            /** @description Optional short title or subject for the feedback. */
-            title?: string;
-            message: string;
-            category: components["schemas"]["FeedbackCategory"];
-            status: components["schemas"]["FeedbackStatus"];
-            /**
-             * Format: uuid
-             * @description Anonymous device identifier.
-             */
-            anon_id?: string;
-            /** @description Derived user key (if verified user token was provided). */
-            user_key?: string;
-            metadata?: components["schemas"]["DeviceMetadata"];
-            attachments?: components["schemas"]["AttachmentInfo"][];
-            tags?: string[];
-            /** Format: date-time */
-            created_at: string;
-            /** Format: date-time */
-            updated_at?: string;
-        };
-        /**
-         * @description Attachment metadata and URLs for console display.
-         *     Only attachments with status 'uploaded' will typically appear in feedback lists,
-         *     as 'pending' attachments are not yet linked to feedback.
-         */
-        AttachmentInfo: {
-            /** Format: uuid */
-            id: string;
-            filename: string;
-            content_type: string;
-            /** @description File size in bytes. */
-            size?: number;
-            status: components["schemas"]["AttachmentStatus"];
-            /**
-             * @description Available URLs. Presence depends on status:
-             *     - pending: not present (file may not be uploaded yet)
-             *     - uploaded: original URL available
-             *     - failed: not present
-             */
-            urls?: components["schemas"]["AttachmentUrls"];
-            /**
-             * @description Error message when status is failed.
-             *     May be omitted if the failure was client-side and not reported.
-             */
-            error?: string;
-        };
-        FeedbackListResponse: {
-            items: components["schemas"]["FeedbackItem"][];
-            /** @description Total number of items matching the query. */
-            total: number;
-            /** @description Current page number (1-indexed). */
-            page: number;
-            /** @description Number of items per page. */
-            page_size: number;
-        };
-        App: {
-            /**
-             * Format: uuid
-             * @description Unique identifier for the app.
-             */
-            id: string;
-            /** @description Display name of the app. */
-            name: string;
-            /**
-             * Format: date-time
-             * @description Timestamp when the app was created.
-             */
-            created_at: string;
-            /**
-             * Format: date-time
-             * @description Timestamp when the app was last updated.
-             */
-            updated_at: string;
-        };
-        AppsListResponse: {
-            /** @description List of apps for the tenant. */
-            apps: components["schemas"]["App"][];
-        };
-        FeedbackUpdateRequest: {
-            /** @description New status for the feedback item. */
-            status?: components["schemas"]["FeedbackStatus"];
-            /** @description Tags to assign to the feedback item. */
-            tags?: string[];
         };
         ErrorResponse: {
             error: {
@@ -744,102 +590,6 @@ export interface operations {
                 };
             };
             401: components["responses"]["Unauthorized"];
-            404: components["responses"]["NotFound"];
-            500: components["responses"]["InternalError"];
-        };
-    };
-    listFeedback: {
-        parameters: {
-            query: {
-                /** @description Filter by app ID. */
-                app_id: string;
-                /** @description Filter by status. */
-                status?: components["schemas"]["FeedbackStatus"];
-                /** @description Filter by category. */
-                category?: components["schemas"]["FeedbackCategory"];
-                /** @description Filter by user key. */
-                user_key?: string;
-                /** @description Search in message content. */
-                search?: string;
-                /** @description Filter by tag (exact match). */
-                tag?: string;
-                /** @description Page number (1-indexed). */
-                page?: number;
-                /** @description Number of items per page. */
-                page_size?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of feedback items. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FeedbackListResponse"];
-                };
-            };
-            400: components["responses"]["BadRequest"];
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            500: components["responses"]["InternalError"];
-        };
-    };
-    listApps: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of apps. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AppsListResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            500: components["responses"]["InternalError"];
-        };
-    };
-    updateFeedback: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Feedback item ID. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["FeedbackUpdateRequest"];
-            };
-        };
-        responses: {
-            /** @description Feedback updated successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FeedbackItem"];
-                };
-            };
-            400: components["responses"]["BadRequest"];
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
             404: components["responses"]["NotFound"];
             500: components["responses"]["InternalError"];
         };
