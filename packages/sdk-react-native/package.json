@@ -54,13 +54,37 @@
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-native": ">=0.72.0",
-    "expo-secure-store": ">=13.0.0"
+    "expo": ">=54.0.0 <55.0.0",
+    "expo-secure-store": ">=13.0.0",
+    "expo-file-system": ">=19.0.0",
+    "expo-image-picker": ">=15.0.0",
+    "expo-document-picker": ">=12.0.0",
+    "@react-native-async-storage/async-storage": ">=1.21.0",
+    "@react-native-community/netinfo": ">=11.0.0"
   },
   "peerDependenciesMeta": {
     "react-native": {
       "optional": false
     },
+    "expo": {
+      "optional": true
+    },
     "expo-secure-store": {
+      "optional": true
+    },
+    "expo-file-system": {
+      "optional": true
+    },
+    "expo-image-picker": {
+      "optional": true
+    },
+    "expo-document-picker": {
+      "optional": true
+    },
+    "@react-native-async-storage/async-storage": {
+      "optional": true
+    },
+    "@react-native-community/netinfo": {
       "optional": true
     }
   },
@@ -68,8 +92,13 @@
     "@harken/contracts": "workspace:*"
   },
   "devDependencies": {
+    "@react-native-async-storage/async-storage": "^2.1.0",
+    "@react-native-community/netinfo": "^11.4.1",
     "@types/react": "^18.3.18",
     "@types/react-native": "^0.72.8",
+    "expo-document-picker": "^13.0.1",
+    "expo-file-system": "^19.0.0",
+    "expo-image-picker": "^16.0.3",
     "react": "^18.3.1",
     "react-native": "^0.76.6",
     "typescript": "^5.7.2"
