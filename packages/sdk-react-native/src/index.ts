@@ -11,7 +11,13 @@ export { HarkenProvider } from './context';
 export type { HarkenContextValue } from './context';
 
 // Hooks
-export { useHarkenTheme, useHarkenContext, useAnonymousId } from './hooks';
+export {
+  useHarkenTheme,
+  useHarkenContext,
+  useAnonymousId,
+  useFeedback,
+} from './hooks';
+export type { SubmitFeedbackParams, UseFeedbackResult } from './hooks';
 
 // Theme system
 export type {
@@ -46,6 +52,40 @@ export {
 
 // Utilities
 export { generateUUID } from './utils';
+
+// Components
+export {
+  ThemedText,
+  ThemedTextInput,
+  ThemedButton,
+  CategorySelector,
+  FeedbackForm,
+  DEFAULT_CATEGORIES,
+} from './components';
+
+export type {
+  ThemedTextProps,
+  TextVariant,
+  ThemedTextInputProps,
+  ThemedButtonProps,
+  ButtonVariant,
+  CategorySelectorProps,
+  CategoryOption,
+  FeedbackFormProps,
+  FeedbackFormData,
+} from './components';
+
+// API client
+export {
+  HarkenClient,
+  createHarkenClient,
+  HarkenError,
+  HarkenApiError,
+  HarkenNetworkError,
+  withRetry,
+  DEFAULT_RETRY_CONFIG,
+} from './api';
+export type { HarkenClientConfig, RetryConfig } from './api';
 
 // Configuration types
 export type {
