@@ -1,9 +1,11 @@
-import React, { createContext, useMemo } from 'react';
+import React, { createContext, useEffect, useMemo, useRef } from 'react';
 import { useColorScheme } from 'react-native';
 import type { HarkenTheme, ThemeMode } from '../theme';
 import { lightTheme, darkTheme, createTheme } from '../theme';
 import type { HarkenConfig, HarkenProviderProps } from '../types';
 import { IdentityStore, createMemoryStorage } from '../storage';
+import { HarkenClient } from '../api/client';
+import { uploadQueueService } from '../services';
 
 /**
  * Context value provided by HarkenProvider.
@@ -19,6 +21,8 @@ export interface HarkenContextValue {
   config: HarkenConfig;
   /** Identity store for anonymous ID management */
   identityStore: IdentityStore;
+  /** API client instance */
+  client: HarkenClient;
 }
 
 /**
@@ -86,6 +90,29 @@ export function HarkenProvider({
     return new IdentityStore(storageImpl);
   }, [storage]);
 
+  // Create API client (memoized)
+  const client = useMemo(() => {
+    return new HarkenClient({
+      publishableKey: config.publishableKey,
+      userToken: config.userToken,
+      baseUrl: config.apiBaseUrl,
+    });
+  }, [config.publishableKey, config.userToken, config.apiBaseUrl]);
+
+  // Initialize upload queue service ONCE at app startup (D2)
+  // This prevents the race condition where uploads complete before callbacks are registered
+  const isQueueInitialized = useRef(false);
+
+  useEffect(() => {
+    if (isQueueInitialized.current) return;
+    isQueueInitialized.current = true;
+
+    void uploadQueueService.initialize({
+      client,
+      debug: config.debug,
+    });
+  }, [client, config.debug]);
+
   // Memoize the context value
   const contextValue = useMemo<HarkenContextValue>(
     () => ({
@@ -94,8 +121,9 @@ export function HarkenProvider({
       isDarkMode,
       config,
       identityStore,
+      client,
     }),
-    [theme, themeMode, isDarkMode, config, identityStore]
+    [theme, themeMode, isDarkMode, config, identityStore, client]
   );
 
   return (

@@ -8,6 +8,12 @@ type FeedbackSubmission = components['schemas']['FeedbackSubmission'];
 type FeedbackSubmissionResponse = components['schemas']['FeedbackSubmissionResponse'];
 type ErrorResponse = components['schemas']['ErrorResponse'];
 
+// Attachment types
+type AttachmentPresignRequest = components['schemas']['AttachmentPresignRequest'];
+type AttachmentPresignResponse = components['schemas']['AttachmentPresignResponse'];
+type AttachmentConfirmRequest = components['schemas']['AttachmentConfirmRequest'];
+type AttachmentStatusResponse = components['schemas']['AttachmentStatusResponse'];
+
 const DEFAULT_API_BASE_URL = 'https://api.harken.app';
 
 export interface HarkenClientConfig {
@@ -54,6 +60,73 @@ export class HarkenClient {
         body: JSON.stringify(submission),
       }),
       this.config.retry
+    );
+  }
+
+  /**
+   * Create a presigned URL for attachment upload.
+   */
+  async createAttachmentUpload(
+    request: AttachmentPresignRequest
+  ): Promise<AttachmentPresignResponse> {
+    return withRetry(
+      () =>
+        this.request<AttachmentPresignResponse>(
+          '/v1/feedback/attachments/presign',
+          {
+            method: 'POST',
+            body: JSON.stringify(request),
+          }
+        ),
+      this.config.retry
+    );
+  }
+
+  /**
+   * Confirm successful attachment upload.
+   */
+  async confirmAttachment(
+    attachmentId: string,
+    request?: AttachmentConfirmRequest
+  ): Promise<AttachmentStatusResponse> {
+    return withRetry(
+      () =>
+        this.request<AttachmentStatusResponse>(
+          `/v1/feedback/attachments/${attachmentId}/confirm`,
+          {
+            method: 'POST',
+            body: request ? JSON.stringify(request) : undefined,
+          }
+        ),
+      this.config.retry
+    );
+  }
+
+  /**
+   * Report attachment upload failure.
+   * This is a terminal state, so no retry is applied.
+   */
+  async reportAttachmentFailure(
+    attachmentId: string,
+    error?: string
+  ): Promise<AttachmentStatusResponse> {
+    return this.request<AttachmentStatusResponse>(
+      `/v1/feedback/attachments/${attachmentId}/fail`,
+      {
+        method: 'POST',
+        body: error ? JSON.stringify({ error }) : undefined,
+      }
+    );
+  }
+
+  /**
+   * Get attachment status and download URLs.
+   */
+  async getAttachmentStatus(
+    attachmentId: string
+  ): Promise<AttachmentStatusResponse> {
+    return this.request<AttachmentStatusResponse>(
+      `/v1/feedback/attachments/${attachmentId}`
     );
   }
 

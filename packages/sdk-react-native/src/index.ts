@@ -16,8 +16,16 @@ export {
   useHarkenContext,
   useAnonymousId,
   useFeedback,
+  useAttachmentUpload,
+  useAttachmentStatus,
 } from './hooks';
-export type { SubmitFeedbackParams, UseFeedbackResult } from './hooks';
+export type {
+  SubmitFeedbackParams,
+  UseFeedbackResult,
+  AttachmentState,
+  UseAttachmentUploadResult,
+  AttachmentStatus,
+} from './hooks';
 
 // Theme system
 export type {
@@ -61,6 +69,11 @@ export {
   CategorySelector,
   FeedbackForm,
   DEFAULT_CATEGORIES,
+  // Attachment components
+  AttachmentPicker,
+  UploadStatusOverlay,
+  AttachmentPreview,
+  AttachmentGrid,
 } from './components';
 
 export type {
@@ -73,6 +86,12 @@ export type {
   CategoryOption,
   FeedbackFormProps,
   FeedbackFormData,
+  // Attachment component types
+  AttachmentPickerProps,
+  AttachmentSource,
+  UploadStatusOverlayProps,
+  AttachmentPreviewProps,
+  AttachmentGridProps,
 } from './components';
 
 // API client
@@ -95,3 +114,26 @@ export type {
   Platform,
   DeviceMetadata,
 } from './types';
+
+// Domain types (upload queue)
+export {
+  UploadPhase,
+  DEFAULT_UPLOAD_RETRY_CONFIG,
+} from './domain';
+export type {
+  QueueItem,
+  QueueStatus,
+  UploadProgress,
+  UploadRetryConfig,
+} from './domain';
+
+// Services
+export {
+  UploadQueueService,
+  uploadQueueService,
+  UploadQueueStorage,
+} from './services';
+export type {
+  UploadQueueServiceConfig,
+  EnqueueParams,
+} from './services';
