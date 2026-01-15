@@ -3,6 +3,7 @@ import { useColorScheme } from 'react-native';
 import type { HarkenTheme, ThemeMode } from '../theme';
 import { lightTheme, darkTheme, createTheme } from '../theme';
 import type { HarkenConfig, HarkenProviderProps } from '../types';
+import { IdentityStore, createMemoryStorage } from '../storage';
 
 /**
  * Context value provided by HarkenProvider.
@@ -16,6 +17,8 @@ export interface HarkenContextValue {
   isDarkMode: boolean;
   /** SDK configuration */
   config: HarkenConfig;
+  /** Identity store for anonymous ID management */
+  identityStore: IdentityStore;
 }
 
 /**
@@ -31,7 +34,10 @@ export const HarkenContext = createContext<HarkenContextValue | null>(null);
  *
  * @example
  * ```tsx
- * import { HarkenProvider } from '@harken/sdk-react-native';
+ * import { HarkenProvider, createSecureStoreAdapter } from '@harken/sdk-react-native';
+ * import * as SecureStore from 'expo-secure-store';
+ *
+ * const storage = createSecureStoreAdapter(SecureStore);
  *
  * function App() {
  *   return (
@@ -39,6 +45,7 @@ export const HarkenContext = createContext<HarkenContextValue | null>(null);
  *       config={{
  *         publishableKey: 'pk_live_xxxx',
  *       }}
+ *       storage={storage}
  *       themeMode="system"
  *     >
  *       <YourApp />
@@ -52,6 +59,7 @@ export function HarkenProvider({
   themeMode = 'system',
   lightTheme: lightOverrides,
   darkTheme: darkOverrides,
+  storage,
   children,
 }: HarkenProviderProps): React.JSX.Element {
   // Get system color scheme
@@ -72,6 +80,12 @@ export function HarkenProvider({
     return createTheme(baseTheme, overrides);
   }, [isDarkMode, lightOverrides, darkOverrides]);
 
+  // Create identity store (memoized to persist across re-renders)
+  const identityStore = useMemo(() => {
+    const storageImpl = storage ?? createMemoryStorage();
+    return new IdentityStore(storageImpl);
+  }, [storage]);
+
   // Memoize the context value
   const contextValue = useMemo<HarkenContextValue>(
     () => ({
@@ -79,8 +93,9 @@ export function HarkenProvider({
       themeMode,
       isDarkMode,
       config,
+      identityStore,
     }),
-    [theme, themeMode, isDarkMode, config]
+    [theme, themeMode, isDarkMode, config, identityStore]
   );
 
   return (

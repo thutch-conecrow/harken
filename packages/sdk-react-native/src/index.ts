@@ -11,7 +11,7 @@ export { HarkenProvider } from './context';
 export type { HarkenContextValue } from './context';
 
 // Hooks
-export { useHarkenTheme, useHarkenContext } from './hooks';
+export { useHarkenTheme, useHarkenContext, useAnonymousId } from './hooks';
 
 // Theme system
 export type {
@@ -35,6 +35,17 @@ export {
   darkTheme,
   createTheme,
 } from './theme';
+
+// Storage and identity
+export type { SecureStorage } from './storage';
+export {
+  createSecureStoreAdapter,
+  createMemoryStorage,
+  IdentityStore,
+} from './storage';
+
+// Utilities
+export { generateUUID } from './utils';
 
 // Configuration types
 export type {

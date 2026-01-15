@@ -1,4 +1,5 @@
 import type { PartialHarkenTheme, ThemeMode } from '../theme';
+import type { SecureStorage } from '../storage';
 
 /**
  * Configuration options for the Harken SDK.
@@ -57,6 +58,22 @@ export interface HarkenProviderProps {
    * Merged with the default dark theme.
    */
   darkTheme?: PartialHarkenTheme;
+
+  /**
+   * Custom secure storage implementation.
+   * If not provided, uses in-memory storage (not persisted across restarts).
+   * For persistence, pass expo-secure-store via createSecureStoreAdapter.
+   *
+   * @example
+   * ```tsx
+   * import * as SecureStore from 'expo-secure-store';
+   * import { createSecureStoreAdapter } from '@harken/sdk-react-native';
+   *
+   * const storage = createSecureStoreAdapter(SecureStore);
+   * <HarkenProvider storage={storage} ... />
+   * ```
+   */
+  storage?: SecureStorage;
 
   /**
    * React children to render within the provider.
