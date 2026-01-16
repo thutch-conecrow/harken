@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 
-// Core SDK imports (no native module dependencies at import time)
+// Core SDK imports
 import {
   HarkenProvider,
   createSecureStoreAdapter,
@@ -24,7 +24,7 @@ import {
   type FeedbackCategory,
 } from '@harken/sdk-react-native';
 
-// Attachment features (separate import for native module dependencies)
+// Attachment features
 import {
   useAttachmentUpload,
   AttachmentPicker,
@@ -191,10 +191,7 @@ export default function App() {
   return (
     <HarkenProvider
       config={{
-        // Replace with your actual publishable key
         publishableKey: 'pk_test_example',
-        // For local development, you can point to a local API
-        // apiBaseUrl: 'http://localhost:3000',
         debug: true,
       }}
       storage={storage}

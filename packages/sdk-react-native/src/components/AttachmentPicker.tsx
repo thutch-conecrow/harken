@@ -15,6 +15,22 @@ import { ThemedText } from './ThemedText';
 
 export type AttachmentSource = 'camera' | 'library' | 'document';
 
+/**
+ * Configuration for a single picker option.
+ */
+export interface PickerOptionConfig {
+  /** Custom label text */
+  label?: string;
+  /** Custom description text */
+  description?: string;
+  /** Icon background color (defaults to theme accent colors) */
+  color?: string;
+  /** Custom icon element (replaces default) */
+  icon?: React.ReactNode;
+  /** Hide this option entirely */
+  hidden?: boolean;
+}
+
 export interface AttachmentPickerProps {
   /** Whether the picker is visible */
   visible: boolean;
@@ -28,8 +44,27 @@ export interface AttachmentPickerProps {
   onPickDocument: () => void;
   /** Title shown in the picker */
   title?: string;
-  /** Custom render function for option icons (optional) */
+  /**
+   * Custom render function for option icons.
+   * @deprecated Use `options.camera.icon` etc. instead
+   */
   renderIcon?: (source: AttachmentSource) => React.ReactNode;
+  /** Customize individual picker options */
+  options?: {
+    camera?: PickerOptionConfig;
+    library?: PickerOptionConfig;
+    document?: PickerOptionConfig;
+  };
+  /** Cancel button label */
+  cancelLabel?: string;
+  /** Overlay background color */
+  overlayColor?: string;
+  /** Bottom sheet corner radius */
+  sheetRadius?: number;
+  /** Additional style for bottom sheet container */
+  sheetStyle?: StyleProp<ViewStyle>;
+  /** Additional style for option rows */
+  optionStyle?: StyleProp<ViewStyle>;
 }
 
 interface PickerOption {
@@ -37,8 +72,9 @@ interface PickerOption {
   label: string;
   description: string;
   color: string;
-  defaultIcon: string;
+  icon: React.ReactNode;
   action: () => void;
+  hidden: boolean;
 }
 
 /**
@@ -49,15 +85,38 @@ interface PickerOption {
  *
  * @example
  * ```tsx
- * const [showPicker, setShowPicker] = useState(false);
- * const { pickImage, pickDocument } = useAttachmentUpload();
- *
+ * // Basic usage
  * <AttachmentPicker
  *   visible={showPicker}
  *   onClose={() => setShowPicker(false)}
  *   onTakePhoto={() => pickImage('camera')}
  *   onPickFromLibrary={() => pickImage('library')}
  *   onPickDocument={() => pickDocument()}
+ * />
+ *
+ * // With customization
+ * <AttachmentPicker
+ *   visible={showPicker}
+ *   onClose={() => setShowPicker(false)}
+ *   onTakePhoto={() => pickImage('camera')}
+ *   onPickFromLibrary={() => pickImage('library')}
+ *   onPickDocument={() => pickDocument()}
+ *   title="Attach File"
+ *   cancelLabel="Dismiss"
+ *   options={{
+ *     camera: {
+ *       label: 'Take Photo',
+ *       icon: <CameraIcon />,
+ *       color: '#007AFF',
+ *     },
+ *     library: {
+ *       label: 'Choose Photo',
+ *       icon: <PhotoIcon />,
+ *     },
+ *     document: {
+ *       hidden: true, // Hide files option
+ *     },
+ *   }}
  * />
  * ```
  */
@@ -69,6 +128,12 @@ export function AttachmentPicker({
   onPickDocument,
   title = 'Add Attachment',
   renderIcon,
+  options: optionOverrides,
+  cancelLabel = 'Cancel',
+  overlayColor,
+  sheetRadius,
+  sheetStyle,
+  optionStyle,
 }: AttachmentPickerProps): React.JSX.Element | null {
   const theme = useHarkenTheme();
   const screenHeight = Dimensions.get('window').height;
@@ -76,32 +141,46 @@ export function AttachmentPicker({
   // Prevent double-triggering ActionSheetIOS if callbacks change
   const isShowingRef = useRef(false);
 
+  // Build options with defaults and overrides
   const options: PickerOption[] = [
     {
       key: 'camera',
-      label: 'Camera',
-      description: 'Take a new photo',
-      color: theme.colors.primary,
-      defaultIcon: '📷',
+      label: optionOverrides?.camera?.label ?? 'Camera',
+      description: optionOverrides?.camera?.description ?? 'Take a new photo',
+      color: optionOverrides?.camera?.color ?? theme.colors.accent1,
+      icon:
+        optionOverrides?.camera?.icon ??
+        (renderIcon ? renderIcon('camera') : <DefaultIcon emoji="📷" />),
       action: onTakePhoto,
+      hidden: optionOverrides?.camera?.hidden ?? false,
     },
     {
       key: 'library',
-      label: 'Photo Library',
-      description: 'Choose from existing photos',
-      color: '#34C759', // Green
-      defaultIcon: '🖼️',
+      label: optionOverrides?.library?.label ?? 'Photo Library',
+      description:
+        optionOverrides?.library?.description ?? 'Choose from existing photos',
+      color: optionOverrides?.library?.color ?? theme.colors.accent2,
+      icon:
+        optionOverrides?.library?.icon ??
+        (renderIcon ? renderIcon('library') : <DefaultIcon emoji="🖼️" />),
       action: onPickFromLibrary,
+      hidden: optionOverrides?.library?.hidden ?? false,
     },
     {
       key: 'document',
-      label: 'Files',
-      description: 'Browse documents and files',
-      color: '#FF9500', // Orange
-      defaultIcon: '📄',
+      label: optionOverrides?.document?.label ?? 'Files',
+      description:
+        optionOverrides?.document?.description ?? 'Browse documents and files',
+      color: optionOverrides?.document?.color ?? theme.colors.accent3,
+      icon:
+        optionOverrides?.document?.icon ??
+        (renderIcon ? renderIcon('document') : <DefaultIcon emoji="📄" />),
       action: onPickDocument,
+      hidden: optionOverrides?.document?.hidden ?? false,
     },
   ];
+
+  const visibleOptions = options.filter((o) => !o.hidden);
 
   const handleOptionPress = (action: () => void) => {
     onClose();
@@ -118,38 +197,37 @@ export function AttachmentPicker({
 
     if (visible && Platform.OS === 'ios' && !isShowingRef.current) {
       isShowingRef.current = true;
+
+      // Build iOS action sheet options from visible options
+      const iosOptions = [cancelLabel, ...visibleOptions.map((o) => o.label)];
+
       ActionSheetIOS.showActionSheetWithOptions(
         {
-          options: ['Cancel', 'Take Photo', 'Photo Library', 'Files'],
+          options: iosOptions,
           cancelButtonIndex: 0,
           title,
         },
         (buttonIndex) => {
           isShowingRef.current = false;
           onClose();
-          // Small delay to ensure any UI updates complete
-          setTimeout(() => {
-            switch (buttonIndex) {
-              case 1:
-                onTakePhoto();
-                break;
-              case 2:
-                onPickFromLibrary();
-                break;
-              case 3:
-                onPickDocument();
-                break;
+          if (buttonIndex > 0) {
+            const selectedOption = visibleOptions[buttonIndex - 1];
+            if (selectedOption) {
+              setTimeout(() => selectedOption.action(), 100);
             }
-          }, 100);
+          }
         }
       );
     }
-  }, [visible, onClose, onTakePhoto, onPickFromLibrary, onPickDocument, title]);
+  }, [visible, onClose, visibleOptions, title, cancelLabel]);
 
   // iOS: Don't render modal - we use ActionSheetIOS instead
   if (Platform.OS === 'ios') {
     return null;
   }
+
+  const resolvedOverlayColor = overlayColor ?? theme.colors.overlay;
+  const resolvedSheetRadius = sheetRadius ?? theme.radii.xl;
 
   // Android: Use bottom sheet modal
   return (
@@ -161,7 +239,10 @@ export function AttachmentPicker({
     >
       <SafeAreaView style={styles.modalContainer}>
         {/* Background overlay */}
-        <Pressable style={styles.overlay} onPress={onClose}>
+        <Pressable
+          style={[styles.overlay, { backgroundColor: resolvedOverlayColor }]}
+          onPress={onClose}
+        >
           {/* Bottom sheet */}
           <View
             style={[
@@ -169,7 +250,10 @@ export function AttachmentPicker({
               {
                 backgroundColor: theme.colors.background,
                 maxHeight: screenHeight * 0.6,
+                borderTopLeftRadius: resolvedSheetRadius,
+                borderTopRightRadius: resolvedSheetRadius,
               },
+              sheetStyle,
             ]}
             // Prevent touches from passing through to background
             onStartShouldSetResponder={() => true}
@@ -193,7 +277,7 @@ export function AttachmentPicker({
 
             {/* Options */}
             <View style={styles.optionsContainer}>
-              {options.map((option) => (
+              {visibleOptions.map((option) => (
                 <Pressable
                   key={option.key}
                   style={({ pressed }) => [
@@ -204,6 +288,7 @@ export function AttachmentPicker({
                         : theme.colors.backgroundSecondary,
                       borderRadius: theme.radii.md,
                     },
+                    optionStyle,
                   ]}
                   onPress={() => handleOptionPress(option.action)}
                 >
@@ -216,13 +301,7 @@ export function AttachmentPicker({
                       },
                     ]}
                   >
-                    {renderIcon ? (
-                      renderIcon(option.key)
-                    ) : (
-                      <ThemedText style={styles.defaultIcon}>
-                        {option.defaultIcon}
-                      </ThemedText>
-                    )}
+                    {option.icon}
                   </View>
                   <View style={styles.optionText}>
                     <ThemedText variant="label">{option.label}</ThemedText>
@@ -235,7 +314,7 @@ export function AttachmentPicker({
 
               {/* Cancel Button */}
               <Pressable style={styles.cancelButton} onPress={onClose}>
-                <ThemedText secondary>Cancel</ThemedText>
+                <ThemedText secondary>{cancelLabel}</ThemedText>
               </Pressable>
             </View>
           </View>
@@ -245,18 +324,22 @@ export function AttachmentPicker({
   );
 }
 
+/**
+ * Default emoji icon component.
+ */
+function DefaultIcon({ emoji }: { emoji: string }): React.JSX.Element {
+  return <ThemedText style={styles.defaultIcon}>{emoji}</ThemedText>;
+}
+
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'flex-end',
   },
   bottomSheet: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
     paddingBottom: 20,
   },
   handleContainer: {

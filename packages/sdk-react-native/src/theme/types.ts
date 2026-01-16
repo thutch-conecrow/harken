@@ -27,6 +27,20 @@ export interface HarkenColors {
   error: string;
   /** Success state color */
   success: string;
+  /** Warning state color */
+  warning: string;
+  /** Informational state color */
+  info: string;
+  /** Light overlay background (for modals, sheets) */
+  overlay: string;
+  /** Dark overlay background (for error states, loading) */
+  overlayDark: string;
+  /** Accent color 1 (e.g., camera option) */
+  accent1: string;
+  /** Accent color 2 (e.g., photo library option) */
+  accent2: string;
+  /** Accent color 3 (e.g., files option) */
+  accent3: string;
 }
 
 /**
@@ -110,6 +124,8 @@ export interface HarkenRadii {
   md: number;
   /** Large radius for modals and sheets (16px default) */
   lg: number;
+  /** Extra large radius for bottom sheets (20px default) */
+  xl: number;
   /** Full/pill radius */
   full: number;
 }

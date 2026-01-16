@@ -15,15 +15,6 @@ export type { CategorySelectorProps, CategoryOption } from './CategorySelector';
 export { FeedbackForm } from './FeedbackForm';
 export type { FeedbackFormProps, FeedbackFormData } from './FeedbackForm';
 
-// Attachment components
-export { AttachmentPicker } from './AttachmentPicker';
-export type { AttachmentPickerProps, AttachmentSource } from './AttachmentPicker';
-
-export { UploadStatusOverlay } from './UploadStatusOverlay';
-export type { UploadStatusOverlayProps } from './UploadStatusOverlay';
-
-export { AttachmentPreview } from './AttachmentPreview';
-export type { AttachmentPreviewProps } from './AttachmentPreview';
-
-export { AttachmentGrid } from './AttachmentGrid';
-export type { AttachmentGridProps } from './AttachmentGrid';
+// Note: Attachment components (AttachmentPicker, AttachmentGrid, etc.) are
+// exported from '@harken/sdk-react-native/attachments' to avoid eager
+// loading of native modules via their type imports.

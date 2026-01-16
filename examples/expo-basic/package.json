@@ -10,9 +10,10 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@harken/sdk-react-native": "workspace:*",
+    "@harken/sdk-react-native": "file:../../packages/sdk-react-native",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/netinfo": "^11.4.1",
+    "babel-preset-expo": "^54.0.9",
     "expo": "^54.0.22",
     "expo-document-picker": "~14.0.7",
     "expo-file-system": "~19.0.17",

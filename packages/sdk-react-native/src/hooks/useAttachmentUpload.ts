@@ -125,6 +125,11 @@ export function useAttachmentUpload(): UseAttachmentUploadResult {
 
   // Subscribe to progress updates from the queue service
   useEffect(() => {
+    // Guard against service not being initialized
+    if (!uploadQueueService) {
+      return;
+    }
+
     const unsubProgress = uploadQueueService.onProgress(
       (progress: UploadProgress) => {
         // Only track attachments we added

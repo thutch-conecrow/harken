@@ -5,6 +5,24 @@ import { useHarkenTheme } from '../hooks';
 import { ThemedText } from './ThemedText';
 import { UploadPhase } from '../domain';
 
+/**
+ * Customizable labels for upload status states.
+ */
+export interface UploadStatusLabels {
+  /** Label for retry button (default: "Retry") */
+  retry?: string;
+  /** Label for remove/cancel button (default: "Remove") */
+  remove?: string;
+  /** Label for cancel during upload (default: "Cancel") */
+  cancel?: string;
+  /** Label while confirming (default: "Confirming...") */
+  confirming?: string;
+  /** Label while queued (default: "Waiting...") */
+  waiting?: string;
+  /** Default error message (default: "Upload failed") */
+  uploadFailed?: string;
+}
+
 export interface UploadStatusOverlayProps {
   /** Current upload phase */
   phase: UploadPhase;
@@ -18,6 +36,18 @@ export interface UploadStatusOverlayProps {
   onRemove?: () => void;
   /** Additional container style */
   style?: StyleProp<ViewStyle>;
+  /** Custom labels for status text */
+  labels?: UploadStatusLabels;
+  /** Custom progress renderer */
+  renderProgress?: (progress: number) => React.ReactNode;
+  /** Custom error renderer */
+  renderError?: (
+    error: string,
+    onRetry?: () => void,
+    onRemove?: () => void
+  ) => React.ReactNode;
+  /** Custom success/completed renderer */
+  renderSuccess?: (onRemove?: () => void) => React.ReactNode;
 }
 
 /**
@@ -31,15 +61,31 @@ export interface UploadStatusOverlayProps {
  *
  * @example
  * ```tsx
- * <View style={styles.thumbnailContainer}>
- *   <Image source={{ uri }} style={styles.thumbnail} />
- *   <UploadStatusOverlay
- *     phase={attachment.phase}
- *     progress={attachment.progress}
- *     onRetry={() => retryAttachment(attachment.attachmentId)}
- *     onRemove={() => removeAttachment(attachment.attachmentId)}
- *   />
- * </View>
+ * // Basic usage
+ * <UploadStatusOverlay
+ *   phase={attachment.phase}
+ *   progress={attachment.progress}
+ *   onRetry={() => retryAttachment(attachment.attachmentId)}
+ *   onRemove={() => removeAttachment(attachment.attachmentId)}
+ * />
+ *
+ * // With custom labels
+ * <UploadStatusOverlay
+ *   phase={phase}
+ *   progress={progress}
+ *   labels={{
+ *     retry: 'Try Again',
+ *     remove: 'Delete',
+ *     confirming: 'Processing...',
+ *   }}
+ * />
+ *
+ * // With custom progress renderer
+ * <UploadStatusOverlay
+ *   phase={phase}
+ *   progress={progress}
+ *   renderProgress={(p) => <CustomProgressBar value={p} />}
+ * />
  * ```
  */
 export function UploadStatusOverlay({
@@ -49,11 +95,31 @@ export function UploadStatusOverlay({
   onRetry,
   onRemove,
   style,
+  labels,
+  renderProgress,
+  renderError,
+  renderSuccess,
 }: UploadStatusOverlayProps): React.JSX.Element | null {
   const theme = useHarkenTheme();
 
+  // Merge labels with defaults
+  const resolvedLabels: Required<UploadStatusLabels> = {
+    retry: labels?.retry ?? 'Retry',
+    remove: labels?.remove ?? 'Remove',
+    cancel: labels?.cancel ?? 'Cancel',
+    confirming: labels?.confirming ?? 'Confirming...',
+    waiting: labels?.waiting ?? 'Waiting...',
+    uploadFailed: labels?.uploadFailed ?? 'Upload failed',
+  };
+
   // Completed state - just show a subtle checkmark
   if (phase === UploadPhase.COMPLETED) {
+    if (renderSuccess) {
+      return (
+        <View style={[styles.overlay, style]}>{renderSuccess(onRemove)}</View>
+      );
+    }
+
     return (
       <View style={[styles.overlay, styles.completedOverlay, style]}>
         <View
@@ -87,18 +153,28 @@ export function UploadStatusOverlay({
 
   // Failed state - show error and retry
   if (phase === UploadPhase.FAILED) {
+    const errorMessage = error ?? resolvedLabels.uploadFailed;
+
+    if (renderError) {
+      return (
+        <View style={[styles.overlay, style]}>
+          {renderError(errorMessage, onRetry, onRemove)}
+        </View>
+      );
+    }
+
     return (
       <View
         style={[
           styles.overlay,
           styles.fullOverlay,
-          { backgroundColor: 'rgba(0,0,0,0.7)' },
+          { backgroundColor: theme.colors.overlayDark },
           style,
         ]}
       >
         <ThemedText style={styles.errorIcon}>⚠️</ThemedText>
         <ThemedText style={styles.errorText} numberOfLines={2}>
-          {error ?? 'Upload failed'}
+          {errorMessage}
         </ThemedText>
         <View style={styles.buttonRow}>
           {onRetry && (
@@ -112,7 +188,9 @@ export function UploadStatusOverlay({
                 },
               ]}
             >
-              <ThemedText style={styles.actionButtonText}>Retry</ThemedText>
+              <ThemedText style={styles.actionButtonText}>
+                {resolvedLabels.retry}
+              </ThemedText>
             </Pressable>
           )}
           {onRemove && (
@@ -126,7 +204,9 @@ export function UploadStatusOverlay({
                 },
               ]}
             >
-              <ThemedText style={styles.actionButtonText}>Remove</ThemedText>
+              <ThemedText style={styles.actionButtonText}>
+                {resolvedLabels.remove}
+              </ThemedText>
             </Pressable>
           )}
         </View>
@@ -137,12 +217,28 @@ export function UploadStatusOverlay({
   // Uploading state - show progress bar
   if (phase === UploadPhase.UPLOADING) {
     const progressPercent = Math.round(progress * 100);
+
+    if (renderProgress) {
+      return (
+        <View
+          style={[
+            styles.overlay,
+            styles.fullOverlay,
+            { backgroundColor: theme.colors.overlay },
+            style,
+          ]}
+        >
+          {renderProgress(progress)}
+        </View>
+      );
+    }
+
     return (
       <View
         style={[
           styles.overlay,
           styles.fullOverlay,
-          { backgroundColor: 'rgba(0,0,0,0.5)' },
+          { backgroundColor: theme.colors.overlay },
           style,
         ]}
       >
@@ -177,7 +273,9 @@ export function UploadStatusOverlay({
               },
             ]}
           >
-            <ThemedText style={styles.cancelText}>Cancel</ThemedText>
+            <ThemedText style={styles.cancelText}>
+              {resolvedLabels.cancel}
+            </ThemedText>
           </Pressable>
         )}
       </View>
@@ -191,12 +289,14 @@ export function UploadStatusOverlay({
         style={[
           styles.overlay,
           styles.fullOverlay,
-          { backgroundColor: 'rgba(0,0,0,0.5)' },
+          { backgroundColor: theme.colors.overlay },
           style,
         ]}
       >
         <ActivityIndicator color="#fff" size="small" />
-        <ThemedText style={styles.confirmingText}>Confirming...</ThemedText>
+        <ThemedText style={styles.confirmingText}>
+          {resolvedLabels.confirming}
+        </ThemedText>
       </View>
     );
   }
@@ -208,12 +308,14 @@ export function UploadStatusOverlay({
         style={[
           styles.overlay,
           styles.fullOverlay,
-          { backgroundColor: 'rgba(0,0,0,0.4)' },
+          { backgroundColor: theme.colors.overlay },
           style,
         ]}
       >
         <ActivityIndicator color="#fff" size="small" />
-        <ThemedText style={styles.queuedText}>Waiting...</ThemedText>
+        <ThemedText style={styles.queuedText}>
+          {resolvedLabels.waiting}
+        </ThemedText>
         {onRemove && (
           <Pressable
             onPress={onRemove}
@@ -224,7 +326,9 @@ export function UploadStatusOverlay({
               },
             ]}
           >
-            <ThemedText style={styles.cancelText}>Cancel</ThemedText>
+            <ThemedText style={styles.cancelText}>
+              {resolvedLabels.cancel}
+            </ThemedText>
           </Pressable>
         )}
       </View>
