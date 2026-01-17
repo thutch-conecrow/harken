@@ -110,16 +110,21 @@ export class UploadQueueService {
    * Must be called once at app startup (in HarkenProvider).
    * This prevents the race condition where uploads complete
    * before callbacks are registered.
+   *
+   * Supports hot reload by updating the client reference on subsequent calls.
    */
   async initialize(config: UploadQueueServiceConfig): Promise<void> {
+    // Always update client reference to support hot reload
+    // (React creates new client instance on re-render)
+    this.client = config.client;
+    this.debug = config.debug ?? false;
+
     if (this.isInitialized) {
-      this.log('Already initialized, skipping');
+      this.log('Already initialized, updated client reference');
       return;
     }
 
-    this.client = config.client;
     this.retryConfig = { ...DEFAULT_UPLOAD_RETRY_CONFIG, ...config.retryConfig };
-    this.debug = config.debug ?? false;
 
     // Load persisted queue
     const persistedItems = await this.storage.loadQueue();

@@ -15,6 +15,12 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
+    "./attachments": {
+      "types": "./dist/attachments/index.d.ts",
+      "react-native": "./src/attachments/index.ts",
+      "import": "./dist/attachments/index.js",
+      "default": "./dist/attachments/index.js"
+    },
     "./theme": {
       "types": "./dist/theme/index.d.ts",
       "react-native": "./src/theme/index.ts",
@@ -94,13 +100,12 @@
   "devDependencies": {
     "@react-native-async-storage/async-storage": "^2.1.0",
     "@react-native-community/netinfo": "^11.4.1",
-    "@types/react": "^18.3.18",
-    "@types/react-native": "^0.72.8",
-    "expo-document-picker": "^13.0.1",
+    "@types/react": "^19.1.0",
+    "expo-document-picker": "^14.0.0",
     "expo-file-system": "^19.0.0",
-    "expo-image-picker": "^16.0.3",
-    "react": "^18.3.1",
-    "react-native": "^0.76.6",
-    "typescript": "^5.7.2"
+    "expo-image-picker": "^17.0.0",
+    "react": "^19.1.0",
+    "react-native": "^0.81.5",
+    "typescript": "^5.9.0"
   }
 }

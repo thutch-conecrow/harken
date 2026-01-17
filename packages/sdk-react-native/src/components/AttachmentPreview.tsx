@@ -4,6 +4,7 @@ import type { ViewStyle, StyleProp, ImageStyle } from 'react-native';
 import { useHarkenTheme } from '../hooks';
 import { ThemedText } from './ThemedText';
 import { UploadStatusOverlay } from './UploadStatusOverlay';
+import type { UploadStatusLabels } from './UploadStatusOverlay';
 import { UploadPhase } from '../domain';
 
 export interface AttachmentPreviewProps {
@@ -29,6 +30,12 @@ export interface AttachmentPreviewProps {
   style?: StyleProp<ViewStyle>;
   /** Additional image style */
   imageStyle?: StyleProp<ImageStyle>;
+  /** Custom renderer for non-image file placeholders */
+  renderPlaceholder?: (mimeType: string, fileName?: string) => React.ReactNode;
+  /** Custom file icon function (returns string emoji or React node) */
+  getFileIcon?: (mimeType: string) => React.ReactNode | string;
+  /** Custom labels for upload status overlay */
+  statusLabels?: UploadStatusLabels;
 }
 
 /**
@@ -39,15 +46,37 @@ export interface AttachmentPreviewProps {
  *
  * @example
  * ```tsx
+ * // Basic usage
  * <AttachmentPreview
  *   uri={attachment.localUri}
  *   mimeType={attachment.mimeType}
- *   fileName={attachment.fileName}
  *   phase={attachment.phase}
  *   progress={attachment.progress}
- *   error={attachment.error}
  *   onRetry={() => retryAttachment(attachment.attachmentId)}
  *   onRemove={() => removeAttachment(attachment.attachmentId)}
+ * />
+ *
+ * // With custom file icon
+ * <AttachmentPreview
+ *   uri={attachment.localUri}
+ *   mimeType={attachment.mimeType}
+ *   phase={attachment.phase}
+ *   progress={attachment.progress}
+ *   getFileIcon={(mime) => {
+ *     if (mime === 'application/pdf') return <PdfIcon />;
+ *     return '📄';
+ *   }}
+ * />
+ *
+ * // With custom placeholder
+ * <AttachmentPreview
+ *   uri={attachment.localUri}
+ *   mimeType={attachment.mimeType}
+ *   phase={attachment.phase}
+ *   progress={attachment.progress}
+ *   renderPlaceholder={(mime, name) => (
+ *     <MyCustomPlaceholder mimeType={mime} fileName={name} />
+ *   )}
  * />
  * ```
  */
@@ -63,9 +92,42 @@ export function AttachmentPreview({
   size = 80,
   style,
   imageStyle,
+  renderPlaceholder,
+  getFileIcon: customGetFileIcon,
+  statusLabels,
 }: AttachmentPreviewProps): React.JSX.Element {
   const theme = useHarkenTheme();
   const isImage = mimeType?.startsWith('image/') ?? true;
+
+  const renderFileContent = () => {
+    if (renderPlaceholder && mimeType) {
+      return renderPlaceholder(mimeType, fileName);
+    }
+
+    const icon = customGetFileIcon
+      ? customGetFileIcon(mimeType ?? '')
+      : getDefaultFileIcon(mimeType);
+
+    return (
+      <View style={styles.filePreview}>
+        {typeof icon === 'string' ? (
+          <ThemedText style={styles.fileIcon}>{icon}</ThemedText>
+        ) : (
+          icon
+        )}
+        {fileName && (
+          <ThemedText
+            variant="caption"
+            secondary
+            numberOfLines={2}
+            style={styles.fileName}
+          >
+            {fileName}
+          </ThemedText>
+        )}
+      </View>
+    );
+  };
 
   return (
     <View
@@ -86,29 +148,11 @@ export function AttachmentPreview({
       {isImage ? (
         <Image
           source={{ uri }}
-          style={[
-            styles.image,
-            { width: size, height: size },
-            imageStyle,
-          ]}
+          style={[styles.image, { width: size, height: size }, imageStyle]}
           resizeMode="cover"
         />
       ) : (
-        <View style={styles.filePreview}>
-          <ThemedText style={styles.fileIcon}>
-            {getFileIcon(mimeType)}
-          </ThemedText>
-          {fileName && (
-            <ThemedText
-              variant="caption"
-              secondary
-              numberOfLines={2}
-              style={styles.fileName}
-            >
-              {fileName}
-            </ThemedText>
-          )}
-        </View>
+        renderFileContent()
       )}
 
       <UploadStatusOverlay
@@ -117,23 +161,26 @@ export function AttachmentPreview({
         error={error}
         onRetry={onRetry}
         onRemove={onRemove}
+        labels={statusLabels}
       />
     </View>
   );
 }
 
 /**
- * Get file icon emoji based on MIME type.
+ * Get default file icon emoji based on MIME type.
  */
-function getFileIcon(mimeType?: string): string {
+function getDefaultFileIcon(mimeType?: string): string {
   if (!mimeType) return '📄';
 
   if (mimeType.startsWith('image/')) return '🖼️';
   if (mimeType.startsWith('video/')) return '🎬';
   if (mimeType === 'application/pdf') return '📕';
-  if (mimeType.includes('spreadsheet') || mimeType.includes('excel')) return '📊';
+  if (mimeType.includes('spreadsheet') || mimeType.includes('excel'))
+    return '📊';
   if (mimeType.includes('document') || mimeType.includes('word')) return '📝';
-  if (mimeType.includes('presentation') || mimeType.includes('powerpoint')) return '📽️';
+  if (mimeType.includes('presentation') || mimeType.includes('powerpoint'))
+    return '📽️';
   if (mimeType.includes('zip') || mimeType.includes('archive')) return '📦';
 
   return '📄';

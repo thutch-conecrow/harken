@@ -23,6 +23,13 @@ export const lightColors: HarkenColors = {
   borderFocused: '#2563EB', // Blue 600
   error: '#DC2626', // Red 600
   success: '#16A34A', // Green 600
+  warning: '#D97706', // Amber 600
+  info: '#2563EB', // Blue 600
+  overlay: 'rgba(0, 0, 0, 0.3)',
+  overlayDark: 'rgba(0, 0, 0, 0.6)',
+  accent1: '#2563EB', // Blue 600 (camera)
+  accent2: '#16A34A', // Green 600 (library)
+  accent3: '#D97706', // Amber 600 (files)
 };
 
 /**
@@ -42,6 +49,13 @@ export const darkColors: HarkenColors = {
   borderFocused: '#3B82F6', // Blue 500
   error: '#EF4444', // Red 500
   success: '#22C55E', // Green 500
+  warning: '#F59E0B', // Amber 500
+  info: '#3B82F6', // Blue 500
+  overlay: 'rgba(0, 0, 0, 0.5)',
+  overlayDark: 'rgba(0, 0, 0, 0.8)',
+  accent1: '#3B82F6', // Blue 500 (camera)
+  accent2: '#22C55E', // Green 500 (library)
+  accent3: '#F59E0B', // Amber 500 (files)
 };
 
 /**
@@ -88,6 +102,7 @@ export const defaultRadii: HarkenRadii = {
   sm: 4,
   md: 8,
   lg: 16,
+  xl: 20,
   full: 9999,
 };
 

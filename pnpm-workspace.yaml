@@ -1,2 +1,3 @@
 packages:
   - "packages/*"
+  # examples are standalone (use npm, not pnpm) for Metro hot reload compatibility

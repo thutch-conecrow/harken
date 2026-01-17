@@ -3,6 +3,28 @@
  *
  * A mobile-first feedback SDK for React Native and Expo applications.
  *
+ * This is the main entry point which contains core functionality without
+ * native module dependencies at import time. For attachment features
+ * (which require expo-file-system, expo-image-picker, etc.), import from
+ * '@harken/sdk-react-native/attachments'.
+ *
+ * @example
+ * ```tsx
+ * // Core SDK
+ * import {
+ *   HarkenProvider,
+ *   useFeedback,
+ *   ThemedText,
+ *   ThemedButton,
+ * } from '@harken/sdk-react-native';
+ *
+ * // Attachment features (separate import to avoid eager native module loading)
+ * import {
+ *   useAttachmentUpload,
+ *   AttachmentGrid,
+ * } from '@harken/sdk-react-native/attachments';
+ * ```
+ *
  * @packageDocumentation
  */
 
@@ -10,22 +32,14 @@
 export { HarkenProvider } from './context';
 export type { HarkenContextValue } from './context';
 
-// Hooks
+// Hooks (core - no native module dependencies)
 export {
   useHarkenTheme,
   useHarkenContext,
   useAnonymousId,
   useFeedback,
-  useAttachmentUpload,
-  useAttachmentStatus,
 } from './hooks';
-export type {
-  SubmitFeedbackParams,
-  UseFeedbackResult,
-  AttachmentState,
-  UseAttachmentUploadResult,
-  AttachmentStatus,
-} from './hooks';
+export type { SubmitFeedbackParams, UseFeedbackResult } from './hooks';
 
 // Theme system
 export type {
@@ -61,7 +75,7 @@ export {
 // Utilities
 export { generateUUID } from './utils';
 
-// Components
+// Components (core - no native module dependencies)
 export {
   ThemedText,
   ThemedTextInput,
@@ -69,11 +83,6 @@ export {
   CategorySelector,
   FeedbackForm,
   DEFAULT_CATEGORIES,
-  // Attachment components
-  AttachmentPicker,
-  UploadStatusOverlay,
-  AttachmentPreview,
-  AttachmentGrid,
 } from './components';
 
 export type {
@@ -86,12 +95,6 @@ export type {
   CategoryOption,
   FeedbackFormProps,
   FeedbackFormData,
-  // Attachment component types
-  AttachmentPickerProps,
-  AttachmentSource,
-  UploadStatusOverlayProps,
-  AttachmentPreviewProps,
-  AttachmentGridProps,
 } from './components';
 
 // API client
@@ -115,25 +118,11 @@ export type {
   DeviceMetadata,
 } from './types';
 
-// Domain types (upload queue)
-export {
-  UploadPhase,
-  DEFAULT_UPLOAD_RETRY_CONFIG,
-} from './domain';
+// Domain types (upload queue types without the service)
+export { UploadPhase, DEFAULT_UPLOAD_RETRY_CONFIG } from './domain';
 export type {
   QueueItem,
   QueueStatus,
   UploadProgress,
   UploadRetryConfig,
 } from './domain';
-
-// Services
-export {
-  UploadQueueService,
-  uploadQueueService,
-  UploadQueueStorage,
-} from './services';
-export type {
-  UploadQueueServiceConfig,
-  EnqueueParams,
-} from './services';

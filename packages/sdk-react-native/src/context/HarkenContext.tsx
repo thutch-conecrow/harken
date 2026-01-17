@@ -1,11 +1,10 @@
-import React, { createContext, useEffect, useMemo, useRef } from 'react';
+import React, { createContext, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import type { HarkenTheme, ThemeMode } from '../theme';
 import { lightTheme, darkTheme, createTheme } from '../theme';
 import type { HarkenConfig, HarkenProviderProps } from '../types';
 import { IdentityStore, createMemoryStorage } from '../storage';
 import { HarkenClient } from '../api/client';
-import { uploadQueueService } from '../services';
 
 /**
  * Context value provided by HarkenProvider.
@@ -99,19 +98,8 @@ export function HarkenProvider({
     });
   }, [config.publishableKey, config.userToken, config.apiBaseUrl]);
 
-  // Initialize upload queue service ONCE at app startup (D2)
-  // This prevents the race condition where uploads complete before callbacks are registered
-  const isQueueInitialized = useRef(false);
-
-  useEffect(() => {
-    if (isQueueInitialized.current) return;
-    isQueueInitialized.current = true;
-
-    void uploadQueueService.initialize({
-      client,
-      debug: config.debug,
-    });
-  }, [client, config.debug]);
+  // Note: Upload queue service initialization has been moved to the attachments module.
+  // When using attachments, the service is initialized when useAttachmentUpload is first called.
 
   // Memoize the context value
   const contextValue = useMemo<HarkenContextValue>(
