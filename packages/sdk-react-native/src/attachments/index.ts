@@ -13,6 +13,9 @@
  *
  * // Attachment features (requires native modules)
  * import { useAttachmentUpload, AttachmentGrid } from '@harken/sdk-react-native/attachments';
+ *
+ * // Or use the batteries-included FeedbackSheet with attachments
+ * import { FeedbackSheet } from '@harken/sdk-react-native/attachments';
  * ```
  *
  * @packageDocumentation
@@ -67,3 +70,7 @@ export type {
   UploadProgress,
   UploadRetryConfig,
 } from '../domain';
+
+// FeedbackSheet with attachment support
+export { FeedbackSheet } from './FeedbackSheet';
+export type { FeedbackSheetProps } from './FeedbackSheet';
