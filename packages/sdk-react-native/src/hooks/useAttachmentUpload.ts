@@ -196,7 +196,7 @@ export function useAttachmentUpload(): UseAttachmentUploadResult {
   const pickImage = useCallback(
     async (source: 'camera' | 'library'): Promise<AttachmentState | null> => {
       const options: ImagePicker.ImagePickerOptions = {
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ['images'],
         quality: 0.8,
       };
 

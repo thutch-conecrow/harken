@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import {
   View,
   Modal,
-  SafeAreaView,
   Pressable,
   Dimensions,
   Platform,
@@ -10,6 +9,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import type { ViewStyle, StyleProp } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useHarkenTheme } from '../hooks';
 import { ThemedText } from './ThemedText';
 

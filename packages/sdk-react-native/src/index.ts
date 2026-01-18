@@ -82,6 +82,7 @@ export {
   ThemedButton,
   CategorySelector,
   FeedbackForm,
+  FeedbackSheet,
   DEFAULT_CATEGORIES,
 } from './components';
 
@@ -95,6 +96,7 @@ export type {
   CategoryOption,
   FeedbackFormProps,
   FeedbackFormData,
+  FeedbackSheetProps,
 } from './components';
 
 // API client
