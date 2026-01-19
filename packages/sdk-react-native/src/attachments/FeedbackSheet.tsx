@@ -15,7 +15,8 @@ import { ThemedButton } from '../components/ThemedButton';
 import { CategorySelector, DEFAULT_CATEGORIES } from '../components/CategorySelector';
 import type { CategoryOption } from '../components/CategorySelector';
 import type { FeedbackCategory } from '../types';
-import { useAttachmentUpload } from '../hooks/useAttachmentUpload';
+import { useAttachmentPicker } from '../hooks/useAttachmentPicker';
+import type { AttachmentSourceConfig } from '../hooks/useAttachmentPicker';
 import { AttachmentGrid } from '../components/AttachmentGrid';
 import { AttachmentPicker } from '../components/AttachmentPicker';
 
@@ -52,6 +53,12 @@ export interface FeedbackSheetProps {
   enableAttachments?: boolean;
   /** Maximum number of attachments. @default 5 */
   maxAttachments?: number;
+  /**
+   * Configure which attachment sources are available.
+   * If only one source is enabled, the picker modal is skipped.
+   * @default { camera: true, library: true, files: true }
+   */
+  attachmentSources?: AttachmentSourceConfig;
 
   /** Message shown in success alert. Set to null to disable alert. */
   successMessage?: string | null;
@@ -93,6 +100,12 @@ export interface FeedbackSheetProps {
  *   }}
  *   onCancel={() => navigation.goBack()}
  * />
+ *
+ * // With restricted attachment sources (photo library only)
+ * <FeedbackSheet
+ *   attachmentSources={{ camera: false, library: true, files: false }}
+ *   onSuccess={() => navigation.goBack()}
+ * />
  * ```
  */
 export function FeedbackSheet({
@@ -109,6 +122,7 @@ export function FeedbackSheet({
   maxMessageLength = 5000,
   enableAttachments = true,
   maxAttachments = 5,
+  attachmentSources,
   successMessage = 'Thank you for your feedback!',
   showSuccessAlert = true,
   clearOnSuccess = true,
@@ -120,17 +134,17 @@ export function FeedbackSheet({
     useFeedback();
   const {
     attachments,
-    pickImage,
-    pickDocument,
     removeAttachment,
     retryAttachment,
     getAttachmentIds,
     hasActiveUploads,
-  } = useAttachmentUpload();
+    openPicker,
+    pickerProps,
+    enabledSourceCount,
+  } = useAttachmentPicker(attachmentSources);
 
   const [message, setMessage] = useState('');
   const [category, setCategory] = useState<FeedbackCategory | null>(null);
-  const [showPicker, setShowPicker] = useState(false);
 
   const trimmedMessage = message.trim();
   const isMessageValid =
@@ -208,22 +222,6 @@ export function FeedbackSheet({
     resetForm();
     onCancel?.();
   }, [resetForm, onCancel]);
-
-  const handlePickerOption = useCallback(
-    async (source: 'camera' | 'library' | 'document') => {
-      setShowPicker(false);
-      try {
-        if (source === 'document') {
-          await pickDocument();
-        } else {
-          await pickImage(source);
-        }
-      } catch (e) {
-        Alert.alert('Error', 'Failed to pick file. Please try again.');
-      }
-    },
-    [pickImage, pickDocument]
-  );
 
   const baseContainerStyle: ViewStyle = {
     flex: 1,
@@ -339,8 +337,9 @@ export function FeedbackSheet({
                 attachments={attachments}
                 onRemove={removeAttachment}
                 onRetry={retryAttachment}
-                onAdd={() => setShowPicker(true)}
+                onAdd={openPicker}
                 maxAttachments={maxAttachments}
+                showAddButton={enabledSourceCount > 0}
               />
             </View>
           )}
@@ -395,15 +394,7 @@ export function FeedbackSheet({
       </KeyboardAvoidingView>
 
       {/* Attachment picker modal */}
-      {enableAttachments && (
-        <AttachmentPicker
-          visible={showPicker}
-          onClose={() => setShowPicker(false)}
-          onTakePhoto={() => handlePickerOption('camera')}
-          onPickFromLibrary={() => handlePickerOption('library')}
-          onPickDocument={() => handlePickerOption('document')}
-        />
-      )}
+      {enableAttachments && <AttachmentPicker {...pickerProps} />}
     </>
   );
 }
