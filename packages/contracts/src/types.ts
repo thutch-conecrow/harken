@@ -275,11 +275,8 @@ export interface components {
         };
         /**
          * @description URLs for accessing attachment at different sizes.
-         *     If this object is present, original is always included.
-         *     Availability of the urls object depends on status:
-         *     - pending: urls not present (file may not be uploaded yet)
-         *     - uploaded: original URL available
-         *     - failed: urls not present
+         *     - original: Always present when urls object exists
+         *     - thumbnail: Present for image attachments when generation succeeded
          */
         AttachmentUrls: {
             /**
@@ -287,6 +284,13 @@ export interface components {
              * @description URL to original uploaded file.
              */
             original: string;
+            /**
+             * Format: uri
+             * @description URL to thumbnail (480px wide WebP).
+             *     Only present for image attachments where thumbnail generation succeeded.
+             *     If absent for an image, client should fall back to original or show placeholder.
+             */
+            thumbnail?: string;
         };
         ErrorResponse: {
             error: {
