@@ -28,6 +28,12 @@ export type {
   UseAttachmentUploadResult,
 } from '../hooks/useAttachmentUpload';
 
+export { useAttachmentPicker } from '../hooks/useAttachmentPicker';
+export type {
+  AttachmentSourceConfig,
+  UseAttachmentPickerResult,
+} from '../hooks/useAttachmentPicker';
+
 export { useAttachmentStatus } from '../hooks/useAttachmentStatus';
 export type { AttachmentStatus } from '../hooks/useAttachmentStatus';
 

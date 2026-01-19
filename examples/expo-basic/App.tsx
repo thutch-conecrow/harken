@@ -24,6 +24,13 @@ export default function App() {
         title="Harken SDK Example"
         enableAttachments
         maxAttachments={5}
+        // Configure which attachment sources are available
+        // With only one enabled, the picker modal is skipped
+        attachmentSources={{
+          camera: true,
+          library: true,
+          files: false, // Disable document picker
+        }}
         onSuccess={(result) => {
           // In a real app, you might navigate back or close a modal
           console.log('Feedback submitted:', result.id);
