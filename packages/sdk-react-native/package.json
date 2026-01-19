@@ -30,7 +30,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "app.plugin.cjs"
   ],
   "scripts": {
     "build": "tsc",
@@ -57,6 +58,9 @@
   },
   "homepage": "https://github.com/harken-app/harken#readme",
   "sideEffects": false,
+  "expo": {
+    "configPlugin": "./app.plugin.cjs"
+  },
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-native": ">=0.72.0",
