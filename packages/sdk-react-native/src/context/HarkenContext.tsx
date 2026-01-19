@@ -3,7 +3,7 @@ import { useColorScheme } from 'react-native';
 import type { HarkenTheme, ThemeMode } from '../theme';
 import { lightTheme, darkTheme, createTheme } from '../theme';
 import type { HarkenConfig, HarkenProviderProps } from '../types';
-import { IdentityStore, createMemoryStorage } from '../storage';
+import { IdentityStore, createDefaultStorage } from '../storage';
 import { HarkenClient } from '../api/client';
 
 /**
@@ -34,27 +34,33 @@ export const HarkenContext = createContext<HarkenContextValue | null>(null);
  * Provider component that configures the Harken SDK.
  *
  * Wrap your app with this provider to enable Harken feedback components.
+ * By default, uses expo-secure-store for persistent anonymous ID storage
+ * (falls back to in-memory storage if not available).
  *
  * @example
  * ```tsx
+ * import { HarkenProvider, FeedbackSheet } from '@harken/sdk-react-native';
+ *
+ * function App() {
+ *   return (
+ *     <HarkenProvider config={{ publishableKey: 'pk_live_xxxx' }}>
+ *       <FeedbackSheet />
+ *     </HarkenProvider>
+ *   );
+ * }
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // With custom storage implementation
  * import { HarkenProvider, createSecureStoreAdapter } from '@harken/sdk-react-native';
  * import * as SecureStore from 'expo-secure-store';
  *
  * const storage = createSecureStoreAdapter(SecureStore);
  *
- * function App() {
- *   return (
- *     <HarkenProvider
- *       config={{
- *         publishableKey: 'pk_live_xxxx',
- *       }}
- *       storage={storage}
- *       themeMode="system"
- *     >
- *       <YourApp />
- *     </HarkenProvider>
- *   );
- * }
+ * <HarkenProvider config={{ publishableKey: 'pk_live_xxxx' }} storage={storage}>
+ *   <YourApp />
+ * </HarkenProvider>
  * ```
  */
 export function HarkenProvider({
@@ -84,8 +90,9 @@ export function HarkenProvider({
   }, [isDarkMode, lightOverrides, darkOverrides]);
 
   // Create identity store (memoized to persist across re-renders)
+  // Uses expo-secure-store by default if available, otherwise falls back to memory
   const identityStore = useMemo(() => {
-    const storageImpl = storage ?? createMemoryStorage();
+    const storageImpl = storage ?? createDefaultStorage();
     return new IdentityStore(storageImpl);
   }, [storage]);
 

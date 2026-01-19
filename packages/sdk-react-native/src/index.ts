@@ -3,26 +3,17 @@
  *
  * A mobile-first feedback SDK for React Native and Expo applications.
  *
- * This is the main entry point which contains core functionality without
- * native module dependencies at import time. For attachment features
- * (which require expo-file-system, expo-image-picker, etc.), import from
- * '@harken/sdk-react-native/attachments'.
- *
  * @example
  * ```tsx
- * // Core SDK
- * import {
- *   HarkenProvider,
- *   useFeedback,
- *   ThemedText,
- *   ThemedButton,
- * } from '@harken/sdk-react-native';
+ * import { HarkenProvider, FeedbackSheet } from '@harken/sdk-react-native';
  *
- * // Attachment features (separate import to avoid eager native module loading)
- * import {
- *   useAttachmentUpload,
- *   AttachmentGrid,
- * } from '@harken/sdk-react-native/attachments';
+ * function App() {
+ *   return (
+ *     <HarkenProvider config={{ publishableKey: 'pk_live_xxxx' }}>
+ *       <FeedbackSheet onSuccess={() => console.log('Submitted!')} />
+ *     </HarkenProvider>
+ *   );
+ * }
  * ```
  *
  * @packageDocumentation
@@ -32,7 +23,7 @@
 export { HarkenProvider } from './context';
 export type { HarkenContextValue } from './context';
 
-// Hooks (core - no native module dependencies)
+// Hooks (core)
 export {
   useHarkenTheme,
   useHarkenContext,
@@ -40,6 +31,22 @@ export {
   useFeedback,
 } from './hooks';
 export type { SubmitFeedbackParams, UseFeedbackResult } from './hooks';
+
+// Hooks (attachments)
+export { useAttachmentUpload } from './hooks/useAttachmentUpload';
+export type {
+  AttachmentState,
+  UseAttachmentUploadResult,
+} from './hooks/useAttachmentUpload';
+
+export { useAttachmentPicker } from './hooks/useAttachmentPicker';
+export type {
+  AttachmentSourceConfig,
+  UseAttachmentPickerResult,
+} from './hooks/useAttachmentPicker';
+
+export { useAttachmentStatus } from './hooks/useAttachmentStatus';
+export type { AttachmentStatus } from './hooks/useAttachmentStatus';
 
 // Theme system
 export type {
@@ -75,14 +82,13 @@ export {
 // Utilities
 export { generateUUID } from './utils';
 
-// Components (core - no native module dependencies)
+// Components (core)
 export {
   ThemedText,
   ThemedTextInput,
   ThemedButton,
   CategorySelector,
   FeedbackForm,
-  FeedbackSheet,
   DEFAULT_CATEGORIES,
 } from './components';
 
@@ -96,8 +102,29 @@ export type {
   CategoryOption,
   FeedbackFormProps,
   FeedbackFormData,
-  FeedbackSheetProps,
 } from './components';
+
+// Components (attachments)
+export {
+  AttachmentPicker,
+  UploadStatusOverlay,
+  AttachmentPreview,
+  AttachmentGrid,
+} from './components';
+
+export type {
+  AttachmentPickerProps,
+  AttachmentSource,
+  PickerOptionConfig,
+  UploadStatusOverlayProps,
+  UploadStatusLabels,
+  AttachmentPreviewProps,
+  AttachmentGridProps,
+} from './components';
+
+// FeedbackSheet (with full attachment support)
+export { FeedbackSheet } from './attachments/FeedbackSheet';
+export type { FeedbackSheetProps } from './attachments/FeedbackSheet';
 
 // API client
 export {
@@ -120,7 +147,7 @@ export type {
   DeviceMetadata,
 } from './types';
 
-// Domain types (upload queue types without the service)
+// Domain types
 export { UploadPhase, DEFAULT_UPLOAD_RETRY_CONFIG } from './domain';
 export type {
   QueueItem,
@@ -128,3 +155,14 @@ export type {
   UploadProgress,
   UploadRetryConfig,
 } from './domain';
+
+// Services (for advanced usage)
+export {
+  UploadQueueService,
+  uploadQueueService,
+  UploadQueueStorage,
+} from './services';
+export type {
+  UploadQueueServiceConfig,
+  EnqueueParams,
+} from './services';

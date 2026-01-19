@@ -1,82 +1,70 @@
 /**
  * Harken SDK - Attachment Features
  *
- * This module contains attachment upload functionality which requires
- * native module dependencies (expo-file-system, expo-image-picker, etc.).
- *
- * Import from this module only when you need attachment features:
+ * @deprecated Import from '@harken/sdk-react-native' instead.
+ * This entry point is maintained for backwards compatibility.
  *
  * @example
  * ```tsx
- * // Core SDK (no native dependencies at import time)
- * import { HarkenProvider, useFeedback } from '@harken/sdk-react-native';
+ * // Preferred (single entry point)
+ * import { HarkenProvider, FeedbackSheet, useAttachmentUpload } from '@harken/sdk-react-native';
  *
- * // Attachment features (requires native modules)
- * import { useAttachmentUpload, AttachmentGrid } from '@harken/sdk-react-native/attachments';
- *
- * // Or use the batteries-included FeedbackSheet with attachments
+ * // Legacy (still works)
  * import { FeedbackSheet } from '@harken/sdk-react-native/attachments';
  * ```
  *
  * @packageDocumentation
  */
 
-// Attachment hooks
-export { useAttachmentUpload } from '../hooks/useAttachmentUpload';
-export type {
-  AttachmentState,
-  UseAttachmentUploadResult,
-} from '../hooks/useAttachmentUpload';
-
-export { useAttachmentPicker } from '../hooks/useAttachmentPicker';
-export type {
-  AttachmentSourceConfig,
-  UseAttachmentPickerResult,
-} from '../hooks/useAttachmentPicker';
-
-export { useAttachmentStatus } from '../hooks/useAttachmentStatus';
-export type { AttachmentStatus } from '../hooks/useAttachmentStatus';
-
-// Attachment components
-export { AttachmentPicker } from '../components/AttachmentPicker';
-export type {
-  AttachmentPickerProps,
-  AttachmentSource,
-  PickerOptionConfig,
-} from '../components/AttachmentPicker';
-
-export { UploadStatusOverlay } from '../components/UploadStatusOverlay';
-export type {
-  UploadStatusOverlayProps,
-  UploadStatusLabels,
-} from '../components/UploadStatusOverlay';
-
-export { AttachmentPreview } from '../components/AttachmentPreview';
-export type { AttachmentPreviewProps } from '../components/AttachmentPreview';
-
-export { AttachmentGrid } from '../components/AttachmentGrid';
-export type { AttachmentGridProps } from '../components/AttachmentGrid';
-
-// Services (for advanced usage)
+// Re-export everything from the main entry point for backwards compatibility
 export {
+  // Attachment hooks
+  useAttachmentUpload,
+  useAttachmentPicker,
+  useAttachmentStatus,
+
+  // Attachment components
+  AttachmentPicker,
+  UploadStatusOverlay,
+  AttachmentPreview,
+  AttachmentGrid,
+  FeedbackSheet,
+
+  // Services
   UploadQueueService,
   uploadQueueService,
   UploadQueueStorage,
-} from '../services';
+
+  // Domain types
+  UploadPhase,
+  DEFAULT_UPLOAD_RETRY_CONFIG,
+} from '../index';
+
 export type {
+  // Attachment hook types
+  AttachmentState,
+  UseAttachmentUploadResult,
+  AttachmentSourceConfig,
+  UseAttachmentPickerResult,
+  AttachmentStatus,
+
+  // Attachment component types
+  AttachmentPickerProps,
+  AttachmentSource,
+  PickerOptionConfig,
+  UploadStatusOverlayProps,
+  UploadStatusLabels,
+  AttachmentPreviewProps,
+  AttachmentGridProps,
+  FeedbackSheetProps,
+
+  // Service types
   UploadQueueServiceConfig,
   EnqueueParams,
-} from '../services';
 
-// Re-export domain types needed for attachments
-export { UploadPhase, DEFAULT_UPLOAD_RETRY_CONFIG } from '../domain';
-export type {
+  // Domain types
   QueueItem,
   QueueStatus,
   UploadProgress,
   UploadRetryConfig,
-} from '../domain';
-
-// FeedbackSheet with attachment support
-export { FeedbackSheet } from './FeedbackSheet';
-export type { FeedbackSheetProps } from './FeedbackSheet';
+} from '../index';

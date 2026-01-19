@@ -11,6 +11,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system/legacy';
 import { uploadQueueService } from '../services';
 import { UploadPhase, UploadProgress } from '../domain';
+import { useHarkenContext } from './useHarkenContext';
 
 /**
  * State for a single attachment.
@@ -116,12 +117,23 @@ export interface UseAttachmentUploadResult {
  * ```
  */
 export function useAttachmentUpload(): UseAttachmentUploadResult {
+  const { client, config } = useHarkenContext();
   const [attachments, setAttachments] = useState<Map<string, AttachmentState>>(
     new Map()
   );
 
   // Track which attachment IDs this hook instance is managing
   const attachmentIdsRef = useRef<Set<string>>(new Set());
+
+  // Initialize upload queue service on first use
+  useEffect(() => {
+    if (!uploadQueueService.initialized) {
+      void uploadQueueService.initialize({
+        client,
+        debug: config.debug,
+      });
+    }
+  }, [client, config.debug]);
 
   // Subscribe to progress updates from the queue service
   useEffect(() => {

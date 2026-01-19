@@ -1,15 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import * as SecureStore from 'expo-secure-store';
-
-import {
-  HarkenProvider,
-  createSecureStoreAdapter,
-} from '@harken/sdk-react-native';
-
-import { FeedbackSheet } from '@harken/sdk-react-native/attachments';
-
-// Create storage adapter for persisting anonymous ID
-const storage = createSecureStoreAdapter(SecureStore);
+import { HarkenProvider, FeedbackSheet } from '@harken/sdk-react-native';
 
 export default function App() {
   return (
@@ -18,7 +8,6 @@ export default function App() {
         publishableKey: 'pk_test_example',
         debug: true,
       }}
-      storage={storage}
     >
       <FeedbackSheet
         title="Harken SDK Example"

@@ -61,13 +61,17 @@ export interface HarkenProviderProps {
 
   /**
    * Custom secure storage implementation.
-   * If not provided, uses in-memory storage (not persisted across restarts).
-   * For persistence, pass expo-secure-store via createSecureStoreAdapter.
+   *
+   * By default, uses expo-secure-store if available, falling back to
+   * in-memory storage (with a console warning) if not installed.
+   *
+   * Only provide this if you need a custom storage implementation.
    *
    * @example
    * ```tsx
-   * import * as SecureStore from 'expo-secure-store';
+   * // Custom storage implementation
    * import { createSecureStoreAdapter } from '@harken/sdk-react-native';
+   * import * as SecureStore from 'expo-secure-store';
    *
    * const storage = createSecureStoreAdapter(SecureStore);
    * <HarkenProvider storage={storage} ... />
