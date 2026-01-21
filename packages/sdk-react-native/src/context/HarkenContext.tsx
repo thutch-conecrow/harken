@@ -39,7 +39,7 @@ export const HarkenContext = createContext<HarkenContextValue | null>(null);
  *
  * @example
  * ```tsx
- * import { HarkenProvider, FeedbackSheet } from '@harken/sdk-react-native';
+ * import { HarkenProvider, FeedbackSheet } from '@harkenapp/sdk-react-native';
  *
  * function App() {
  *   return (
@@ -53,7 +53,7 @@ export const HarkenContext = createContext<HarkenContextValue | null>(null);
  * @example
  * ```tsx
  * // With custom storage implementation
- * import { HarkenProvider, createSecureStoreAdapter } from '@harken/sdk-react-native';
+ * import { HarkenProvider, createSecureStoreAdapter } from '@harkenapp/sdk-react-native';
  * import * as SecureStore from 'expo-secure-store';
  *
  * const storage = createSecureStoreAdapter(SecureStore);

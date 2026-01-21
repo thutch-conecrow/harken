@@ -1,5 +1,5 @@
 /**
- * Expo config plugin for @harken/sdk-react-native
+ * Expo config plugin for @harkenapp/sdk-react-native
  *
  * Automatically configures iOS and Android permissions required for
  * camera, photo library, and document picker functionality.
@@ -9,7 +9,7 @@
  * {
  *   "expo": {
  *     "plugins": [
- *       "@harken/sdk-react-native"
+ *       "@harkenapp/sdk-react-native"
  *     ]
  *   }
  * }
@@ -19,7 +19,7 @@
  * {
  *   "expo": {
  *     "plugins": [
- *       ["@harken/sdk-react-native", {
+ *       ["@harkenapp/sdk-react-native", {
  *         "cameraPermission": "Take photos to include with your feedback",
  *         "photoLibraryPermission": "Select photos to include with your feedback"
  *       }]

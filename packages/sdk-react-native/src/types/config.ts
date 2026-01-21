@@ -70,7 +70,7 @@ export interface HarkenProviderProps {
    * @example
    * ```tsx
    * // Custom storage implementation
-   * import { createSecureStoreAdapter } from '@harken/sdk-react-native';
+   * import { createSecureStoreAdapter } from '@harkenapp/sdk-react-native';
    * import * as SecureStore from 'expo-secure-store';
    *
    * const storage = createSecureStoreAdapter(SecureStore);

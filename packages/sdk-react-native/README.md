@@ -5,7 +5,7 @@ React Native / Expo SDK for submitting in-app feedback.
 ## Installation
 
 ```bash
-npx expo install @harken/sdk-react-native
+npx expo install @harkenapp/sdk-react-native
 ```
 
 ## Permissions
@@ -20,7 +20,7 @@ Add the SDK to your `app.json` or `app.config.js` plugins:
 {
   "expo": {
     "plugins": [
-      "@harken/sdk-react-native"
+      "@harkenapp/sdk-react-native"
     ]
   }
 }
@@ -47,7 +47,7 @@ You can customize the iOS permission dialog strings:
 {
   "expo": {
     "plugins": [
-      ["@harken/sdk-react-native", {
+      ["@harkenapp/sdk-react-native", {
         "cameraPermission": "Take photos to include with your feedback",
         "photoLibraryPermission": "Select photos to include with your feedback"
       }]

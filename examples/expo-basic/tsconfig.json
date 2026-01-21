@@ -3,7 +3,7 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@harken/sdk-react-native": [
+      "@harkenapp/sdk-react-native": [
         "../../packages/sdk-react-native/src"
       ]
     }

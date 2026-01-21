@@ -8,7 +8,7 @@ import type { SecureStorage } from './types';
  *
  * @example
  * ```tsx
- * import { createSecureStoreAdapter } from '@harken/sdk-react-native';
+ * import { createSecureStoreAdapter } from '@harkenapp/sdk-react-native';
  * import * as SecureStore from 'expo-secure-store';
  *
  * const storage = createSecureStoreAdapter(SecureStore);

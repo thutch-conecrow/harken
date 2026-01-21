@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { HarkenProvider, FeedbackSheet } from '@harken/sdk-react-native';
+import { HarkenProvider, FeedbackSheet } from '@harkenapp/sdk-react-native';
 
 export default function App() {
   return (

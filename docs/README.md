@@ -13,8 +13,7 @@ Harken is a mobile-first feedback SDK for React Native and Expo applications. It
 
 Harken consists of:
 
-- **[@harken/sdk-react-native](../packages/sdk-react-native)** - The React Native SDK
-- **[@harken/contracts](../packages/contracts)** - Shared TypeScript types
+- **[@harkenapp/sdk-react-native](../packages/sdk-react-native)** - The React Native SDK
 
 ## Features
 
@@ -28,7 +27,7 @@ Harken consists of:
 ## Minimal Example
 
 ```tsx
-import { HarkenProvider, FeedbackSheet } from '@harken/sdk-react-native';
+import { HarkenProvider, FeedbackSheet } from '@harkenapp/sdk-react-native';
 
 export default function App() {
   return (

@@ -1,16 +1,16 @@
 /**
  * Harken SDK - Attachment Features
  *
- * @deprecated Import from '@harken/sdk-react-native' instead.
+ * @deprecated Import from '@harkenapp/sdk-react-native' instead.
  * This entry point is maintained for backwards compatibility.
  *
  * @example
  * ```tsx
  * // Preferred (single entry point)
- * import { HarkenProvider, FeedbackSheet, useAttachmentUpload } from '@harken/sdk-react-native';
+ * import { HarkenProvider, FeedbackSheet, useAttachmentUpload } from '@harkenapp/sdk-react-native';
  *
  * // Legacy (still works)
- * import { FeedbackSheet } from '@harken/sdk-react-native/attachments';
+ * import { FeedbackSheet } from '@harkenapp/sdk-react-native/attachments';
  * ```
  *
  * @packageDocumentation

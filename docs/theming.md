@@ -163,7 +163,7 @@ Control corner rounding:
 Access the current theme with `useHarkenTheme`:
 
 ```tsx
-import { useHarkenTheme, ThemedText } from '@harken/sdk-react-native';
+import { useHarkenTheme, ThemedText } from '@harkenapp/sdk-react-native';
 
 function CustomComponent() {
   const theme = useHarkenTheme();
@@ -192,7 +192,7 @@ import {
   createTheme,
   lightTheme,
   darkTheme,
-} from '@harken/sdk-react-native';
+} from '@harkenapp/sdk-react-native';
 
 const myLightTheme = createTheme(lightTheme, {
   colors: {

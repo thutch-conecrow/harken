@@ -1,4 +1,4 @@
-import type { components } from '@harken/contracts';
+import type { components } from '../types/index.js';
 
 type ErrorResponse = components['schemas']['ErrorResponse'];
 type ErrorDetail = components['schemas']['ErrorDetail'];

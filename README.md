@@ -16,11 +16,11 @@ Harken makes it easy to collect in-app feedback from your users. Add a feedback 
 ## Quick Start
 
 ```bash
-npx expo install @harken/sdk-react-native
+npx expo install @harkenapp/sdk-react-native
 ```
 
 ```tsx
-import { HarkenProvider, FeedbackSheet } from '@harken/sdk-react-native';
+import { HarkenProvider, FeedbackSheet } from '@harkenapp/sdk-react-native';
 
 export default function App() {
   return (
@@ -45,8 +45,7 @@ Get your publishable key from [console.harken.app](https://console.harken.app).
 
 | Package | Description |
 |---------|-------------|
-| [@harken/sdk-react-native](./packages/sdk-react-native) | React Native SDK |
-| [@harken/contracts](./packages/contracts) | Shared TypeScript types |
+| [@harkenapp/sdk-react-native](./packages/sdk-react-native) | React Native SDK |
 
 ## Examples
 

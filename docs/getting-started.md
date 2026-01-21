@@ -11,13 +11,13 @@ This guide will help you integrate Harken into your React Native or Expo applica
 
 ```bash
 # Using npm
-npm install @harken/sdk-react-native
+npm install @harkenapp/sdk-react-native
 
 # Using pnpm
-pnpm add @harken/sdk-react-native
+pnpm add @harkenapp/sdk-react-native
 
 # Using Expo
-npx expo install @harken/sdk-react-native
+npx expo install @harkenapp/sdk-react-native
 ```
 
 ### Peer Dependencies
@@ -38,7 +38,7 @@ Add it to your `app.json` or `app.config.js`:
 {
   "expo": {
     "plugins": [
-      "@harken/sdk-react-native"
+      "@harkenapp/sdk-react-native"
     ]
   }
 }
@@ -58,7 +58,7 @@ Customize the iOS permission dialog text:
 {
   "expo": {
     "plugins": [
-      ["@harken/sdk-react-native", {
+      ["@harkenapp/sdk-react-native", {
         "cameraPermission": "Take photos to include with your feedback",
         "photoLibraryPermission": "Select photos to include with your feedback"
       }]
@@ -72,7 +72,7 @@ Customize the iOS permission dialog text:
 ### 1. Wrap Your App with HarkenProvider
 
 ```tsx
-import { HarkenProvider } from '@harken/sdk-react-native';
+import { HarkenProvider } from '@harkenapp/sdk-react-native';
 
 export default function App() {
   return (
@@ -94,7 +94,7 @@ Get your publishable key from the [Harken Console](https://console.harken.app).
 The simplest way to collect feedback is with the `FeedbackSheet` component:
 
 ```tsx
-import { FeedbackSheet } from '@harken/sdk-react-native';
+import { FeedbackSheet } from '@harkenapp/sdk-react-native';
 
 function FeedbackScreen() {
   return (
@@ -181,7 +181,7 @@ import {
   CategorySelector,
   AttachmentPicker,
   AttachmentGrid,
-} from '@harken/sdk-react-native';
+} from '@harkenapp/sdk-react-native';
 
 function CustomFeedbackForm() {
   const { submitFeedback, isSubmitting } = useFeedback();

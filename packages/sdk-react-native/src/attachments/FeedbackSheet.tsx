@@ -7,7 +7,7 @@ import {
   Alert,
 } from 'react-native';
 import type { ViewStyle } from 'react-native';
-import type { components } from '@harken/contracts';
+import type { components } from '../types/index.js';
 import { useHarkenTheme, useFeedback } from '../hooks';
 import { ThemedText } from '../components/ThemedText';
 import { ThemedTextInput } from '../components/ThemedTextInput';
@@ -76,14 +76,14 @@ export interface FeedbackSheetProps {
 /**
  * A batteries-included feedback form component with full attachment support.
  *
- * This version is exported from '@harken/sdk-react-native/attachments' and
+ * This version is exported from '@harkenapp/sdk-react-native/attachments' and
  * includes support for picking images, documents, and uploading them.
  *
  * For the version without attachment dependencies, import from the main entry point.
  *
  * @example
  * ```tsx
- * import { FeedbackSheet } from '@harken/sdk-react-native/attachments';
+ * import { FeedbackSheet } from '@harkenapp/sdk-react-native/attachments';
  *
  * // Minimal usage with attachments
  * <FeedbackSheet onSuccess={() => navigation.goBack()} />

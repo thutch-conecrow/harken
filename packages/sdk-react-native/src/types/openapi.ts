@@ -17,7 +17,7 @@ export interface paths {
          * Submit feedback
          * @description Submit user feedback from a mobile app.
          *
-         *     **Attachments:** If `attachment_ids` are provided, they will be linked to
+         *     **Attachments:** If `attachments` are provided, they will be linked to
          *     this feedback and their status will be updated from 'pending' to 'uploaded'.
          *     Only attachments in 'pending' or 'uploaded' status that are not already
          *     linked to other feedback can be used.
@@ -52,7 +52,7 @@ export interface paths {
          *
          *     **Cleanup Policy:** Attachments not linked to submitted feedback are
          *     automatically cleaned up after a server-configured period (typically
-         *     7 days). Ensure you submit the feedback with the attachment_ids to
+         *     7 days). Ensure you submit the feedback with the attachments to
          *     complete the lifecycle.
          */
         post: operations["createAttachmentUpload"];
@@ -149,7 +149,7 @@ export interface components {
          *     **Lifecycle:**
          *     1. SDK calls presign → status becomes 'pending'
          *     2. SDK uploads file to presigned URL
-         *     3. SDK submits feedback with attachment_ids → status becomes 'uploaded'
+         *     3. SDK submits feedback with attachments → status becomes 'uploaded'
          *
          *     **Cleanup Policy:**
          *     Attachments that remain in 'pending' status (not linked to feedback)

@@ -1,8 +1,7 @@
 {
-  "name": "@harken/sdk-react-native",
-  "version": "0.0.1",
+  "name": "@harkenapp/sdk-react-native",
+  "version": "0.0.1-alpha.1",
   "description": "Harken React Native / Expo SDK for in-app feedback",
-  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -26,15 +25,19 @@
       "react-native": "./src/theme/index.ts",
       "import": "./dist/theme/index.js",
       "default": "./dist/theme/index.js"
-    }
+    },
+    "./app.plugin.js": "./app.plugin.js",
+    "./app.plugin": "./app.plugin.js"
   },
   "files": [
     "dist",
     "src",
+    "app.plugin.js",
     "app.plugin.cjs"
   ],
   "scripts": {
-    "build": "tsc",
+    "generate": "openapi-typescript openapi.yaml -o src/types/openapi.ts",
+    "build": "pnpm run generate && tsc",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm run clean && pnpm run build"
@@ -48,6 +51,9 @@
     "harken"
   ],
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/harken-app/harken.git",
@@ -102,10 +108,8 @@
       "optional": true
     }
   },
-  "dependencies": {
-    "@harken/contracts": "*"
-  },
   "devDependencies": {
+    "openapi-typescript": "^7.4.4",
     "@react-native-async-storage/async-storage": "^2.1.0",
     "@react-native-community/netinfo": "^11.4.1",
     "@types/react": "^19.1.0",
