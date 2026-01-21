@@ -4,4 +4,7 @@ export type {
   FeedbackCategory,
   Platform,
   DeviceMetadata,
-} from './config';
+} from './config.js';
+
+// Re-export OpenAPI generated types
+export type { components, operations, paths } from './openapi.js';

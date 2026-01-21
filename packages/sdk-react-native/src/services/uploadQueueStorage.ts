@@ -7,7 +7,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { PersistedQueue, QueueItem } from '../domain';
 
-const STORAGE_KEY = '@harken/upload-queue';
+const STORAGE_KEY = '@harkenapp/upload-queue';
 const CURRENT_VERSION = 1;
 
 /**

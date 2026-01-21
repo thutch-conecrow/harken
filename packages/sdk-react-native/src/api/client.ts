@@ -1,4 +1,4 @@
-import type { components } from '@harken/contracts';
+import type { components } from '../types/index.js';
 import { HarkenApiError, HarkenNetworkError } from './errors';
 import { withRetry } from './retry';
 import type { RetryConfig } from './retry';

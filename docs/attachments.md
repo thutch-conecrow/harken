@@ -7,7 +7,7 @@ Harken supports file attachments with feedback submissions. Users can attach pho
 The `FeedbackSheet` component includes attachment support by default:
 
 ```tsx
-import { FeedbackSheet } from '@harken/sdk-react-native';
+import { FeedbackSheet } from '@harkenapp/sdk-react-native';
 
 <FeedbackSheet
   enableAttachments={true}  // default
@@ -55,7 +55,7 @@ import {
   AttachmentGrid,
   AttachmentPicker,
   UploadPhase,
-} from '@harken/sdk-react-native';
+} from '@harkenapp/sdk-react-native';
 
 function CustomFeedbackForm() {
   const {
@@ -111,7 +111,7 @@ Attachments go through these phases:
 Check the phase to show appropriate UI:
 
 ```tsx
-import { UploadPhase } from '@harken/sdk-react-native';
+import { UploadPhase } from '@harkenapp/sdk-react-native';
 
 attachments.map(att => {
   switch (att.phase) {

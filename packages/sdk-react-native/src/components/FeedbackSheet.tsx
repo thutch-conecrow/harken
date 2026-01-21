@@ -7,7 +7,7 @@ import {
   Alert,
 } from 'react-native';
 import type { ViewStyle } from 'react-native';
-import type { components } from '@harken/contracts';
+import type { components } from '../types/index.js';
 import { useHarkenTheme, useFeedback } from '../hooks';
 import { ThemedText } from './ThemedText';
 import { ThemedTextInput } from './ThemedTextInput';
@@ -68,7 +68,7 @@ export interface FeedbackSheetProps {
  * - Form state management
  * - Keyboard handling
  *
- * For attachment support, import from '@harken/sdk-react-native/attachments'.
+ * For attachment support, import from '@harkenapp/sdk-react-native/attachments'.
  *
  * @example
  * ```tsx

@@ -22,7 +22,7 @@
       }
     },
     "plugins": [
-      ["@harken/sdk-react-native", {
+      ["@harkenapp/sdk-react-native", {
         "cameraPermission": "Take photos to include with your feedback",
         "photoLibraryPermission": "Select photos to include with your feedback"
       }]

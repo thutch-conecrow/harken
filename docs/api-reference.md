@@ -1,6 +1,6 @@
 # API Reference
 
-Complete reference for all exports from `@harken/sdk-react-native`.
+Complete reference for all exports from `@harkenapp/sdk-react-native`.
 
 ## Provider
 
@@ -9,7 +9,7 @@ Complete reference for all exports from `@harken/sdk-react-native`.
 Wrap your app to enable Harken functionality.
 
 ```tsx
-import { HarkenProvider } from '@harken/sdk-react-native';
+import { HarkenProvider } from '@harkenapp/sdk-react-native';
 
 <HarkenProvider
   config={{
@@ -34,7 +34,7 @@ import { HarkenProvider } from '@harken/sdk-react-native';
 Batteries-included feedback form with attachments.
 
 ```tsx
-import { FeedbackSheet } from '@harken/sdk-react-native';
+import { FeedbackSheet } from '@harkenapp/sdk-react-native';
 
 <FeedbackSheet
   onSuccess={(result) => {}}
@@ -304,7 +304,7 @@ import {
   defaultSpacing,
   defaultRadii,
   createTheme,
-} from '@harken/sdk-react-native';
+} from '@harkenapp/sdk-react-native';
 
 const customTheme = createTheme(lightTheme, {
   colors: { primary: '#7C3AED' },
@@ -319,7 +319,7 @@ Create storage adapter from expo-secure-store.
 
 ```tsx
 import * as SecureStore from 'expo-secure-store';
-import { createSecureStoreAdapter } from '@harken/sdk-react-native';
+import { createSecureStoreAdapter } from '@harkenapp/sdk-react-native';
 
 const storage = createSecureStoreAdapter(SecureStore);
 ```
@@ -329,7 +329,7 @@ const storage = createSecureStoreAdapter(SecureStore);
 Create in-memory storage (for testing).
 
 ```tsx
-import { createMemoryStorage } from '@harken/sdk-react-native';
+import { createMemoryStorage } from '@harkenapp/sdk-react-native';
 
 const storage = createMemoryStorage();
 ```
@@ -341,7 +341,7 @@ const storage = createMemoryStorage();
 Low-level API client (usually not needed directly).
 
 ```tsx
-import { createHarkenClient } from '@harken/sdk-react-native';
+import { createHarkenClient } from '@harkenapp/sdk-react-native';
 
 const client = createHarkenClient({
   publishableKey: 'pk_live_xxx',
@@ -356,7 +356,7 @@ import {
   HarkenError,        // Base error class
   HarkenApiError,     // API returned an error
   HarkenNetworkError, // Network request failed
-} from '@harken/sdk-react-native';
+} from '@harkenapp/sdk-react-native';
 ```
 
 ## Domain Types
@@ -392,7 +392,7 @@ type Platform = 'ios' | 'android';
 Default feedback categories.
 
 ```tsx
-import { DEFAULT_CATEGORIES } from '@harken/sdk-react-native';
+import { DEFAULT_CATEGORIES } from '@harkenapp/sdk-react-native';
 
 // [
 //   { value: 'bug', label: 'Bug', icon: '🐛' },
@@ -407,7 +407,7 @@ import { DEFAULT_CATEGORIES } from '@harken/sdk-react-native';
 Default retry configuration for API calls.
 
 ```tsx
-import { DEFAULT_RETRY_CONFIG } from '@harken/sdk-react-native';
+import { DEFAULT_RETRY_CONFIG } from '@harkenapp/sdk-react-native';
 
 // { maxRetries: 3, initialDelay: 1000, maxDelay: 30000 }
 ```

@@ -32,7 +32,7 @@ A complete example demonstrating the Harken React Native SDK in an Expo applicat
 2. **Build the SDK** (if not already built):
 
    ```bash
-   pnpm --filter @harken/sdk-react-native build
+   pnpm --filter @harkenapp/sdk-react-native build
    ```
 
 3. **Start the example**:
@@ -136,7 +136,7 @@ import {
   // Constants
   DEFAULT_CATEGORIES,
   UploadPhase,
-} from '@harken/sdk-react-native';
+} from '@harkenapp/sdk-react-native';
 ```
 
 ## Development Build

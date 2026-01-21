@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { Platform } from 'react-native';
-import type { components } from '@harken/contracts';
+import type { components } from '../types/index.js';
 import { useHarkenContext } from './useHarkenContext';
 import { useAnonymousId } from './useAnonymousId';
 import { HarkenClient } from '../api/client';

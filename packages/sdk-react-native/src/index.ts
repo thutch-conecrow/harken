@@ -5,7 +5,7 @@
  *
  * @example
  * ```tsx
- * import { HarkenProvider, FeedbackSheet } from '@harken/sdk-react-native';
+ * import { HarkenProvider, FeedbackSheet } from '@harkenapp/sdk-react-native';
  *
  * function App() {
  *   return (
