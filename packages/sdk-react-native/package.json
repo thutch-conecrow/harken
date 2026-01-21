@@ -103,7 +103,7 @@
     }
   },
   "dependencies": {
-    "@harken/contracts": "workspace:*"
+    "@harken/contracts": "*"
   },
   "devDependencies": {
     "@react-native-async-storage/async-storage": "^2.1.0",
