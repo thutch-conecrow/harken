@@ -139,6 +139,15 @@ jobs:
       - name: Rebuild with new version
         run: pnpm build
 
+      - name: Debug npm auth presence
+        run: |
+          if [ -f ~/.npmrc ]; then
+            grep -q "_authToken" ~/.npmrc && echo "authToken present in ~/.npmrc" || echo "no authToken in ~/.npmrc"
+          else
+            echo "~/.npmrc not present"
+          fi
+          node -e "console.log('NODE_AUTH_TOKEN set:', !!process.env.NODE_AUTH_TOKEN)"
+
       # IMPORTANT: Publish uses OIDC (id-token: write permission + npm trusted publishing).
       # No NODE_AUTH_TOKEN or NPM_TOKEN secret needed when OIDC is configured.
       # The --provenance flag triggers OIDC authentication automatically.
