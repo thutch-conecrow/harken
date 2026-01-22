@@ -64,7 +64,7 @@ jobs:
         working-directory: packages/sdk-react-native
         run: |
           CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "current_version(2)=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
           if [ -n "${{ github.event.inputs.version_override }}" ]; then
             NEW_VERSION="${{ github.event.inputs.version_override }}"
