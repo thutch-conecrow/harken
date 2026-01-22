@@ -27,11 +27,11 @@ Harken consists of:
 ## Minimal Example
 
 ```tsx
-import { HarkenProvider, FeedbackSheet } from '@harkenapp/sdk-react-native';
+import { HarkenProvider, FeedbackSheet } from "@harkenapp/sdk-react-native";
 
 export default function App() {
   return (
-    <HarkenProvider config={{ publishableKey: 'pk_live_your_key' }}>
+    <HarkenProvider config={{ publishableKey: "pk_live_your_key" }}>
       <YourApp />
       <FeedbackSheet />
     </HarkenProvider>

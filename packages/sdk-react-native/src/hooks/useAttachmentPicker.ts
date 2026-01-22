@@ -6,10 +6,10 @@
  * - Warning when no sources are enabled
  */
 
-import { useState, useCallback, useMemo, useEffect } from 'react';
-import { useAttachmentUpload } from './useAttachmentUpload';
-import type { UseAttachmentUploadResult } from './useAttachmentUpload';
-import type { AttachmentPickerProps } from '../components/AttachmentPicker';
+import { useState, useCallback, useMemo, useEffect } from "react";
+import { useAttachmentUpload } from "./useAttachmentUpload";
+import type { UseAttachmentUploadResult } from "./useAttachmentUpload";
+import type { AttachmentPickerProps } from "../components/AttachmentPicker";
 
 /**
  * Configuration for which attachment sources are enabled.
@@ -39,7 +39,7 @@ export interface UseAttachmentPickerResult extends UseAttachmentUploadResult {
   /** Props to spread onto AttachmentPicker component */
   pickerProps: Pick<
     AttachmentPickerProps,
-    'visible' | 'onClose' | 'onTakePhoto' | 'onPickFromLibrary' | 'onPickDocument' | 'options'
+    "visible" | "onClose" | "onTakePhoto" | "onPickFromLibrary" | "onPickDocument" | "options"
   >;
 
   /** Which sources are enabled */
@@ -138,18 +138,18 @@ export function useAttachmentPicker(
   const handleTakePhoto = useCallback(async () => {
     setIsPickerVisible(false);
     try {
-      await pickImage('camera');
+      await pickImage("camera");
     } catch (e) {
-      console.error('[Harken] Failed to take photo:', e);
+      console.error("[Harken] Failed to take photo:", e);
     }
   }, [pickImage]);
 
   const handlePickFromLibrary = useCallback(async () => {
     setIsPickerVisible(false);
     try {
-      await pickImage('library');
+      await pickImage("library");
     } catch (e) {
-      console.error('[Harken] Failed to pick from library:', e);
+      console.error("[Harken] Failed to pick from library:", e);
     }
   }, [pickImage]);
 
@@ -158,7 +158,7 @@ export function useAttachmentPicker(
     try {
       await pickDocument();
     } catch (e) {
-      console.error('[Harken] Failed to pick document:', e);
+      console.error("[Harken] Failed to pick document:", e);
     }
   }, [pickDocument]);
 
@@ -175,8 +175,8 @@ export function useAttachmentPicker(
   const openPicker = useCallback(() => {
     if (enabledSourceCount === 0) {
       console.warn(
-        '[Harken] useAttachmentPicker: No attachment sources are enabled. ' +
-          'Enable at least one of: camera, library, or files.'
+        "[Harken] useAttachmentPicker: No attachment sources are enabled. " +
+          "Enable at least one of: camera, library, or files."
       );
       return;
     }

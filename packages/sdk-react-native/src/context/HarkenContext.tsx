@@ -1,10 +1,10 @@
-import React, { createContext, useMemo } from 'react';
-import { useColorScheme } from 'react-native';
-import type { ResolvedHarkenTheme, ThemeMode } from '../theme';
-import { lightTheme, darkTheme, resolveTheme } from '../theme';
-import type { HarkenConfig, HarkenProviderProps } from '../types';
-import { IdentityStore, createDefaultStorage } from '../storage';
-import { HarkenClient } from '../api/client';
+import React, { createContext, useMemo } from "react";
+import { useColorScheme } from "react-native";
+import type { ResolvedHarkenTheme, ThemeMode } from "../theme";
+import { lightTheme, darkTheme, resolveTheme } from "../theme";
+import type { HarkenConfig, HarkenProviderProps } from "../types";
+import { IdentityStore, createDefaultStorage } from "../storage";
+import { HarkenClient } from "../api/client";
 
 /**
  * Context value provided by HarkenProvider.
@@ -70,7 +70,7 @@ export const HarkenContext = createContext<HarkenContextValue | null>(null);
  */
 export function HarkenProvider({
   config,
-  themeMode = 'system',
+  themeMode = "system",
   lightTheme: lightOverrides,
   darkTheme: darkOverrides,
   storage,
@@ -81,10 +81,10 @@ export function HarkenProvider({
 
   // Determine if dark mode should be active
   const isDarkMode = useMemo(() => {
-    if (themeMode === 'dark') return true;
-    if (themeMode === 'light') return false;
+    if (themeMode === "dark") return true;
+    if (themeMode === "light") return false;
     // 'system' mode - follow device preference
-    return systemColorScheme === 'dark';
+    return systemColorScheme === "dark";
   }, [themeMode, systemColorScheme]);
 
   // Build the resolved theme using the centralized resolver
@@ -126,9 +126,5 @@ export function HarkenProvider({
     [theme, themeMode, isDarkMode, config, identityStore, client]
   );
 
-  return (
-    <HarkenContext.Provider value={contextValue}>
-      {children}
-    </HarkenContext.Provider>
-  );
+  return <HarkenContext.Provider value={contextValue}>{children}</HarkenContext.Provider>;
 }

@@ -19,9 +19,7 @@ Add the SDK to your `app.json` or `app.config.js` plugins:
 ```json
 {
   "expo": {
-    "plugins": [
-      "@harkenapp/sdk-react-native"
-    ]
+    "plugins": ["@harkenapp/sdk-react-native"]
   }
 }
 ```
@@ -29,12 +27,14 @@ Add the SDK to your `app.json` or `app.config.js` plugins:
 This automatically configures:
 
 **iOS (Info.plist):**
+
 - `NSCameraUsageDescription` - Camera access for taking photos
 - `NSPhotoLibraryUsageDescription` - Photo library access for selecting images
 
 > **Note:** `NSDocumentsFolderUsageDescription` is not required. The SDK uses `expo-document-picker` which presents the system document picker UI, handling file access permissions automatically without needing an Info.plist entry.
 
 **Android (AndroidManifest.xml):**
+
 - `android.permission.CAMERA` - Camera access
 - `android.permission.READ_MEDIA_IMAGES` - Photo library access (Android 13+)
 - `android.permission.READ_EXTERNAL_STORAGE` - Photo library access (Android 12 and below)
@@ -47,10 +47,13 @@ You can customize the iOS permission dialog strings:
 {
   "expo": {
     "plugins": [
-      ["@harkenapp/sdk-react-native", {
-        "cameraPermission": "Take photos to include with your feedback",
-        "photoLibraryPermission": "Select photos to include with your feedback"
-      }]
+      [
+        "@harkenapp/sdk-react-native",
+        {
+          "cameraPermission": "Take photos to include with your feedback",
+          "photoLibraryPermission": "Select photos to include with your feedback"
+        }
+      ]
     ]
   }
 }
@@ -65,3 +68,37 @@ npx expo prebuild
 ```
 
 Or if using EAS Build, permissions are applied automatically during the build process.
+
+## Development
+
+See the root [CONTRIBUTING.md](../../CONTRIBUTING.md) for development setup.
+
+### Testing
+
+```bash
+# Run tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run tests with coverage
+pnpm test:coverage
+```
+
+### Building
+
+```bash
+# Regenerate OpenAPI types and build
+pnpm build
+```
+
+## Versioning
+
+This package follows [Semantic Versioning](https://semver.org/). Releases are automated via GitHub Actions when changes are merged to `main`.
+
+Current version: See [package.json](./package.json)
+
+## License
+
+Apache-2.0

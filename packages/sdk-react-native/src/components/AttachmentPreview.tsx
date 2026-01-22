@@ -1,11 +1,11 @@
-import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
-import type { ViewStyle, StyleProp, ImageStyle } from 'react-native';
-import { useHarkenTheme } from '../hooks';
-import { ThemedText } from './ThemedText';
-import { UploadStatusOverlay } from './UploadStatusOverlay';
-import type { UploadStatusLabels } from './UploadStatusOverlay';
-import { UploadPhase } from '../domain';
+import React from "react";
+import { View, Image, StyleSheet } from "react-native";
+import type { ViewStyle, StyleProp, ImageStyle } from "react-native";
+import { useHarkenTheme } from "../hooks";
+import { ThemedText } from "./ThemedText";
+import { UploadStatusOverlay } from "./UploadStatusOverlay";
+import type { UploadStatusLabels } from "./UploadStatusOverlay";
+import type { UploadPhase } from "../domain";
 
 export interface AttachmentPreviewProps {
   /** Local file URI for preview */
@@ -104,7 +104,7 @@ export function AttachmentPreview({
 }: AttachmentPreviewProps): React.JSX.Element {
   const theme = useHarkenTheme();
   const { tile } = theme.components;
-  const isImage = mimeType?.startsWith('image/') ?? true;
+  const isImage = mimeType?.startsWith("image/") ?? true;
 
   const effectiveSize = size ?? tile.size;
 
@@ -114,23 +114,14 @@ export function AttachmentPreview({
     }
 
     const icon = customGetFileIcon
-      ? customGetFileIcon(mimeType ?? '')
+      ? customGetFileIcon(mimeType ?? "")
       : getDefaultFileIcon(mimeType);
 
     return (
       <View style={styles.filePreview}>
-        {typeof icon === 'string' ? (
-          <ThemedText style={styles.fileIcon}>{icon}</ThemedText>
-        ) : (
-          icon
-        )}
+        {typeof icon === "string" ? <ThemedText style={styles.fileIcon}>{icon}</ThemedText> : icon}
         {fileName && (
-          <ThemedText
-            variant="caption"
-            secondary
-            numberOfLines={2}
-            style={styles.fileName}
-          >
+          <ThemedText variant="caption" secondary numberOfLines={2} style={styles.fileName}>
             {fileName}
           </ThemedText>
         )}
@@ -149,7 +140,7 @@ export function AttachmentPreview({
           backgroundColor: tile.background,
           borderWidth: 1,
           borderColor: tile.border,
-          overflow: 'hidden',
+          overflow: "hidden",
         },
         style,
       ]}
@@ -188,30 +179,28 @@ export function AttachmentPreview({
  * Get default file icon emoji based on MIME type.
  */
 function getDefaultFileIcon(mimeType?: string): string {
-  if (!mimeType) return '📄';
+  if (!mimeType) return "📄";
 
-  if (mimeType.startsWith('image/')) return '🖼️';
-  if (mimeType.startsWith('video/')) return '🎬';
-  if (mimeType === 'application/pdf') return '📕';
-  if (mimeType.includes('spreadsheet') || mimeType.includes('excel'))
-    return '📊';
-  if (mimeType.includes('document') || mimeType.includes('word')) return '📝';
-  if (mimeType.includes('presentation') || mimeType.includes('powerpoint'))
-    return '📽️';
-  if (mimeType.includes('zip') || mimeType.includes('archive')) return '📦';
+  if (mimeType.startsWith("image/")) return "🖼️";
+  if (mimeType.startsWith("video/")) return "🎬";
+  if (mimeType === "application/pdf") return "📕";
+  if (mimeType.includes("spreadsheet") || mimeType.includes("excel")) return "📊";
+  if (mimeType.includes("document") || mimeType.includes("word")) return "📝";
+  if (mimeType.includes("presentation") || mimeType.includes("powerpoint")) return "📽️";
+  if (mimeType.includes("zip") || mimeType.includes("archive")) return "📦";
 
-  return '📄';
+  return "📄";
 }
 
 const styles = StyleSheet.create({
   container: {
-    position: 'relative',
+    position: "relative",
   },
   image: {},
   filePreview: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 8,
   },
   fileIcon: {
@@ -219,7 +208,7 @@ const styles = StyleSheet.create({
   },
   fileName: {
     marginTop: 4,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 10,
   },
 });

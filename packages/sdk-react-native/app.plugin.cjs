@@ -28,17 +28,14 @@
  * }
  */
 
-const {
-  withInfoPlist,
-  withAndroidManifest,
-} = require('@expo/config-plugins');
+const { withInfoPlist, withAndroidManifest } = require("@expo/config-plugins");
 
 /**
  * Default permission strings for iOS
  */
 const DEFAULT_PERMISSIONS = {
-  cameraPermission: 'Allow $(PRODUCT_NAME) to access your camera to take photos for feedback',
-  photoLibraryPermission: 'Allow $(PRODUCT_NAME) to access your photos to include with feedback',
+  cameraPermission: "Allow $(PRODUCT_NAME) to access your camera to take photos for feedback",
+  photoLibraryPermission: "Allow $(PRODUCT_NAME) to access your photos to include with feedback",
 };
 
 /**
@@ -74,23 +71,21 @@ function withAndroidPermissions(config) {
     const manifest = config.modResults.manifest;
 
     // Ensure uses-permission array exists
-    if (!manifest['uses-permission']) {
-      manifest['uses-permission'] = [];
+    if (!manifest["uses-permission"]) {
+      manifest["uses-permission"] = [];
     }
 
-    const permissions = manifest['uses-permission'];
+    const permissions = manifest["uses-permission"];
 
     /**
      * Add a permission if it doesn't already exist
      */
     function addPermission(name, attributes = {}) {
-      const exists = permissions.some(
-        (p) => p.$?.['android:name'] === name
-      );
+      const exists = permissions.some((p) => p.$?.["android:name"] === name);
       if (!exists) {
         permissions.push({
           $: {
-            'android:name': name,
+            "android:name": name,
             ...attributes,
           },
         });
@@ -98,16 +93,16 @@ function withAndroidPermissions(config) {
     }
 
     // Camera permission
-    addPermission('android.permission.CAMERA');
+    addPermission("android.permission.CAMERA");
 
     // Photo library permissions
     // READ_MEDIA_IMAGES for Android 13+ (API 33+)
-    addPermission('android.permission.READ_MEDIA_IMAGES');
+    addPermission("android.permission.READ_MEDIA_IMAGES");
 
     // READ_EXTERNAL_STORAGE for Android 12 and below
     // Use maxSdkVersion to limit to older APIs
-    addPermission('android.permission.READ_EXTERNAL_STORAGE', {
-      'android:maxSdkVersion': '32',
+    addPermission("android.permission.READ_EXTERNAL_STORAGE", {
+      "android:maxSdkVersion": "32",
     });
 
     return config;

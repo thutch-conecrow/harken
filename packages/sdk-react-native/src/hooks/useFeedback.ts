@@ -1,13 +1,13 @@
-import { useState, useCallback, useMemo } from 'react';
-import { Platform } from 'react-native';
-import type { components } from '../types/index.js';
-import { useHarkenContext } from './useHarkenContext';
-import { useAnonymousId } from './useAnonymousId';
-import { HarkenClient } from '../api/client';
-import { HarkenApiError, HarkenNetworkError } from '../api/errors';
-import type { FeedbackCategory, DeviceMetadata } from '../types';
+import { useState, useCallback, useMemo } from "react";
+import { Platform } from "react-native";
+import type { components } from "../types/index.js";
+import { useHarkenContext } from "./useHarkenContext";
+import { useAnonymousId } from "./useAnonymousId";
+import { HarkenClient } from "../api/client";
+import { HarkenApiError, HarkenNetworkError } from "../api/errors";
+import type { FeedbackCategory, DeviceMetadata } from "../types";
 
-type FeedbackSubmissionResponse = components['schemas']['FeedbackSubmissionResponse'];
+type FeedbackSubmissionResponse = components["schemas"]["FeedbackSubmissionResponse"];
 
 export interface SubmitFeedbackParams {
   /** Feedback message content */
@@ -82,7 +82,7 @@ export function useFeedback(): UseFeedbackResult {
   const submitFeedback = useCallback(
     async (params: SubmitFeedbackParams): Promise<FeedbackSubmissionResponse> => {
       if (!anonymousId) {
-        throw new Error('Anonymous ID not yet initialized. Wait for isInitializing to be false.');
+        throw new Error("Anonymous ID not yet initialized. Wait for isInitializing to be false.");
       }
 
       setIsSubmitting(true);
@@ -93,9 +93,7 @@ export function useFeedback(): UseFeedbackResult {
         // Only set platform if it's a known value (ios, android)
         // Other platforms (web, windows, macos) should be passed via metadata
         const detectedPlatform =
-          Platform.OS === 'ios' ? 'ios' :
-          Platform.OS === 'android' ? 'android' :
-          undefined;
+          Platform.OS === "ios" ? "ios" : Platform.OS === "android" ? "android" : undefined;
 
         const deviceMetadata: DeviceMetadata = {
           ...(detectedPlatform && { platform: detectedPlatform }),
@@ -117,7 +115,7 @@ export function useFeedback(): UseFeedbackResult {
           e instanceof HarkenApiError || e instanceof HarkenNetworkError
             ? e
             : new HarkenNetworkError(
-                e instanceof Error ? e.message : 'Unknown error',
+                e instanceof Error ? e.message : "Unknown error",
                 e instanceof Error ? e : undefined
               );
         setError(harkenError);

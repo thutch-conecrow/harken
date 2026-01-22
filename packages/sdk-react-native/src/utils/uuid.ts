@@ -18,10 +18,7 @@ declare const crypto:
  */
 export function generateUUID(): string {
   // Use crypto.getRandomValues if available (React Native has this)
-  if (
-    typeof crypto !== 'undefined' &&
-    typeof crypto.getRandomValues === 'function'
-  ) {
+  if (typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function") {
     return generateUUIDCrypto();
   }
 
@@ -64,8 +61,8 @@ function generateUUIDFallback(): string {
  */
 function formatUUID(bytes: Uint8Array): string {
   const hex = Array.from(bytes)
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 
   return [
     hex.slice(0, 8),
@@ -73,5 +70,5 @@ function formatUUID(bytes: Uint8Array): string {
     hex.slice(12, 16),
     hex.slice(16, 20),
     hex.slice(20, 32),
-  ].join('-');
+  ].join("-");
 }

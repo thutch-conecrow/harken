@@ -20,33 +20,25 @@
  */
 
 // Provider and context
-export { HarkenProvider } from './context';
-export type { HarkenContextValue } from './context';
+export { HarkenProvider } from "./context";
+export type { HarkenContextValue } from "./context";
 
 // Hooks (core)
-export {
-  useHarkenTheme,
-  useHarkenContext,
-  useAnonymousId,
-  useFeedback,
-} from './hooks';
-export type { SubmitFeedbackParams, UseFeedbackResult } from './hooks';
+export { useHarkenTheme, useHarkenContext, useAnonymousId, useFeedback } from "./hooks";
+export type { SubmitFeedbackParams, UseFeedbackResult } from "./hooks";
 
 // Hooks (attachments)
-export { useAttachmentUpload } from './hooks/useAttachmentUpload';
-export type {
-  AttachmentState,
-  UseAttachmentUploadResult,
-} from './hooks/useAttachmentUpload';
+export { useAttachmentUpload } from "./hooks/useAttachmentUpload";
+export type { AttachmentState, UseAttachmentUploadResult } from "./hooks/useAttachmentUpload";
 
-export { useAttachmentPicker } from './hooks/useAttachmentPicker';
+export { useAttachmentPicker } from "./hooks/useAttachmentPicker";
 export type {
   AttachmentSourceConfig,
   UseAttachmentPickerResult,
-} from './hooks/useAttachmentPicker';
+} from "./hooks/useAttachmentPicker";
 
-export { useAttachmentStatus } from './hooks/useAttachmentStatus';
-export type { AttachmentStatus } from './hooks/useAttachmentStatus';
+export { useAttachmentStatus } from "./hooks/useAttachmentStatus";
+export type { AttachmentStatus } from "./hooks/useAttachmentStatus";
 
 // Theme system
 export type {
@@ -58,7 +50,7 @@ export type {
   PartialHarkenTheme,
   TextWeight,
   ThemeMode,
-} from './theme';
+} from "./theme";
 
 export {
   lightColors,
@@ -69,18 +61,14 @@ export {
   lightTheme,
   darkTheme,
   createTheme,
-} from './theme';
+} from "./theme";
 
 // Storage and identity
-export type { SecureStorage } from './storage';
-export {
-  createSecureStoreAdapter,
-  createMemoryStorage,
-  IdentityStore,
-} from './storage';
+export type { SecureStorage } from "./storage";
+export { createSecureStoreAdapter, createMemoryStorage, IdentityStore } from "./storage";
 
 // Utilities
-export { generateUUID } from './utils';
+export { generateUUID } from "./utils";
 
 // Components (core)
 export {
@@ -90,7 +78,7 @@ export {
   CategorySelector,
   FeedbackForm,
   DEFAULT_CATEGORIES,
-} from './components';
+} from "./components";
 
 export type {
   ThemedTextProps,
@@ -102,7 +90,7 @@ export type {
   CategoryOption,
   FeedbackFormProps,
   FeedbackFormData,
-} from './components';
+} from "./components";
 
 // Components (attachments)
 export {
@@ -110,7 +98,7 @@ export {
   UploadStatusOverlay,
   AttachmentPreview,
   AttachmentGrid,
-} from './components';
+} from "./components";
 
 export type {
   AttachmentPickerProps,
@@ -120,11 +108,11 @@ export type {
   UploadStatusLabels,
   AttachmentPreviewProps,
   AttachmentGridProps,
-} from './components';
+} from "./components";
 
 // FeedbackSheet (with full attachment support)
-export { FeedbackSheet } from './attachments/FeedbackSheet';
-export type { FeedbackSheetProps } from './attachments/FeedbackSheet';
+export { FeedbackSheet } from "./attachments/FeedbackSheet";
+export type { FeedbackSheetProps } from "./attachments/FeedbackSheet";
 
 // API client
 export {
@@ -135,8 +123,8 @@ export {
   HarkenNetworkError,
   withRetry,
   DEFAULT_RETRY_CONFIG,
-} from './api';
-export type { HarkenClientConfig, RetryConfig } from './api';
+} from "./api";
+export type { HarkenClientConfig, RetryConfig } from "./api";
 
 // Configuration types
 export type {
@@ -145,24 +133,12 @@ export type {
   FeedbackCategory,
   Platform,
   DeviceMetadata,
-} from './types';
+} from "./types";
 
 // Domain types
-export { UploadPhase, DEFAULT_UPLOAD_RETRY_CONFIG } from './domain';
-export type {
-  QueueItem,
-  QueueStatus,
-  UploadProgress,
-  UploadRetryConfig,
-} from './domain';
+export { UploadPhase, DEFAULT_UPLOAD_RETRY_CONFIG } from "./domain";
+export type { QueueItem, QueueStatus, UploadProgress, UploadRetryConfig } from "./domain";
 
 // Services (for advanced usage)
-export {
-  UploadQueueService,
-  uploadQueueService,
-  UploadQueueStorage,
-} from './services';
-export type {
-  UploadQueueServiceConfig,
-  EnqueueParams,
-} from './services';
+export { UploadQueueService, uploadQueueService, UploadQueueStorage } from "./services";
+export type { UploadQueueServiceConfig, EnqueueParams } from "./services";

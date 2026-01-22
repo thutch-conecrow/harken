@@ -1,5 +1,5 @@
-import type { PartialHarkenTheme, ThemeMode } from '../theme';
-import type { SecureStorage } from '../storage';
+import type { PartialHarkenTheme, ThemeMode } from "../theme";
+import type { SecureStorage } from "../storage";
 
 /**
  * Configuration options for the Harken SDK.
@@ -88,12 +88,12 @@ export interface HarkenProviderProps {
 /**
  * Feedback category types supported by the API.
  */
-export type FeedbackCategory = 'bug' | 'idea' | 'ux' | 'other';
+export type FeedbackCategory = "bug" | "idea" | "ux" | "other";
 
 /**
  * Platform type for device metadata.
  */
-export type Platform = 'ios' | 'android';
+export type Platform = "ios" | "android";
 
 /**
  * Device metadata collected with feedback submissions.

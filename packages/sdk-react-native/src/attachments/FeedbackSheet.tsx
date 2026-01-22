@@ -1,26 +1,20 @@
-import React, { useState, useCallback } from 'react';
-import {
-  View,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  Alert,
-} from 'react-native';
-import type { ViewStyle, StyleProp } from 'react-native';
-import type { components } from '../types/index.js';
-import { useHarkenTheme, useFeedback } from '../hooks';
-import { ThemedText } from '../components/ThemedText';
-import { ThemedTextInput } from '../components/ThemedTextInput';
-import { ThemedButton } from '../components/ThemedButton';
-import { CategorySelector, DEFAULT_CATEGORIES } from '../components/CategorySelector';
-import type { CategoryOption } from '../components/CategorySelector';
-import type { FeedbackCategory } from '../types';
-import { useAttachmentPicker } from '../hooks/useAttachmentPicker';
-import type { AttachmentSourceConfig } from '../hooks/useAttachmentPicker';
-import { AttachmentGrid } from '../components/AttachmentGrid';
-import { AttachmentPicker } from '../components/AttachmentPicker';
+import React, { useState, useCallback } from "react";
+import { View, KeyboardAvoidingView, Platform, ScrollView, Alert } from "react-native";
+import type { ViewStyle, StyleProp } from "react-native";
+import type { components } from "../types/index.js";
+import { useHarkenTheme, useFeedback } from "../hooks";
+import { ThemedText } from "../components/ThemedText";
+import { ThemedTextInput } from "../components/ThemedTextInput";
+import { ThemedButton } from "../components/ThemedButton";
+import { CategorySelector, DEFAULT_CATEGORIES } from "../components/CategorySelector";
+import type { CategoryOption } from "../components/CategorySelector";
+import type { FeedbackCategory } from "../types";
+import { useAttachmentPicker } from "../hooks/useAttachmentPicker";
+import type { AttachmentSourceConfig } from "../hooks/useAttachmentPicker";
+import { AttachmentGrid } from "../components/AttachmentGrid";
+import { AttachmentPicker } from "../components/AttachmentPicker";
 
-type FeedbackSubmissionResponse = components['schemas']['FeedbackSubmissionResponse'];
+type FeedbackSubmissionResponse = components["schemas"]["FeedbackSubmissionResponse"];
 
 export interface FeedbackSheetProps {
   /** Called when feedback is successfully submitted */
@@ -72,7 +66,7 @@ export interface FeedbackSheetProps {
    * - 'flex': Uses flex: 1 (default, requires parent with explicit height)
    * - 'auto': Content determines height (for bottom sheet modal embedding)
    */
-  layout?: 'flex' | 'auto';
+  layout?: "flex" | "auto";
 
   /** Container style override (outer KeyboardAvoidingView) */
   containerStyle?: StyleProp<ViewStyle>;
@@ -136,10 +130,10 @@ export function FeedbackSheet({
   onSuccess,
   onError,
   onCancel,
-  title = 'Send Feedback',
-  placeholder = 'What would you like to share?',
-  submitLabel = 'Submit',
-  cancelLabel = 'Cancel',
+  title = "Send Feedback",
+  placeholder = "What would you like to share?",
+  submitLabel = "Submit",
+  cancelLabel = "Cancel",
   categories = DEFAULT_CATEGORIES,
   requireCategory = false,
   minMessageLength = 1,
@@ -147,18 +141,17 @@ export function FeedbackSheet({
   enableAttachments = true,
   maxAttachments = 5,
   attachmentSources,
-  successMessage = 'Thank you for your feedback!',
+  successMessage = "Thank you for your feedback!",
   showSuccessAlert = true,
   clearOnSuccess = true,
-  layout = 'flex',
+  layout = "flex",
   containerStyle,
   contentStyle,
   formStyle,
 }: FeedbackSheetProps): React.JSX.Element {
   const theme = useHarkenTheme();
   const { form } = theme.components;
-  const { submitFeedback, isSubmitting, error, clearError, isInitializing } =
-    useFeedback();
+  const { submitFeedback, isSubmitting, error, clearError, isInitializing } = useFeedback();
   const {
     attachments,
     removeAttachment,
@@ -170,18 +163,17 @@ export function FeedbackSheet({
     enabledSourceCount,
   } = useAttachmentPicker(attachmentSources);
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [category, setCategory] = useState<FeedbackCategory | null>(null);
 
   const trimmedMessage = message.trim();
   const isMessageValid =
-    trimmedMessage.length >= minMessageLength &&
-    trimmedMessage.length <= maxMessageLength;
+    trimmedMessage.length >= minMessageLength && trimmedMessage.length <= maxMessageLength;
   const isCategoryValid = !requireCategory || category !== null;
   const canSubmit = isMessageValid && isCategoryValid && !isSubmitting && !isInitializing;
 
   const resetForm = useCallback(() => {
-    setMessage('');
+    setMessage("");
     setCategory(null);
     clearError();
     // Note: We don't clear attachments since they may still be uploading
@@ -196,18 +188,19 @@ export function FeedbackSheet({
     try {
       const result = await submitFeedback({
         message: trimmedMessage,
-        category: category ?? 'other',
+        category: category ?? "other",
         attachments: enableAttachments ? getAttachmentIds() : undefined,
       });
 
-      const uploadNote = enableAttachments && hasActiveUploads
-        ? '\n\nAttachments are still uploading in the background.'
-        : '';
+      const uploadNote =
+        enableAttachments && hasActiveUploads
+          ? "\n\nAttachments are still uploading in the background."
+          : "";
 
       if (showSuccessAlert && successMessage) {
-        Alert.alert('Success', `${successMessage}${uploadNote}`, [
+        Alert.alert("Success", `${successMessage}${uploadNote}`, [
           {
-            text: 'OK',
+            text: "OK",
             onPress: () => {
               if (clearOnSuccess) {
                 resetForm();
@@ -224,8 +217,8 @@ export function FeedbackSheet({
       }
     } catch (e) {
       const errorMessage =
-        e instanceof Error ? e.message : 'Failed to submit feedback. Please try again.';
-      Alert.alert('Submission Failed', errorMessage);
+        e instanceof Error ? e.message : "Failed to submit feedback. Please try again.";
+      Alert.alert("Submission Failed", errorMessage);
       onError?.(e instanceof Error ? e : new Error(errorMessage));
     }
   }, [
@@ -251,13 +244,13 @@ export function FeedbackSheet({
   }, [resetForm, onCancel]);
 
   const baseContainerStyle: ViewStyle = {
-    ...(layout === 'flex' ? { flex: 1 } : {}),
+    ...(layout === "flex" ? { flex: 1 } : {}),
     backgroundColor: form.background,
     borderRadius: form.radius,
   };
 
   const scrollContentStyle: ViewStyle = {
-    ...(layout === 'flex' ? { flexGrow: 1 } : {}),
+    ...(layout === "flex" ? { flexGrow: 1 } : {}),
     padding: form.padding,
   };
 
@@ -269,7 +262,7 @@ export function FeedbackSheet({
   const effectiveContentStyle = contentStyle ?? formStyle;
 
   const buttonRowStyle: ViewStyle = {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: theme.spacing.sm,
     marginTop: theme.spacing.md,
   };
@@ -279,7 +272,13 @@ export function FeedbackSheet({
 
   if (isInitializing) {
     return (
-      <View style={[baseContainerStyle, containerStyle, { justifyContent: 'center', alignItems: 'center' }]}>
+      <View
+        style={[
+          baseContainerStyle,
+          containerStyle,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
         <ThemedText variant="body" secondary>
           Initializing...
         </ThemedText>
@@ -290,7 +289,7 @@ export function FeedbackSheet({
   return (
     <>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={[baseContainerStyle, containerStyle]}
       >
         <ScrollView
@@ -306,12 +305,8 @@ export function FeedbackSheet({
 
           {/* Category selector */}
           <View style={sectionStyle}>
-            <ThemedText
-              variant="label"
-              secondary
-              style={{ marginBottom: theme.spacing.sm }}
-            >
-              Category{requireCategory ? '' : ' (optional)'}
+            <ThemedText variant="label" secondary style={{ marginBottom: theme.spacing.sm }}>
+              Category{requireCategory ? "" : " (optional)"}
             </ThemedText>
             <CategorySelector
               value={category}
@@ -323,11 +318,7 @@ export function FeedbackSheet({
 
           {/* Message input */}
           <View style={sectionStyle}>
-            <ThemedText
-              variant="label"
-              secondary
-              style={{ marginBottom: theme.spacing.sm }}
-            >
+            <ThemedText variant="label" secondary style={{ marginBottom: theme.spacing.sm }}>
               Message
             </ThemedText>
             <ThemedTextInput
@@ -349,7 +340,7 @@ export function FeedbackSheet({
                     ? theme.colors.error
                     : theme.colors.textSecondary
                 }
-                style={{ marginTop: theme.spacing.xs, textAlign: 'right' }}
+                style={{ marginTop: theme.spacing.xs, textAlign: "right" }}
               >
                 {characterCount}/{maxMessageLength}
               </ThemedText>
@@ -359,11 +350,7 @@ export function FeedbackSheet({
           {/* Attachments */}
           {enableAttachments && (
             <View style={sectionStyle}>
-              <ThemedText
-                variant="label"
-                secondary
-                style={{ marginBottom: theme.spacing.sm }}
-              >
+              <ThemedText variant="label" secondary style={{ marginBottom: theme.spacing.sm }}>
                 Attachments
               </ThemedText>
               <AttachmentGrid
@@ -417,7 +404,7 @@ export function FeedbackSheet({
               <ThemedText
                 variant="caption"
                 color={theme.colors.primary}
-                style={{ textAlign: 'center' }}
+                style={{ textAlign: "center" }}
               >
                 Uploads in progress - you can still submit now
               </ThemedText>

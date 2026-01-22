@@ -1,6 +1,6 @@
-import { useContext } from 'react';
-import { HarkenContext } from '../context';
-import type { HarkenContextValue } from '../context';
+import { useContext } from "react";
+import { HarkenContext } from "../context";
+import type { HarkenContextValue } from "../context";
 
 /**
  * Hook to access the full Harken context.
@@ -28,7 +28,7 @@ export function useHarkenContext(): HarkenContextValue {
   const context = useContext(HarkenContext);
 
   if (!context) {
-    throw new Error('useHarkenContext must be used within a HarkenProvider');
+    throw new Error("useHarkenContext must be used within a HarkenProvider");
   }
 
   return context;

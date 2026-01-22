@@ -6,8 +6,8 @@
  *
  * This declaration enables TypeScript to resolve the import.
  */
-declare module 'expo-file-system/legacy' {
+declare module "expo-file-system/legacy" {
   // Re-export types from the build output
-  export * from 'expo-file-system/build/legacy/FileSystem';
-  export * from 'expo-file-system/build/legacy/FileSystem.types';
+  export * from "expo-file-system/build/legacy/FileSystem";
+  export * from "expo-file-system/build/legacy/FileSystem.types";
 }

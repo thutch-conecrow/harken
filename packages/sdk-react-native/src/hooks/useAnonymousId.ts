@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext } from 'react';
-import { HarkenContext } from '../context';
+import { useState, useEffect, useContext } from "react";
+import { HarkenContext } from "../context";
 
 /**
  * Hook to access the anonymous ID for the current installation.
@@ -31,7 +31,7 @@ export function useAnonymousId(): {
   const context = useContext(HarkenContext);
 
   if (!context) {
-    throw new Error('useAnonymousId must be used within a HarkenProvider');
+    throw new Error("useAnonymousId must be used within a HarkenProvider");
   }
 
   // Capture identityStore to satisfy TypeScript narrowing in useEffect

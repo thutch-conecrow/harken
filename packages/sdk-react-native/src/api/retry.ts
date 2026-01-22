@@ -1,4 +1,4 @@
-import { HarkenApiError, HarkenNetworkError } from './errors';
+import { HarkenApiError, HarkenNetworkError } from "./errors";
 
 export interface RetryConfig {
   /** Maximum number of retry attempts (default: 3) */
@@ -45,9 +45,7 @@ export function calculateRetryDelay(
 /**
  * Check if an error is retryable.
  */
-export function isRetryableError(
-  error: unknown
-): error is HarkenApiError | HarkenNetworkError {
+export function isRetryableError(error: unknown): error is HarkenApiError | HarkenNetworkError {
   if (error instanceof HarkenApiError) {
     return error.isRetryable;
   }
@@ -86,8 +84,7 @@ export async function withRetry<T>(
       }
 
       // Calculate delay, respecting Retry-After header if present
-      const retryAfter =
-        error instanceof HarkenApiError ? error.retryAfter : undefined;
+      const retryAfter = error instanceof HarkenApiError ? error.retryAfter : undefined;
 
       const delay = calculateRetryDelay(attempt, fullConfig, retryAfter);
       await sleep(delay);

@@ -136,7 +136,7 @@ import {
   // Constants
   DEFAULT_CATEGORIES,
   UploadPhase,
-} from '@harkenapp/sdk-react-native';
+} from "@harkenapp/sdk-react-native";
 ```
 
 ## Development Build

@@ -1,11 +1,11 @@
-import { StatusBar } from 'expo-status-bar';
-import { HarkenProvider, FeedbackSheet } from '@harkenapp/sdk-react-native';
+import { StatusBar } from "expo-status-bar";
+import { HarkenProvider, FeedbackSheet } from "@harkenapp/sdk-react-native";
 
 export default function App() {
   return (
     <HarkenProvider
       config={{
-        publishableKey: 'pk_test_example',
+        publishableKey: "pk_test_example",
         debug: true,
       }}
     >
@@ -22,7 +22,7 @@ export default function App() {
         }}
         onSuccess={(result) => {
           // In a real app, you might navigate back or close a modal
-          console.log('Feedback submitted:', result.id);
+          console.log("Feedback submitted:", result.id);
         }}
       />
       <StatusBar style="auto" />

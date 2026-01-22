@@ -13,22 +13,14 @@
  * - D6: Real progress tracking from expo-file-system
  */
 
-import * as FileSystem from 'expo-file-system/legacy';
-import NetInfo, {
-  NetInfoState,
-  NetInfoSubscription,
-} from '@react-native-community/netinfo';
-import { HarkenClient } from '../api/client';
-import { UploadQueueStorage } from './uploadQueueStorage';
-import {
-  QueueItem,
-  QueueStatus,
-  UploadPhase,
-  UploadProgress,
-  UploadRetryConfig,
-  DEFAULT_UPLOAD_RETRY_CONFIG,
-} from '../domain';
-import { generateUUID } from '../utils';
+import * as FileSystem from "expo-file-system/legacy";
+import type { NetInfoState, NetInfoSubscription } from "@react-native-community/netinfo";
+import NetInfo from "@react-native-community/netinfo";
+import type { HarkenClient } from "../api/client";
+import { UploadQueueStorage } from "./uploadQueueStorage";
+import type { QueueItem, QueueStatus, UploadProgress, UploadRetryConfig } from "../domain";
+import { UploadPhase, DEFAULT_UPLOAD_RETRY_CONFIG } from "../domain";
+import { generateUUID } from "../utils";
 
 // Callback types for event subscriptions
 type ProgressCallback = (progress: UploadProgress) => void;
@@ -120,7 +112,7 @@ export class UploadQueueService {
     this.debug = config.debug ?? false;
 
     if (this.isInitialized) {
-      this.log('Already initialized, updated client reference');
+      this.log("Already initialized, updated client reference");
       return;
     }
 
@@ -131,10 +123,7 @@ export class UploadQueueService {
     for (const item of persistedItems) {
       // Reset any "uploading" or "confirming" items to "queued"
       // (app was killed mid-upload)
-      if (
-        item.phase === UploadPhase.UPLOADING ||
-        item.phase === UploadPhase.CONFIRMING
-      ) {
+      if (item.phase === UploadPhase.UPLOADING || item.phase === UploadPhase.CONFIRMING) {
         item.phase = UploadPhase.QUEUED;
         item.progress = 0;
       }
@@ -176,7 +165,7 @@ export class UploadQueueService {
     queueItemId: string;
   }> {
     if (!this.client) {
-      throw new Error('UploadQueueService not initialized');
+      throw new Error("UploadQueueService not initialized");
     }
 
     // 1. Get presigned URL from server
@@ -236,19 +225,19 @@ export class UploadQueueService {
     this.clearRetryTimer();
 
     this.isProcessing = true;
-    this.log('Processing queue...');
+    this.log("Processing queue...");
 
     try {
       while (true) {
         // Find next item to process
         const item = this.getNextQueuedItem();
         if (!item) {
-          this.log('No more items to process');
+          this.log("No more items to process");
           break;
         }
 
         if (this.isPaused) {
-          this.log('Queue paused, stopping processing');
+          this.log("Queue paused, stopping processing");
           break;
         }
 
@@ -270,7 +259,7 @@ export class UploadQueueService {
     // Check if URL has expired
     if (new Date(item.uploadExpiresAt) < new Date()) {
       this.log(`URL expired for ${item.attachmentId}`);
-      await this.handleItemFailure(item, 'Upload URL expired');
+      await this.handleItemFailure(item, "Upload URL expired");
       return;
     }
 
@@ -314,8 +303,7 @@ export class UploadQueueService {
 
       this.log(`Completed upload for ${item.attachmentId}`);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
       this.log(`Upload failed for ${item.attachmentId}: ${errorMessage}`);
 
       if (item.attemptNumber < item.maxAttempts) {
@@ -346,11 +334,11 @@ export class UploadQueueService {
         item.uploadUrl,
         item.localUri,
         {
-          httpMethod: 'PUT',
+          httpMethod: "PUT",
           uploadType: FileSystem.FileSystemUploadType.BINARY_CONTENT,
           sessionType: FileSystem.FileSystemSessionType.BACKGROUND,
           headers: {
-            'Content-Type': item.mimeType,
+            "Content-Type": item.mimeType,
           },
         },
         (progress) => {
@@ -375,9 +363,7 @@ export class UploadQueueService {
           if (result && result.status >= 200 && result.status < 300) {
             resolve();
           } else {
-            reject(
-              new Error(`Upload failed with status ${result?.status ?? 'unknown'}`)
-            );
+            reject(new Error(`Upload failed with status ${result?.status ?? "unknown"}`));
           }
         })
         .catch((error) => {
@@ -493,29 +479,27 @@ export class UploadQueueService {
   // --- Network Monitoring (D5) ---
 
   private setupNetworkMonitoring(): void {
-    this.networkUnsubscribe = NetInfo.addEventListener(
-      (state: NetInfoState) => {
-        if (state.isConnected && this.isPaused) {
-          this.log('Network restored, resuming queue');
-          this.isPaused = false;
-          void this.processQueue();
-        } else if (!state.isConnected && !this.isPaused) {
-          this.log('Network lost, pausing queue');
-          this.isPaused = true;
-          // Cancel active uploads - they'll resume when back online
-          for (const [id, task] of this.activeTasks) {
-            void task.cancelAsync();
-            const item = this.items.get(id);
-            if (item) {
-              item.phase = UploadPhase.QUEUED;
-              item.progress = 0;
-            }
+    this.networkUnsubscribe = NetInfo.addEventListener((state: NetInfoState) => {
+      if (state.isConnected && this.isPaused) {
+        this.log("Network restored, resuming queue");
+        this.isPaused = false;
+        void this.processQueue();
+      } else if (!state.isConnected && !this.isPaused) {
+        this.log("Network lost, pausing queue");
+        this.isPaused = true;
+        // Cancel active uploads - they'll resume when back online
+        for (const [id, task] of this.activeTasks) {
+          void task.cancelAsync();
+          const item = this.items.get(id);
+          if (item) {
+            item.phase = UploadPhase.QUEUED;
+            item.progress = 0;
           }
-          this.activeTasks.clear();
-          void this.persistQueue();
         }
+        this.activeTasks.clear();
+        void this.persistQueue();
       }
-    );
+    });
   }
 
   // --- Event Emitters ---
@@ -622,7 +606,7 @@ export class UploadQueueService {
   async retryItem(attachmentId: string): Promise<void> {
     const item = this.getItemByAttachmentId(attachmentId);
     if (!item || item.phase !== UploadPhase.FAILED) {
-      throw new Error('Item not found or not in failed state');
+      throw new Error("Item not found or not in failed state");
     }
 
     item.phase = UploadPhase.QUEUED;
@@ -669,7 +653,7 @@ export class UploadQueueService {
       }
     }
     await this.persistQueue();
-    this.log('Cleared completed items');
+    this.log("Cleared completed items");
   }
 
   /**
@@ -682,7 +666,7 @@ export class UploadQueueService {
       }
     }
     await this.persistQueue();
-    this.log('Cleared failed items');
+    this.log("Cleared failed items");
   }
 
   // --- Internal Utilities ---

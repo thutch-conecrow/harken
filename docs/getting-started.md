@@ -37,9 +37,7 @@ Add it to your `app.json` or `app.config.js`:
 ```json
 {
   "expo": {
-    "plugins": [
-      "@harkenapp/sdk-react-native"
-    ]
+    "plugins": ["@harkenapp/sdk-react-native"]
   }
 }
 ```
@@ -58,10 +56,13 @@ Customize the iOS permission dialog text:
 {
   "expo": {
     "plugins": [
-      ["@harkenapp/sdk-react-native", {
-        "cameraPermission": "Take photos to include with your feedback",
-        "photoLibraryPermission": "Select photos to include with your feedback"
-      }]
+      [
+        "@harkenapp/sdk-react-native",
+        {
+          "cameraPermission": "Take photos to include with your feedback",
+          "photoLibraryPermission": "Select photos to include with your feedback"
+        }
+      ]
     ]
   }
 }
@@ -72,13 +73,13 @@ Customize the iOS permission dialog text:
 ### 1. Wrap Your App with HarkenProvider
 
 ```tsx
-import { HarkenProvider } from '@harkenapp/sdk-react-native';
+import { HarkenProvider } from "@harkenapp/sdk-react-native";
 
 export default function App() {
   return (
     <HarkenProvider
       config={{
-        publishableKey: 'pk_live_your_key_here',
+        publishableKey: "pk_live_your_key_here",
       }}
     >
       <YourApp />
@@ -94,7 +95,7 @@ Get your publishable key from the [Harken Console](https://console.harken.app).
 The simplest way to collect feedback is with the `FeedbackSheet` component:
 
 ```tsx
-import { FeedbackSheet } from '@harkenapp/sdk-react-native';
+import { FeedbackSheet } from "@harkenapp/sdk-react-native";
 
 function FeedbackScreen() {
   return (
@@ -117,40 +118,40 @@ That's it! Users can now submit feedback with optional category selection and fi
 
 ### HarkenProvider Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `config.publishableKey` | `string` | Required | Your app's publishable API key |
-| `config.userToken` | `string` | - | Optional verified user identity token |
-| `config.apiBaseUrl` | `string` | `'https://api.harken.app'` | API base URL (for self-hosting) |
-| `config.debug` | `boolean` | `false` | Enable debug logging |
-| `themeMode` | `'light' \| 'dark' \| 'system'` | `'system'` | Theme mode |
-| `lightTheme` | `PartialHarkenTheme` | - | Light theme overrides |
-| `darkTheme` | `PartialHarkenTheme` | - | Dark theme overrides |
-| `storage` | `SecureStorage` | Auto-detected | Custom storage implementation |
+| Prop                    | Type                            | Default                    | Description                           |
+| ----------------------- | ------------------------------- | -------------------------- | ------------------------------------- |
+| `config.publishableKey` | `string`                        | Required                   | Your app's publishable API key        |
+| `config.userToken`      | `string`                        | -                          | Optional verified user identity token |
+| `config.apiBaseUrl`     | `string`                        | `'https://api.harken.app'` | API base URL (for self-hosting)       |
+| `config.debug`          | `boolean`                       | `false`                    | Enable debug logging                  |
+| `themeMode`             | `'light' \| 'dark' \| 'system'` | `'system'`                 | Theme mode                            |
+| `lightTheme`            | `PartialHarkenTheme`            | -                          | Light theme overrides                 |
+| `darkTheme`             | `PartialHarkenTheme`            | -                          | Dark theme overrides                  |
+| `storage`               | `SecureStorage`                 | Auto-detected              | Custom storage implementation         |
 
 ### FeedbackSheet Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `onSuccess` | `(result) => void` | - | Called on successful submission |
-| `onError` | `(error) => void` | - | Called on submission failure |
-| `onCancel` | `() => void` | - | Called when user cancels (shows cancel button) |
-| `title` | `string` | `'Send Feedback'` | Form title (set to `""` to hide) |
-| `placeholder` | `string` | `'What would you like to share?'` | Message placeholder |
-| `submitLabel` | `string` | `'Submit'` | Submit button text |
-| `cancelLabel` | `string` | `'Cancel'` | Cancel button text |
-| `categories` | `CategoryOption[]` | Default categories | Custom category options |
-| `requireCategory` | `boolean` | `false` | Require category selection |
-| `minMessageLength` | `number` | `1` | Minimum message length |
-| `maxMessageLength` | `number` | `5000` | Maximum message length |
-| `enableAttachments` | `boolean` | `true` | Enable file attachments |
-| `maxAttachments` | `number` | `5` | Maximum attachments allowed |
-| `attachmentSources` | `object` | All enabled | Configure attachment sources |
-| `showSuccessAlert` | `boolean` | `true` | Show success alert |
-| `clearOnSuccess` | `boolean` | `true` | Clear form after success |
-| `layout` | `'flex' \| 'auto'` | `'flex'` | Layout mode (use `'auto'` for modal embedding) |
-| `containerStyle` | `StyleProp<ViewStyle>` | - | Outer container style override |
-| `contentStyle` | `StyleProp<ViewStyle>` | - | Inner content style override |
+| Prop                | Type                   | Default                           | Description                                    |
+| ------------------- | ---------------------- | --------------------------------- | ---------------------------------------------- |
+| `onSuccess`         | `(result) => void`     | -                                 | Called on successful submission                |
+| `onError`           | `(error) => void`      | -                                 | Called on submission failure                   |
+| `onCancel`          | `() => void`           | -                                 | Called when user cancels (shows cancel button) |
+| `title`             | `string`               | `'Send Feedback'`                 | Form title (set to `""` to hide)               |
+| `placeholder`       | `string`               | `'What would you like to share?'` | Message placeholder                            |
+| `submitLabel`       | `string`               | `'Submit'`                        | Submit button text                             |
+| `cancelLabel`       | `string`               | `'Cancel'`                        | Cancel button text                             |
+| `categories`        | `CategoryOption[]`     | Default categories                | Custom category options                        |
+| `requireCategory`   | `boolean`              | `false`                           | Require category selection                     |
+| `minMessageLength`  | `number`               | `1`                               | Minimum message length                         |
+| `maxMessageLength`  | `number`               | `5000`                            | Maximum message length                         |
+| `enableAttachments` | `boolean`              | `true`                            | Enable file attachments                        |
+| `maxAttachments`    | `number`               | `5`                               | Maximum attachments allowed                    |
+| `attachmentSources` | `object`               | All enabled                       | Configure attachment sources                   |
+| `showSuccessAlert`  | `boolean`              | `true`                            | Show success alert                             |
+| `clearOnSuccess`    | `boolean`              | `true`                            | Clear form after success                       |
+| `layout`            | `'flex' \| 'auto'`     | `'flex'`                          | Layout mode (use `'auto'` for modal embedding) |
+| `containerStyle`    | `StyleProp<ViewStyle>` | -                                 | Outer container style override                 |
+| `contentStyle`      | `StyleProp<ViewStyle>` | -                                 | Inner content style override                   |
 
 ## Verified User Identity (Optional)
 
@@ -184,18 +185,18 @@ import {
   CategorySelector,
   AttachmentPicker,
   AttachmentGrid,
-} from '@harkenapp/sdk-react-native';
+} from "@harkenapp/sdk-react-native";
 
 function CustomFeedbackForm() {
   const { submitFeedback, isSubmitting } = useFeedback();
   const { attachments, getAttachmentIds } = useAttachmentUpload();
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [category, setCategory] = useState(null);
 
   const handleSubmit = async () => {
     await submitFeedback({
       message,
-      category: category ?? 'other',
+      category: category ?? "other",
       attachments: getAttachmentIds(),
     });
   };
@@ -210,11 +211,7 @@ function CustomFeedbackForm() {
         multiline
       />
       <AttachmentGrid attachments={attachments} />
-      <ThemedButton
-        title="Submit"
-        onPress={handleSubmit}
-        loading={isSubmitting}
-      />
+      <ThemedButton title="Submit" onPress={handleSubmit} loading={isSubmitting} />
     </View>
   );
 }
