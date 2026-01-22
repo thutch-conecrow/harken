@@ -13,7 +13,7 @@ Thank you for your interest in contributing to Harken!
 
 ```bash
 # Clone the repository
-git clone https://github.com/harken-app/harken.git
+git clone https://github.com/thutch-conecrow/harken.git
 cd harken
 
 # Install dependencies
