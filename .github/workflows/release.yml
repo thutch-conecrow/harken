@@ -122,9 +122,19 @@ jobs:
           fi
           node -e "console.log('NODE_AUTH_TOKEN set:', !!process.env.NODE_AUTH_TOKEN)"
 
+      - name: Debug token env names
+        run: env | cut -d= -f1 | rg -i "token|npm"
+
+      - name: Force OIDC (no token auth)
+        run: |
+          unset NODE_AUTH_TOKEN NPM_TOKEN
+          rm -f ~/.npmrc
+
       - name: Publish to npm
         working-directory: packages/sdk-react-native
         run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ""
 
       - name: Commit version bump
         run: |
