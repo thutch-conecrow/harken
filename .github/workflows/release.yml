@@ -136,6 +136,11 @@ jobs:
       - name: Debug npm config source
         run: npm config list -l | grep -i -E "provenance|registry|userconfig" || true
 
+      - name: Debug npm registry metadata
+        run: |
+          npm view @harkenapp/sdk-react-native repository --json || true
+          npm view @harkenapp/sdk-react-native@0.0.1-alpha.2 repository --json || true
+
       - name: Debug OIDC claims (safe)
         env:
           AUDIENCE: npm
