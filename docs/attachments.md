@@ -7,13 +7,13 @@ Harken supports file attachments with feedback submissions. Users can attach pho
 The `FeedbackSheet` component includes attachment support by default:
 
 ```tsx
-import { FeedbackSheet } from '@harkenapp/sdk-react-native';
+import { FeedbackSheet } from "@harkenapp/sdk-react-native";
 
 <FeedbackSheet
-  enableAttachments={true}  // default
-  maxAttachments={5}        // default
+  enableAttachments={true} // default
+  maxAttachments={5} // default
   onSuccess={() => navigation.goBack()}
-/>
+/>;
 ```
 
 ## Configuring Attachment Sources
@@ -23,9 +23,9 @@ Control which sources are available:
 ```tsx
 <FeedbackSheet
   attachmentSources={{
-    camera: true,   // Take photo with camera
-    library: true,  // Select from photo library
-    files: true,    // Pick documents (images, PDFs)
+    camera: true, // Take photo with camera
+    library: true, // Select from photo library
+    files: true, // Pick documents (images, PDFs)
   }}
 />
 ```
@@ -55,7 +55,7 @@ import {
   AttachmentGrid,
   AttachmentPicker,
   UploadPhase,
-} from '@harkenapp/sdk-react-native';
+} from "@harkenapp/sdk-react-native";
 
 function CustomFeedbackForm() {
   const {
@@ -79,17 +79,19 @@ function CustomFeedbackForm() {
       />
 
       {/* Picker buttons */}
-      <Button onPress={() => pickImage('camera')} title="Take Photo" />
-      <Button onPress={() => pickImage('library')} title="Choose Photo" />
+      <Button onPress={() => pickImage("camera")} title="Take Photo" />
+      <Button onPress={() => pickImage("library")} title="Choose Photo" />
       <Button onPress={pickDocument} title="Pick Document" />
 
       {/* Submit feedback */}
       <Button
-        onPress={() => submitFeedback({
-          message: 'My feedback',
-          attachments: getAttachmentIds(),
-        })}
-        title={hasActiveUploads ? 'Submit (uploads continue)' : 'Submit'}
+        onPress={() =>
+          submitFeedback({
+            message: "My feedback",
+            attachments: getAttachmentIds(),
+          })
+        }
+        title={hasActiveUploads ? "Submit (uploads continue)" : "Submit"}
       />
     </View>
   );
@@ -100,20 +102,20 @@ function CustomFeedbackForm() {
 
 Attachments go through these phases:
 
-| Phase | Description |
-|-------|-------------|
-| `QUEUED` | Waiting to be processed |
-| `UPLOADING` | Uploading to storage |
+| Phase        | Description                             |
+| ------------ | --------------------------------------- |
+| `QUEUED`     | Waiting to be processed                 |
+| `UPLOADING`  | Uploading to storage                    |
 | `CONFIRMING` | Upload complete, confirming with server |
-| `COMPLETED` | Successfully uploaded and confirmed |
-| `FAILED` | Failed after max retries |
+| `COMPLETED`  | Successfully uploaded and confirmed     |
+| `FAILED`     | Failed after max retries                |
 
 Check the phase to show appropriate UI:
 
 ```tsx
-import { UploadPhase } from '@harkenapp/sdk-react-native';
+import { UploadPhase } from "@harkenapp/sdk-react-native";
 
-attachments.map(att => {
+attachments.map((att) => {
   switch (att.phase) {
     case UploadPhase.QUEUED:
     case UploadPhase.UPLOADING:
@@ -131,6 +133,7 @@ attachments.map(att => {
 ## Background Uploads
 
 Uploads continue in the background:
+
 - If the user navigates away
 - If the app is backgrounded (within OS limits)
 - If network connectivity is temporarily lost
@@ -142,19 +145,20 @@ const { hasActiveUploads, getAttachmentIds } = useAttachmentUpload();
 
 // Can submit even with active uploads
 await submitFeedback({
-  message: 'Bug report',
+  message: "Bug report",
   attachments: getAttachmentIds(), // IDs are available immediately
 });
 
 // Inform user if needed
 if (hasActiveUploads) {
-  Alert.alert('Submitted', 'Your feedback was sent. Attachments are still uploading.');
+  Alert.alert("Submitted", "Your feedback was sent. Attachments are still uploading.");
 }
 ```
 
 ## Automatic Retry
 
 Failed uploads are automatically retried with exponential backoff:
+
 - Initial delay: 1 second
 - Max delay: 30 seconds
 - Max retries: 3
@@ -164,10 +168,7 @@ After max retries, the attachment enters `FAILED` state. Users can manually retr
 ```tsx
 const { retryAttachment } = useAttachmentUpload();
 
-<Button
-  onPress={() => retryAttachment(attachment.attachmentId)}
-  title="Retry Upload"
-/>
+<Button onPress={() => retryAttachment(attachment.attachmentId)} title="Retry Upload" />;
 ```
 
 ## Attachment State
@@ -176,30 +177,30 @@ Each attachment has this state:
 
 ```typescript
 interface AttachmentState {
-  attachmentId: string;  // Server-assigned ID
-  localUri: string;      // Local file URI for preview
-  fileName: string;      // Original filename
-  mimeType: string;      // MIME type (image/jpeg, application/pdf, etc.)
-  phase: UploadPhase;    // Current upload phase
-  progress: number;      // Upload progress (0.0 - 1.0)
-  error?: string;        // Error message if failed
+  attachmentId: string; // Server-assigned ID
+  localUri: string; // Local file URI for preview
+  fileName: string; // Original filename
+  mimeType: string; // MIME type (image/jpeg, application/pdf, etc.)
+  phase: UploadPhase; // Current upload phase
+  progress: number; // Upload progress (0.0 - 1.0)
+  error?: string; // Error message if failed
 }
 ```
 
 ## useAttachmentUpload API
 
-| Method | Description |
-|--------|-------------|
-| `attachments` | Array of current attachments |
-| `pickImage(source)` | Pick from `'camera'` or `'library'` |
-| `pickDocument()` | Pick document (images or PDFs) |
-| `addAttachment(params)` | Add attachment from existing URI |
-| `removeAttachment(id)` | Remove and cancel if uploading |
-| `retryAttachment(id)` | Retry a failed upload |
-| `getAttachmentIds()` | Get IDs for feedback submission |
-| `hasActiveUploads` | True if any uploads in progress |
-| `clearCompleted()` | Remove all completed attachments |
-| `clearFailed()` | Remove all failed attachments |
+| Method                  | Description                         |
+| ----------------------- | ----------------------------------- |
+| `attachments`           | Array of current attachments        |
+| `pickImage(source)`     | Pick from `'camera'` or `'library'` |
+| `pickDocument()`        | Pick document (images or PDFs)      |
+| `addAttachment(params)` | Add attachment from existing URI    |
+| `removeAttachment(id)`  | Remove and cancel if uploading      |
+| `retryAttachment(id)`   | Retry a failed upload               |
+| `getAttachmentIds()`    | Get IDs for feedback submission     |
+| `hasActiveUploads`      | True if any uploads in progress     |
+| `clearCompleted()`      | Remove all completed attachments    |
+| `clearFailed()`         | Remove all failed attachments       |
 
 ## Components
 
@@ -212,7 +213,7 @@ Displays attachment previews with upload status:
   attachments={attachments}
   onRemove={removeAttachment}
   onRetry={retryAttachment}
-  onAdd={openPicker}           // Optional: show add button
+  onAdd={openPicker} // Optional: show add button
   maxAttachments={5}
   showAddButton={true}
 />
@@ -267,10 +268,12 @@ Maximum file size is configured server-side (default: 10MB).
 The SDK's Expo config plugin automatically configures required permissions:
 
 **iOS:**
+
 - `NSCameraUsageDescription` - Camera access
 - `NSPhotoLibraryUsageDescription` - Photo library access
 
 **Android:**
+
 - `android.permission.CAMERA`
 - `android.permission.READ_MEDIA_IMAGES` (Android 13+)
 - `android.permission.READ_EXTERNAL_STORAGE` (Android 12-)

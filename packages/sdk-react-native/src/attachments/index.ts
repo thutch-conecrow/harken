@@ -38,7 +38,7 @@ export {
   // Domain types
   UploadPhase,
   DEFAULT_UPLOAD_RETRY_CONFIG,
-} from '../index';
+} from "../index";
 
 export type {
   // Attachment hook types
@@ -67,4 +67,4 @@ export type {
   QueueStatus,
   UploadProgress,
   UploadRetryConfig,
-} from '../index';
+} from "../index";

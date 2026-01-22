@@ -9,22 +9,22 @@ Complete reference for all exports from `@harkenapp/sdk-react-native`.
 Wrap your app to enable Harken functionality.
 
 ```tsx
-import { HarkenProvider } from '@harkenapp/sdk-react-native';
+import { HarkenProvider } from "@harkenapp/sdk-react-native";
 
 <HarkenProvider
   config={{
-    publishableKey: 'pk_live_xxx',
-    userToken: 'optional-jwt',
-    apiBaseUrl: 'https://api.harken.app',
+    publishableKey: "pk_live_xxx",
+    userToken: "optional-jwt",
+    apiBaseUrl: "https://api.harken.app",
     debug: false,
   }}
   themeMode="system"
-  lightTheme={{ colors: { primary: '#007AFF' } }}
-  darkTheme={{ colors: { primary: '#0A84FF' } }}
+  lightTheme={{ colors: { primary: "#007AFF" } }}
+  darkTheme={{ colors: { primary: "#0A84FF" } }}
   storage={customStorage}
 >
   <App />
-</HarkenProvider>
+</HarkenProvider>;
 ```
 
 ## High-Level Components
@@ -34,42 +34,36 @@ import { HarkenProvider } from '@harkenapp/sdk-react-native';
 Batteries-included feedback form with attachments.
 
 ```tsx
-import { FeedbackSheet } from '@harkenapp/sdk-react-native';
+import { FeedbackSheet } from "@harkenapp/sdk-react-native";
 
 <FeedbackSheet
   // Callbacks
   onSuccess={(result) => {}}
   onError={(error) => {}}
   onCancel={() => {}}
-
   // Labels
-  title="Send Feedback"         // Set to "" to hide title section
+  title="Send Feedback" // Set to "" to hide title section
   placeholder="What would you like to share?"
   submitLabel="Submit"
   cancelLabel="Cancel"
-
   // Categories
-  categories={[{ value: 'bug', label: 'Bug' }]}
+  categories={[{ value: "bug", label: "Bug" }]}
   requireCategory={false}
-
   // Message
   minMessageLength={1}
   maxMessageLength={5000}
-
   // Attachments
   enableAttachments={true}
   maxAttachments={5}
   attachmentSources={{ camera: true, library: true, files: true }}
-
   // Behavior
   showSuccessAlert={true}
   clearOnSuccess={true}
-
   // Layout (for modal embedding)
-  layout="flex"                 // 'flex' | 'auto' - use 'auto' for modals
-  containerStyle={{}}           // Outer container style
-  contentStyle={{}}             // Inner scrollable content style
-/>
+  layout="flex" // 'flex' | 'auto' - use 'auto' for modals
+  containerStyle={{}} // Outer container style
+  contentStyle={{}} // Inner scrollable content style
+/>;
 ```
 
 ## Hooks
@@ -80,18 +74,18 @@ Submit feedback to Harken.
 
 ```tsx
 const {
-  submitFeedback,  // (params) => Promise<FeedbackSubmissionResponse>
-  isSubmitting,    // boolean
-  isInitializing,  // boolean (waiting for anonymous ID)
-  error,           // Error | null
-  clearError,      // () => void
+  submitFeedback, // (params) => Promise<FeedbackSubmissionResponse>
+  isSubmitting, // boolean
+  isInitializing, // boolean (waiting for anonymous ID)
+  error, // Error | null
+  clearError, // () => void
 } = useFeedback();
 
 await submitFeedback({
-  message: 'Bug report',
-  category: 'bug',  // 'bug' | 'idea' | 'ux' | 'other'
-  attachments: ['attachment-id-1'],
-  metadata: { customField: 'value' },
+  message: "Bug report",
+  category: "bug", // 'bug' | 'idea' | 'ux' | 'other'
+  attachments: ["attachment-id-1"],
+  metadata: { customField: "value" },
 });
 ```
 
@@ -101,16 +95,16 @@ Manage file uploads.
 
 ```tsx
 const {
-  attachments,       // AttachmentState[]
-  pickImage,         // (source: 'camera' | 'library') => Promise<AttachmentState | null>
-  pickDocument,      // () => Promise<AttachmentState | null>
-  addAttachment,     // (params) => Promise<AttachmentState>
-  removeAttachment,  // (id: string) => Promise<void>
-  retryAttachment,   // (id: string) => Promise<void>
-  getAttachmentIds,  // () => string[]
-  hasActiveUploads,  // boolean
-  clearCompleted,    // () => void
-  clearFailed,       // () => void
+  attachments, // AttachmentState[]
+  pickImage, // (source: 'camera' | 'library') => Promise<AttachmentState | null>
+  pickDocument, // () => Promise<AttachmentState | null>
+  addAttachment, // (params) => Promise<AttachmentState>
+  removeAttachment, // (id: string) => Promise<void>
+  retryAttachment, // (id: string) => Promise<void>
+  getAttachmentIds, // () => string[]
+  hasActiveUploads, // boolean
+  clearCompleted, // () => void
+  clearFailed, // () => void
 } = useAttachmentUpload();
 ```
 
@@ -125,8 +119,8 @@ const {
   retryAttachment,
   getAttachmentIds,
   hasActiveUploads,
-  openPicker,        // () => void
-  pickerProps,       // Props to spread on AttachmentPicker
+  openPicker, // () => void
+  pickerProps, // Props to spread on AttachmentPicker
   enabledSourceCount,
 } = useAttachmentPicker({
   camera: true,
@@ -143,18 +137,18 @@ Access current resolved theme with all tokens populated.
 const theme = useHarkenTheme();
 
 // Flat token access
-theme.colors.primary
-theme.colors.chipBackground
-theme.spacing.md
-theme.radii.chip
-theme.sizing.buttonMinHeight
-theme.opacity.disabled
+theme.colors.primary;
+theme.colors.chipBackground;
+theme.spacing.md;
+theme.radii.chip;
+theme.sizing.buttonMinHeight;
+theme.opacity.disabled;
 
 // Structured component access (same values, better discoverability)
-theme.components.chip.background
-theme.components.input.border
-theme.components.button.primary.text
-theme.components.form.padding
+theme.components.chip.background;
+theme.components.input.border;
+theme.components.button.primary.text;
+theme.components.form.padding;
 ```
 
 ### useHarkenContext
@@ -171,10 +165,10 @@ Access the anonymous device ID.
 
 ```tsx
 const {
-  anonymousId,   // string | null
-  isLoading,     // boolean
-  error,         // Error | null
-  regenerate,    // () => Promise<string>
+  anonymousId, // string | null
+  isLoading, // boolean
+  error, // Error | null
+  regenerate, // () => Promise<string>
 } = useAnonymousId();
 ```
 
@@ -194,9 +188,9 @@ Text component with theme support.
 
 ```tsx
 <ThemedText
-  variant="title"  // 'title' | 'body' | 'label' | 'caption'
-  secondary        // Use secondary text color
-  color="#custom"  // Override color
+  variant="title" // 'title' | 'body' | 'label' | 'caption'
+  secondary // Use secondary text color
+  color="#custom" // Override color
 >
   Hello
 </ThemedText>
@@ -223,7 +217,7 @@ Button with theme support.
 ```tsx
 <ThemedButton
   title="Submit"
-  variant="primary"  // 'primary' | 'secondary'
+  variant="primary" // 'primary' | 'secondary'
   onPress={handlePress}
   disabled={false}
   loading={false}
@@ -240,8 +234,8 @@ Feedback category picker.
   value={category}
   onChange={setCategory}
   categories={[
-    { value: 'bug', label: 'Bug', icon: '🐛' },
-    { value: 'idea', label: 'Idea', icon: '💡' },
+    { value: "bug", label: "Bug", icon: "🐛" },
+    { value: "idea", label: "Idea", icon: "💡" },
   ]}
   disabled={false}
 />
@@ -298,11 +292,7 @@ Single attachment preview.
 Upload progress overlay.
 
 ```tsx
-<UploadStatusOverlay
-  phase={UploadPhase.UPLOADING}
-  progress={0.5}
-  onRetry={handleRetry}
-/>
+<UploadStatusOverlay phase={UploadPhase.UPLOADING} progress={0.5} onRetry={handleRetry} />
 ```
 
 ## Theme
@@ -312,12 +302,12 @@ Upload progress overlay.
 ```typescript
 // Input theme (what you provide)
 interface HarkenTheme {
-  colors: HarkenColors;        // Base + optional component tokens
+  colors: HarkenColors; // Base + optional component tokens
   typography: HarkenTypography;
-  spacing: HarkenSpacing;      // Base + optional component tokens
-  radii: HarkenRadii;          // Base + optional component tokens
-  sizing?: HarkenSizing;       // Optional sizing overrides
-  opacity?: HarkenOpacity;     // Optional opacity overrides
+  spacing: HarkenSpacing; // Base + optional component tokens
+  radii: HarkenRadii; // Base + optional component tokens
+  sizing?: HarkenSizing; // Optional sizing overrides
+  opacity?: HarkenOpacity; // Optional opacity overrides
 }
 
 // Partial theme for overriding specific values
@@ -332,16 +322,16 @@ interface PartialHarkenTheme {
 
 // Resolved theme (what useHarkenTheme returns)
 interface ResolvedHarkenTheme {
-  colors: ResolvedHarkenColors;    // All tokens populated
+  colors: ResolvedHarkenColors; // All tokens populated
   typography: HarkenTypography;
   spacing: ResolvedHarkenSpacing;
   radii: ResolvedHarkenRadii;
   sizing: ResolvedHarkenSizing;
   opacity: ResolvedHarkenOpacity;
-  components: HarkenComponentTokens;  // Structured access
+  components: HarkenComponentTokens; // Structured access
 }
 
-type ThemeMode = 'light' | 'dark' | 'system';
+type ThemeMode = "light" | "dark" | "system";
 ```
 
 ### Default Themes
@@ -357,11 +347,11 @@ import {
   defaultRadii,
   createTheme,
   resolveTheme,
-} from '@harkenapp/sdk-react-native';
+} from "@harkenapp/sdk-react-native";
 
 // Create theme with overrides (for passing to HarkenProvider)
 const customTheme = createTheme(lightTheme, {
-  colors: { primary: '#7C3AED' },
+  colors: { primary: "#7C3AED" },
   sizing: { buttonMinHeight: 52 },
   opacity: { disabled: 0.5 },
 });
@@ -374,8 +364,8 @@ const customTheme = createTheme(lightTheme, {
 Create storage adapter from expo-secure-store.
 
 ```tsx
-import * as SecureStore from 'expo-secure-store';
-import { createSecureStoreAdapter } from '@harkenapp/sdk-react-native';
+import * as SecureStore from "expo-secure-store";
+import { createSecureStoreAdapter } from "@harkenapp/sdk-react-native";
 
 const storage = createSecureStoreAdapter(SecureStore);
 ```
@@ -385,7 +375,7 @@ const storage = createSecureStoreAdapter(SecureStore);
 Create in-memory storage (for testing).
 
 ```tsx
-import { createMemoryStorage } from '@harkenapp/sdk-react-native';
+import { createMemoryStorage } from "@harkenapp/sdk-react-native";
 
 const storage = createMemoryStorage();
 ```
@@ -397,11 +387,11 @@ const storage = createMemoryStorage();
 Low-level API client (usually not needed directly).
 
 ```tsx
-import { createHarkenClient } from '@harkenapp/sdk-react-native';
+import { createHarkenClient } from "@harkenapp/sdk-react-native";
 
 const client = createHarkenClient({
-  publishableKey: 'pk_live_xxx',
-  apiBaseUrl: 'https://api.harken.app',
+  publishableKey: "pk_live_xxx",
+  apiBaseUrl: "https://api.harken.app",
 });
 ```
 
@@ -409,10 +399,10 @@ const client = createHarkenClient({
 
 ```tsx
 import {
-  HarkenError,        // Base error class
-  HarkenApiError,     // API returned an error
+  HarkenError, // Base error class
+  HarkenApiError, // API returned an error
   HarkenNetworkError, // Network request failed
-} from '@harkenapp/sdk-react-native';
+} from "@harkenapp/sdk-react-native";
 ```
 
 ## Domain Types
@@ -421,24 +411,24 @@ import {
 
 ```typescript
 enum UploadPhase {
-  QUEUED = 'queued',
-  UPLOADING = 'uploading',
-  CONFIRMING = 'confirming',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
+  QUEUED = "queued",
+  UPLOADING = "uploading",
+  CONFIRMING = "confirming",
+  COMPLETED = "completed",
+  FAILED = "failed",
 }
 ```
 
 ### FeedbackCategory
 
 ```typescript
-type FeedbackCategory = 'bug' | 'idea' | 'ux' | 'other';
+type FeedbackCategory = "bug" | "idea" | "ux" | "other";
 ```
 
 ### Platform
 
 ```typescript
-type Platform = 'ios' | 'android';
+type Platform = "ios" | "android";
 ```
 
 ## Constants
@@ -448,7 +438,7 @@ type Platform = 'ios' | 'android';
 Default feedback categories.
 
 ```tsx
-import { DEFAULT_CATEGORIES } from '@harkenapp/sdk-react-native';
+import { DEFAULT_CATEGORIES } from "@harkenapp/sdk-react-native";
 
 // [
 //   { value: 'bug', label: 'Bug', icon: '🐛' },
@@ -463,7 +453,7 @@ import { DEFAULT_CATEGORIES } from '@harkenapp/sdk-react-native';
 Default retry configuration for API calls.
 
 ```tsx
-import { DEFAULT_RETRY_CONFIG } from '@harkenapp/sdk-react-native';
+import { DEFAULT_RETRY_CONFIG } from "@harkenapp/sdk-react-native";
 
 // { maxRetries: 3, initialDelay: 1000, maxDelay: 30000 }
 ```

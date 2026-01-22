@@ -4,10 +4,10 @@
  * Uses AsyncStorage to persist queue state across app restarts.
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { PersistedQueue, QueueItem } from '../domain';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import type { PersistedQueue, QueueItem } from "../domain";
 
-const STORAGE_KEY = '@harkenapp/upload-queue';
+const STORAGE_KEY = "@harkenapp/upload-queue";
 const CURRENT_VERSION = 1;
 
 /**
@@ -34,7 +34,7 @@ export class UploadQueueStorage {
 
       return parsed.items;
     } catch (error) {
-      console.error('[UploadQueueStorage] Failed to load queue:', error);
+      console.error("[UploadQueueStorage] Failed to load queue:", error);
       return [];
     }
   }
@@ -50,7 +50,7 @@ export class UploadQueueStorage {
       };
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch (error) {
-      console.error('[UploadQueueStorage] Failed to save queue:', error);
+      console.error("[UploadQueueStorage] Failed to save queue:", error);
     }
   }
 
@@ -61,7 +61,7 @@ export class UploadQueueStorage {
     try {
       await AsyncStorage.removeItem(STORAGE_KEY);
     } catch (error) {
-      console.error('[UploadQueueStorage] Failed to clear queue:', error);
+      console.error("[UploadQueueStorage] Failed to clear queue:", error);
     }
   }
 
@@ -70,9 +70,7 @@ export class UploadQueueStorage {
    * For now, unknown versions are reset to empty.
    */
   private migrateQueue(data: PersistedQueue): QueueItem[] {
-    console.warn(
-      `[UploadQueueStorage] Unknown queue version ${data.version}, resetting`
-    );
+    console.warn(`[UploadQueueStorage] Unknown queue version ${data.version}, resetting`);
     return [];
   }
 }

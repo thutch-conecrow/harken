@@ -5,13 +5,14 @@
  * Uploads happen in background via the singleton uploadQueueService.
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import * as ImagePicker from 'expo-image-picker';
-import * as DocumentPicker from 'expo-document-picker';
-import * as FileSystem from 'expo-file-system/legacy';
-import { uploadQueueService } from '../services';
-import { UploadPhase, UploadProgress } from '../domain';
-import { useHarkenContext } from './useHarkenContext';
+import { useState, useEffect, useCallback, useRef } from "react";
+import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system/legacy";
+import { uploadQueueService } from "../services";
+import type { UploadProgress } from "../domain";
+import { UploadPhase } from "../domain";
+import { useHarkenContext } from "./useHarkenContext";
 
 /**
  * State for a single attachment.
@@ -41,7 +42,7 @@ export interface UseAttachmentUploadResult {
   attachments: AttachmentState[];
 
   /** Pick image from camera or library */
-  pickImage: (source: 'camera' | 'library') => Promise<AttachmentState | null>;
+  pickImage: (source: "camera" | "library") => Promise<AttachmentState | null>;
 
   /** Pick document (images or PDFs) */
   pickDocument: () => Promise<AttachmentState | null>;
@@ -118,9 +119,7 @@ export interface UseAttachmentUploadResult {
  */
 export function useAttachmentUpload(): UseAttachmentUploadResult {
   const { client, config } = useHarkenContext();
-  const [attachments, setAttachments] = useState<Map<string, AttachmentState>>(
-    new Map()
-  );
+  const [attachments, setAttachments] = useState<Map<string, AttachmentState>>(new Map());
 
   // Track which attachment IDs this hook instance is managing
   const attachmentIdsRef = useRef<Set<string>>(new Set());
@@ -142,26 +141,24 @@ export function useAttachmentUpload(): UseAttachmentUploadResult {
       return;
     }
 
-    const unsubProgress = uploadQueueService.onProgress(
-      (progress: UploadProgress) => {
-        // Only track attachments we added
-        if (!attachmentIdsRef.current.has(progress.attachmentId)) return;
+    const unsubProgress = uploadQueueService.onProgress((progress: UploadProgress) => {
+      // Only track attachments we added
+      if (!attachmentIdsRef.current.has(progress.attachmentId)) return;
 
-        setAttachments((prev) => {
-          const existing = prev.get(progress.attachmentId);
-          if (!existing) return prev;
+      setAttachments((prev) => {
+        const existing = prev.get(progress.attachmentId);
+        if (!existing) return prev;
 
-          const next = new Map(prev);
-          next.set(progress.attachmentId, {
-            ...existing,
-            phase: progress.phase,
-            progress: progress.progress,
-            error: progress.error,
-          });
-          return next;
+        const next = new Map(prev);
+        next.set(progress.attachmentId, {
+          ...existing,
+          phase: progress.phase,
+          progress: progress.progress,
+          error: progress.error,
         });
-      }
-    );
+        return next;
+      });
+    });
 
     return () => {
       unsubProgress();
@@ -206,14 +203,14 @@ export function useAttachmentUpload(): UseAttachmentUploadResult {
    * Pick an image from camera or photo library.
    */
   const pickImage = useCallback(
-    async (source: 'camera' | 'library'): Promise<AttachmentState | null> => {
+    async (source: "camera" | "library"): Promise<AttachmentState | null> => {
       const options: ImagePicker.ImagePickerOptions = {
-        mediaTypes: ['images'],
+        mediaTypes: ["images"],
         quality: 0.8,
       };
 
       const result =
-        source === 'camera'
+        source === "camera"
           ? await ImagePicker.launchCameraAsync(options)
           : await ImagePicker.launchImageLibraryAsync(options);
 
@@ -223,7 +220,7 @@ export function useAttachmentUpload(): UseAttachmentUploadResult {
 
       const asset = result.assets[0];
       const fileName = asset.fileName ?? `image_${Date.now()}.jpg`;
-      const mimeType = asset.mimeType ?? 'image/jpeg';
+      const mimeType = asset.mimeType ?? "image/jpeg";
 
       // Get file size - use asset.fileSize if available, otherwise query filesystem
       let fileSize = asset.fileSize;
@@ -247,7 +244,7 @@ export function useAttachmentUpload(): UseAttachmentUploadResult {
    */
   const pickDocument = useCallback(async (): Promise<AttachmentState | null> => {
     const result = await DocumentPicker.getDocumentAsync({
-      type: ['image/*', 'application/pdf'],
+      type: ["image/*", "application/pdf"],
       copyToCacheDirectory: true,
     });
 
@@ -266,7 +263,7 @@ export function useAttachmentUpload(): UseAttachmentUploadResult {
 
     return addAttachment({
       uri: asset.uri,
-      mimeType: asset.mimeType ?? 'application/octet-stream',
+      mimeType: asset.mimeType ?? "application/octet-stream",
       fileName: asset.name,
       fileSize,
     });
@@ -275,28 +272,22 @@ export function useAttachmentUpload(): UseAttachmentUploadResult {
   /**
    * Retry a failed attachment upload.
    */
-  const retryAttachment = useCallback(
-    async (attachmentId: string): Promise<void> => {
-      await uploadQueueService.retryItem(attachmentId);
-    },
-    []
-  );
+  const retryAttachment = useCallback(async (attachmentId: string): Promise<void> => {
+    await uploadQueueService.retryItem(attachmentId);
+  }, []);
 
   /**
    * Remove an attachment (cancels upload if in progress).
    */
-  const removeAttachment = useCallback(
-    async (attachmentId: string): Promise<void> => {
-      await uploadQueueService.cancelItem(attachmentId);
-      attachmentIdsRef.current.delete(attachmentId);
-      setAttachments((prev) => {
-        const next = new Map(prev);
-        next.delete(attachmentId);
-        return next;
-      });
-    },
-    []
-  );
+  const removeAttachment = useCallback(async (attachmentId: string): Promise<void> => {
+    await uploadQueueService.cancelItem(attachmentId);
+    attachmentIdsRef.current.delete(attachmentId);
+    setAttachments((prev) => {
+      const next = new Map(prev);
+      next.delete(attachmentId);
+      return next;
+    });
+  }, []);
 
   /**
    * Get all attachment IDs for feedback submission.

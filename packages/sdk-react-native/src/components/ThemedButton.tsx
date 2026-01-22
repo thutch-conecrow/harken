@@ -1,16 +1,12 @@
-import React from 'react';
-import {
-  Pressable,
-  ActivityIndicator,
-  StyleSheet,
-} from 'react-native';
-import type { PressableProps, ViewStyle, TextStyle, StyleProp } from 'react-native';
-import { useHarkenTheme } from '../hooks';
-import { ThemedText } from './ThemedText';
+import React from "react";
+import { Pressable, ActivityIndicator, StyleSheet } from "react-native";
+import type { PressableProps, ViewStyle, TextStyle, StyleProp } from "react-native";
+import { useHarkenTheme } from "../hooks";
+import { ThemedText } from "./ThemedText";
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
+export type ButtonVariant = "primary" | "secondary" | "ghost";
 
-export interface ThemedButtonProps extends Omit<PressableProps, 'children' | 'style'> {
+export interface ThemedButtonProps extends Omit<PressableProps, "children" | "style"> {
   /** Button text */
   title: string;
   /** Button variant */
@@ -42,7 +38,7 @@ export interface ThemedButtonProps extends Omit<PressableProps, 'children' | 'st
  */
 export function ThemedButton({
   title,
-  variant = 'primary',
+  variant = "primary",
   loading = false,
   fullWidth = false,
   disabled,
@@ -55,18 +51,16 @@ export function ThemedButton({
 
   const getBackgroundColor = (pressed: boolean): string => {
     if (disabled) {
-      return variant === 'primary'
-        ? theme.colors.border
-        : 'transparent';
+      return variant === "primary" ? theme.colors.border : "transparent";
     }
 
     switch (variant) {
-      case 'primary':
+      case "primary":
         return pressed ? button.primary.backgroundPressed : button.primary.background;
-      case 'secondary':
+      case "secondary":
         return pressed ? theme.colors.border : button.secondary.background;
-      case 'ghost':
-        return pressed ? theme.colors.surface : 'transparent';
+      case "ghost":
+        return pressed ? theme.colors.surface : "transparent";
     }
   };
 
@@ -76,21 +70,21 @@ export function ThemedButton({
     }
 
     switch (variant) {
-      case 'primary':
+      case "primary":
         return button.primary.text;
-      case 'secondary':
+      case "secondary":
         return button.secondary.text;
-      case 'ghost':
+      case "ghost":
         return button.ghost.text;
     }
   };
 
   const getBorderColor = (): string => {
     switch (variant) {
-      case 'secondary':
+      case "secondary":
         return button.secondary.border;
       default:
-        return 'transparent';
+        return "transparent";
     }
   };
 
@@ -103,20 +97,20 @@ export function ThemedButton({
       style={({ pressed }) => {
         const baseStyle: ViewStyle = {
           backgroundColor: getBackgroundColor(pressed),
-          borderWidth: variant === 'secondary' ? 1 : 0,
+          borderWidth: variant === "secondary" ? 1 : 0,
           borderColor: getBorderColor(),
           borderRadius: button.radius,
           paddingVertical: button.paddingVertical + 4,
           paddingHorizontal: button.paddingHorizontal,
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'row',
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "row",
           minHeight: button.minHeight,
           opacity: disabled ? theme.opacity.disabled : 1,
         };
 
         if (fullWidth) {
-          baseStyle.width = '100%';
+          baseStyle.width = "100%";
         }
 
         return [baseStyle, flattenedStyle];
@@ -124,16 +118,9 @@ export function ThemedButton({
       {...props}
     >
       {loading ? (
-        <ActivityIndicator
-          color={getTextColor()}
-          size="small"
-        />
+        <ActivityIndicator color={getTextColor()} size="small" />
       ) : (
-        <ThemedText
-          variant="label"
-          color={getTextColor()}
-          style={textStyle}
-        >
+        <ThemedText variant="label" color={getTextColor()} style={textStyle}>
           {title}
         </ThemedText>
       )}

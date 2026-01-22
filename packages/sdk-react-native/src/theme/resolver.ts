@@ -14,7 +14,7 @@ import type {
   ResolvedHarkenOpacity,
   ResolvedHarkenTheme,
   HarkenComponentTokens,
-} from './types';
+} from "./types";
 
 // ============================================================================
 // DEFAULT VALUES
@@ -36,7 +36,7 @@ const DEFAULT_OPACITY: ResolvedHarkenOpacity = {
 };
 
 /** Default progress track color (used when no theme-aware value is available) */
-const DEFAULT_PROGRESS_TRACK = 'rgba(255, 255, 255, 0.3)';
+const DEFAULT_PROGRESS_TRACK = "rgba(255, 255, 255, 0.3)";
 
 // ============================================================================
 // COLOR RESOLUTION
@@ -58,7 +58,11 @@ function resolveColors(
   const primaryPressed = input?.primaryPressed ?? defaults.primaryPressed;
   const background = input?.background ?? defaults.background;
   // Surface resolution order: explicit surface > explicit backgroundSecondary > defaults.surface > defaults.backgroundSecondary
-  const surface = input?.surface ?? input?.backgroundSecondary ?? defaults.surface ?? defaults.backgroundSecondary;
+  const surface =
+    input?.surface ??
+    input?.backgroundSecondary ??
+    defaults.surface ??
+    defaults.backgroundSecondary;
   const backgroundSecondary = input?.backgroundSecondary ?? surface;
   const text = input?.text ?? defaults.text;
   const textSecondary = input?.textSecondary ?? defaults.textSecondary;
@@ -311,8 +315,7 @@ function buildComponentAliases(
   colors: ResolvedHarkenColors,
   spacing: ResolvedHarkenSpacing,
   radii: ResolvedHarkenRadii,
-  sizing: ResolvedHarkenSizing,
-  opacity: ResolvedHarkenOpacity
+  sizing: ResolvedHarkenSizing
 ): HarkenComponentTokens {
   return {
     chip: {
@@ -429,7 +432,7 @@ export function resolveTheme(
   const opacity = resolveOpacity(overrides?.opacity);
 
   // Build component aliases
-  const components = buildComponentAliases(colors, spacing, radii, sizing, opacity);
+  const components = buildComponentAliases(colors, spacing, radii, sizing);
 
   return {
     colors,

@@ -3,13 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@harkenapp/sdk-react-native": [
-        "../../packages/sdk-react-native/src"
-      ]
+      "@harkenapp/sdk-react-native": ["../../packages/sdk-react-native/src"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "include": ["**/*.ts", "**/*.tsx"]
 }

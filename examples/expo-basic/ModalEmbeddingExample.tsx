@@ -1,15 +1,8 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Modal,
-  Pressable,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-} from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { HarkenProvider, FeedbackSheet } from '@harkenapp/sdk-react-native';
-import type { PartialHarkenTheme } from '@harkenapp/sdk-react-native';
+import React, { useState } from "react";
+import { View, Modal, Pressable, Text, StyleSheet, SafeAreaView } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { HarkenProvider, FeedbackSheet } from "@harkenapp/sdk-react-native";
+import type { PartialHarkenTheme } from "@harkenapp/sdk-react-native";
 
 /**
  * Minimal dark theme for modal embedding.
@@ -20,30 +13,30 @@ import type { PartialHarkenTheme } from '@harkenapp/sdk-react-native';
 const modalDarkTheme: PartialHarkenTheme = {
   colors: {
     // Base surface - match your modal's background
-    surface: '#2d2d2d',
+    surface: "#2d2d2d",
 
     // Chip tokens - must contrast with surface
-    chipBackground: '#3d3d3d',
-    chipBorder: '#4d4d4d',
-    chipBackgroundSelected: '#0066ff',
-    chipBorderSelected: '#0066ff',
+    chipBackground: "#3d3d3d",
+    chipBorder: "#4d4d4d",
+    chipBackgroundSelected: "#0066ff",
+    chipBorderSelected: "#0066ff",
 
     // Form background - set to transparent to inherit modal background
     // (defaults to background color, so must be explicit for modal embedding)
-    formBackground: 'transparent',
+    formBackground: "transparent",
 
     // Text colors for dark mode
-    text: '#ffffff',
-    textSecondary: '#a0a0a0',
-    textPlaceholder: '#666666',
+    text: "#ffffff",
+    textSecondary: "#a0a0a0",
+    textPlaceholder: "#666666",
 
     // Primary action color
-    primary: '#0066ff',
+    primary: "#0066ff",
 
     // Input styling
-    inputBackground: '#3d3d3d',
-    inputBorder: '#4d4d4d',
-    inputBorderFocused: '#0066ff',
+    inputBackground: "#3d3d3d",
+    inputBorder: "#4d4d4d",
+    inputBorderFocused: "#0066ff",
   },
 };
 
@@ -73,14 +66,11 @@ export default function ModalEmbeddingExample() {
       <View style={styles.content}>
         <Text style={styles.title}>Modal Embedding Example</Text>
         <Text style={styles.description}>
-          This demonstrates embedding FeedbackSheet in a dark-themed modal
-          using layout="auto" and minimal theme tokens.
+          This demonstrates embedding FeedbackSheet in a dark-themed modal using layout="auto" and
+          minimal theme tokens.
         </Text>
 
-        <Pressable
-          style={styles.button}
-          onPress={() => setModalVisible(true)}
-        >
+        <Pressable style={styles.button} onPress={() => setModalVisible(true)}>
           <Text style={styles.buttonText}>Open Feedback Modal</Text>
         </Pressable>
       </View>
@@ -93,7 +83,7 @@ export default function ModalEmbeddingExample() {
       >
         <HarkenProvider
           config={{
-            publishableKey: 'pk_test_example',
+            publishableKey: "pk_test_example",
             debug: true,
           }}
           themeMode="dark"
@@ -130,65 +120,65 @@ export default function ModalEmbeddingExample() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 12,
-    color: '#1a1a1a',
+    color: "#1a1a1a",
   },
   description: {
     fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
     marginBottom: 24,
     paddingHorizontal: 20,
   },
   button: {
-    backgroundColor: '#0066ff',
+    backgroundColor: "#0066ff",
     paddingVertical: 14,
     paddingHorizontal: 28,
     borderRadius: 8,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: '#2d2d2d',
+    backgroundColor: "#2d2d2d",
   },
   modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#3d3d3d',
+    borderBottomColor: "#3d3d3d",
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#fff',
+    fontWeight: "600",
+    color: "#fff",
   },
   closeButton: {
     width: 32,
     height: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   closeButtonText: {
     fontSize: 28,
-    color: '#999',
+    color: "#999",
     lineHeight: 28,
   },
   feedbackContainer: {

@@ -30,5 +30,5 @@ export interface SecureStorage {
  * @internal
  */
 export const STORAGE_KEYS = {
-  ANON_ID: 'harken_anon_id',
+  ANON_ID: "harken_anon_id",
 } as const;

@@ -1,7 +1,4 @@
-export {
-  UploadPhase,
-  DEFAULT_UPLOAD_RETRY_CONFIG,
-} from './upload-queue';
+export { UploadPhase, DEFAULT_UPLOAD_RETRY_CONFIG } from "./upload-queue";
 
 export type {
   QueueItem,
@@ -9,4 +6,4 @@ export type {
   UploadProgress,
   PersistedQueue,
   UploadRetryConfig,
-} from './upload-queue';
+} from "./upload-queue";

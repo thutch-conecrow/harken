@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
-import type { ViewStyle, StyleProp } from 'react-native';
-import { useHarkenTheme } from '../hooks';
-import { ThemedText } from './ThemedText';
-import { UploadPhase } from '../domain';
+import React from "react";
+import { View, Pressable, ActivityIndicator, StyleSheet } from "react-native";
+import type { ViewStyle, StyleProp } from "react-native";
+import { useHarkenTheme } from "../hooks";
+import { ThemedText } from "./ThemedText";
+import { UploadPhase } from "../domain";
 
 /**
  * Customizable labels for upload status states.
@@ -41,11 +41,7 @@ export interface UploadStatusOverlayProps {
   /** Custom progress renderer */
   renderProgress?: (progress: number) => React.ReactNode;
   /** Custom error renderer */
-  renderError?: (
-    error: string,
-    onRetry?: () => void,
-    onRemove?: () => void
-  ) => React.ReactNode;
+  renderError?: (error: string, onRetry?: () => void, onRemove?: () => void) => React.ReactNode;
   /** Custom success/completed renderer */
   renderSuccess?: (onRemove?: () => void) => React.ReactNode;
 }
@@ -113,20 +109,18 @@ export function UploadStatusOverlay({
 
   // Merge labels with defaults
   const resolvedLabels: Required<UploadStatusLabels> = {
-    retry: labels?.retry ?? 'Retry',
-    remove: labels?.remove ?? 'Remove',
-    cancel: labels?.cancel ?? 'Cancel',
-    confirming: labels?.confirming ?? 'Confirming...',
-    waiting: labels?.waiting ?? 'Waiting...',
-    uploadFailed: labels?.uploadFailed ?? 'Upload failed',
+    retry: labels?.retry ?? "Retry",
+    remove: labels?.remove ?? "Remove",
+    cancel: labels?.cancel ?? "Cancel",
+    confirming: labels?.confirming ?? "Confirming...",
+    waiting: labels?.waiting ?? "Waiting...",
+    uploadFailed: labels?.uploadFailed ?? "Upload failed",
   };
 
   // Completed state - just show a subtle checkmark
   if (phase === UploadPhase.COMPLETED) {
     if (renderSuccess) {
-      return (
-        <View style={[styles.overlay, style]}>{renderSuccess(onRemove)}</View>
-      );
+      return <View style={[styles.overlay, style]}>{renderSuccess(onRemove)}</View>;
     }
 
     return (
@@ -140,9 +134,7 @@ export function UploadStatusOverlay({
             },
           ]}
         >
-          <ThemedText style={[styles.badgeIcon, { color: upload.text }]}>
-            ✓
-          </ThemedText>
+          <ThemedText style={[styles.badgeIcon, { color: upload.text }]}>✓</ThemedText>
         </View>
         {onRemove && (
           <Pressable
@@ -168,9 +160,7 @@ export function UploadStatusOverlay({
 
     if (renderError) {
       return (
-        <View style={[styles.overlay, style]}>
-          {renderError(errorMessage, onRetry, onRemove)}
-        </View>
+        <View style={[styles.overlay, style]}>{renderError(errorMessage, onRetry, onRemove)}</View>
       );
     }
 
@@ -232,12 +222,7 @@ export function UploadStatusOverlay({
     if (renderProgress) {
       return (
         <View
-          style={[
-            styles.overlay,
-            styles.fullOverlay,
-            { backgroundColor: upload.overlay },
-            style,
-          ]}
+          style={[styles.overlay, styles.fullOverlay, { backgroundColor: upload.overlay }, style]}
         >
           {renderProgress(progress)}
         </View>
@@ -246,12 +231,7 @@ export function UploadStatusOverlay({
 
     return (
       <View
-        style={[
-          styles.overlay,
-          styles.fullOverlay,
-          { backgroundColor: upload.overlay },
-          style,
-        ]}
+        style={[styles.overlay, styles.fullOverlay, { backgroundColor: upload.overlay }, style]}
       >
         <ThemedText style={[styles.progressText, { color: upload.text }]}>
           {progressPercent}%
@@ -300,12 +280,7 @@ export function UploadStatusOverlay({
   if (phase === UploadPhase.CONFIRMING) {
     return (
       <View
-        style={[
-          styles.overlay,
-          styles.fullOverlay,
-          { backgroundColor: upload.overlay },
-          style,
-        ]}
+        style={[styles.overlay, styles.fullOverlay, { backgroundColor: upload.overlay }, style]}
       >
         <ActivityIndicator color={upload.text} size="small" />
         <ThemedText style={[styles.confirmingText, { color: upload.text }]}>
@@ -319,12 +294,7 @@ export function UploadStatusOverlay({
   if (phase === UploadPhase.QUEUED) {
     return (
       <View
-        style={[
-          styles.overlay,
-          styles.fullOverlay,
-          { backgroundColor: upload.overlay },
-          style,
-        ]}
+        style={[styles.overlay, styles.fullOverlay, { backgroundColor: upload.overlay }, style]}
       >
         <ActivityIndicator color={upload.text} size="small" />
         <ThemedText style={[styles.queuedText, { color: upload.text }]}>
@@ -358,32 +328,32 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   fullOverlay: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 8,
   },
   completedOverlay: {
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+    flexDirection: "row",
     padding: 4,
   },
   badge: {
     width: 24,
     height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   badgeIcon: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   removeButton: {
     width: 24,
     height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
@@ -391,21 +361,21 @@ const styles = StyleSheet.create({
   },
   removeIcon: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: "700",
     lineHeight: 20,
   },
   progressText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
   },
   progressBarContainer: {
-    width: '80%',
+    width: "80%",
     height: 6,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressBarFill: {
-    height: '100%',
+    height: "100%",
   },
   cancelButton: {
     marginTop: 8,
@@ -429,11 +399,11 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 11,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 8,
   },
   buttonRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
   },
   actionButton: {
@@ -442,6 +412,6 @@ const styles = StyleSheet.create({
   },
   actionButtonText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

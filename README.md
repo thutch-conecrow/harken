@@ -20,13 +20,13 @@ npx expo install @harkenapp/sdk-react-native
 ```
 
 ```tsx
-import { HarkenProvider, FeedbackSheet } from '@harkenapp/sdk-react-native';
+import { HarkenProvider, FeedbackSheet } from "@harkenapp/sdk-react-native";
 
 export default function App() {
   return (
-    <HarkenProvider config={{ publishableKey: 'pk_live_your_key' }}>
+    <HarkenProvider config={{ publishableKey: "pk_live_your_key" }}>
       <YourApp />
-      <FeedbackSheet onSuccess={() => console.log('Submitted!')} />
+      <FeedbackSheet onSuccess={() => console.log("Submitted!")} />
     </HarkenProvider>
   );
 }
@@ -43,8 +43,8 @@ Get your publishable key from [console.harken.app](https://console.harken.app).
 
 ## Packages
 
-| Package | Description |
-|---------|-------------|
+| Package                                                    | Description      |
+| ---------------------------------------------------------- | ---------------- |
 | [@harkenapp/sdk-react-native](./packages/sdk-react-native) | React Native SDK |
 
 ## Examples

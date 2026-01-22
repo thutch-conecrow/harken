@@ -1,9 +1,9 @@
-import React from 'react';
-import { Text } from 'react-native';
-import type { TextProps, TextStyle } from 'react-native';
-import { useHarkenTheme } from '../hooks';
+import React from "react";
+import { Text } from "react-native";
+import type { TextProps, TextStyle } from "react-native";
+import { useHarkenTheme } from "../hooks";
 
-export type TextVariant = 'title' | 'body' | 'label' | 'caption';
+export type TextVariant = "title" | "body" | "label" | "caption";
 
 export interface ThemedTextProps extends TextProps {
   /** Text variant determining size and weight */
@@ -18,7 +18,7 @@ export interface ThemedTextProps extends TextProps {
  * Themed text component that uses Harken theme typography.
  */
 export function ThemedText({
-  variant = 'body',
+  variant = "body",
   color,
   secondary = false,
   style,
@@ -55,10 +55,7 @@ export function ThemedText({
   const textColor = color ?? (secondary ? theme.colors.textSecondary : theme.colors.text);
 
   return (
-    <Text
-      style={[variantStyles[variant], { color: textColor }, style]}
-      {...props}
-    >
+    <Text style={[variantStyles[variant], { color: textColor }, style]} {...props}>
       {children}
     </Text>
   );

@@ -1,20 +1,20 @@
-import type { components } from '../types/index.js';
-import { HarkenApiError, HarkenNetworkError } from './errors';
-import { withRetry } from './retry';
-import type { RetryConfig } from './retry';
+import type { components } from "../types/index.js";
+import { HarkenApiError, HarkenNetworkError } from "./errors";
+import { withRetry } from "./retry";
+import type { RetryConfig } from "./retry";
 
 // Re-export types from contracts for convenience
-type FeedbackSubmission = components['schemas']['FeedbackSubmission'];
-type FeedbackSubmissionResponse = components['schemas']['FeedbackSubmissionResponse'];
-type ErrorResponse = components['schemas']['ErrorResponse'];
+type FeedbackSubmission = components["schemas"]["FeedbackSubmission"];
+type FeedbackSubmissionResponse = components["schemas"]["FeedbackSubmissionResponse"];
+type ErrorResponse = components["schemas"]["ErrorResponse"];
 
 // Attachment types
-type AttachmentPresignRequest = components['schemas']['AttachmentPresignRequest'];
-type AttachmentPresignResponse = components['schemas']['AttachmentPresignResponse'];
-type AttachmentConfirmRequest = components['schemas']['AttachmentConfirmRequest'];
-type AttachmentStatusResponse = components['schemas']['AttachmentStatusResponse'];
+type AttachmentPresignRequest = components["schemas"]["AttachmentPresignRequest"];
+type AttachmentPresignResponse = components["schemas"]["AttachmentPresignResponse"];
+type AttachmentConfirmRequest = components["schemas"]["AttachmentConfirmRequest"];
+type AttachmentStatusResponse = components["schemas"]["AttachmentStatusResponse"];
 
-const DEFAULT_API_BASE_URL = 'https://api.harken.app';
+const DEFAULT_API_BASE_URL = "https://api.harken.app";
 
 export interface HarkenClientConfig {
   /** Publishable API key */
@@ -34,9 +34,9 @@ export interface HarkenClientConfig {
  */
 export class HarkenClient {
   private readonly config: Required<
-    Pick<HarkenClientConfig, 'publishableKey' | 'baseUrl' | 'timeout'>
+    Pick<HarkenClientConfig, "publishableKey" | "baseUrl" | "timeout">
   > &
-    Pick<HarkenClientConfig, 'userToken' | 'retry'>;
+    Pick<HarkenClientConfig, "userToken" | "retry">;
 
   constructor(config: HarkenClientConfig) {
     this.config = {
@@ -51,14 +51,13 @@ export class HarkenClient {
   /**
    * Submit feedback to the API.
    */
-  async submitFeedback(
-    submission: FeedbackSubmission
-  ): Promise<FeedbackSubmissionResponse> {
+  async submitFeedback(submission: FeedbackSubmission): Promise<FeedbackSubmissionResponse> {
     return withRetry(
-      () => this.request<FeedbackSubmissionResponse>('/v1/feedback', {
-        method: 'POST',
-        body: JSON.stringify(submission),
-      }),
+      () =>
+        this.request<FeedbackSubmissionResponse>("/v1/feedback", {
+          method: "POST",
+          body: JSON.stringify(submission),
+        }),
       this.config.retry
     );
   }
@@ -71,13 +70,10 @@ export class HarkenClient {
   ): Promise<AttachmentPresignResponse> {
     return withRetry(
       () =>
-        this.request<AttachmentPresignResponse>(
-          '/v1/feedback/attachments/presign',
-          {
-            method: 'POST',
-            body: JSON.stringify(request),
-          }
-        ),
+        this.request<AttachmentPresignResponse>("/v1/feedback/attachments/presign", {
+          method: "POST",
+          body: JSON.stringify(request),
+        }),
       this.config.retry
     );
   }
@@ -91,13 +87,10 @@ export class HarkenClient {
   ): Promise<AttachmentStatusResponse> {
     return withRetry(
       () =>
-        this.request<AttachmentStatusResponse>(
-          `/v1/feedback/attachments/${attachmentId}/confirm`,
-          {
-            method: 'POST',
-            body: request ? JSON.stringify(request) : undefined,
-          }
-        ),
+        this.request<AttachmentStatusResponse>(`/v1/feedback/attachments/${attachmentId}/confirm`, {
+          method: "POST",
+          body: request ? JSON.stringify(request) : undefined,
+        }),
       this.config.retry
     );
   }
@@ -110,43 +103,33 @@ export class HarkenClient {
     attachmentId: string,
     error?: string
   ): Promise<AttachmentStatusResponse> {
-    return this.request<AttachmentStatusResponse>(
-      `/v1/feedback/attachments/${attachmentId}/fail`,
-      {
-        method: 'POST',
-        body: error ? JSON.stringify({ error }) : undefined,
-      }
-    );
+    return this.request<AttachmentStatusResponse>(`/v1/feedback/attachments/${attachmentId}/fail`, {
+      method: "POST",
+      body: error ? JSON.stringify({ error }) : undefined,
+    });
   }
 
   /**
    * Get attachment status and download URLs.
    */
-  async getAttachmentStatus(
-    attachmentId: string
-  ): Promise<AttachmentStatusResponse> {
-    return this.request<AttachmentStatusResponse>(
-      `/v1/feedback/attachments/${attachmentId}`
-    );
+  async getAttachmentStatus(attachmentId: string): Promise<AttachmentStatusResponse> {
+    return this.request<AttachmentStatusResponse>(`/v1/feedback/attachments/${attachmentId}`);
   }
 
   /**
    * Make an authenticated request to the API.
    */
-  private async request<T>(
-    path: string,
-    options: RequestInit = {}
-  ): Promise<T> {
+  private async request<T>(path: string, options: RequestInit = {}): Promise<T> {
     const url = `${this.config.baseUrl}${path}`;
 
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      'X-Publishable-Key': this.config.publishableKey,
+      "Content-Type": "application/json",
+      "X-Publishable-Key": this.config.publishableKey,
       ...(options.headers as Record<string, string>),
     };
 
     if (this.config.userToken) {
-      headers['X-User-Token'] = this.config.userToken;
+      headers["X-User-Token"] = this.config.userToken;
     }
 
     // Create abort controller for timeout
@@ -165,9 +148,7 @@ export class HarkenClient {
       if (!response.ok) {
         const errorBody = await this.parseErrorResponse(response);
         // Only parse Retry-After for 429 responses
-        const retryAfter = response.status === 429
-          ? this.parseRetryAfter(response)
-          : undefined;
+        const retryAfter = response.status === 429 ? this.parseRetryAfter(response) : undefined;
         throw new HarkenApiError(response.status, errorBody, { retryAfter });
       }
 
@@ -181,18 +162,18 @@ export class HarkenClient {
       }
 
       // Handle abort (timeout)
-      if (error instanceof Error && error.name === 'AbortError') {
-        throw new HarkenNetworkError('Request timed out', error);
+      if (error instanceof Error && error.name === "AbortError") {
+        throw new HarkenNetworkError("Request timed out", error);
       }
 
       // Handle other fetch errors (network issues)
       if (error instanceof TypeError) {
-        throw new HarkenNetworkError('Network request failed', error);
+        throw new HarkenNetworkError("Network request failed", error);
       }
 
       // Unknown error
       throw new HarkenNetworkError(
-        error instanceof Error ? error.message : 'Unknown error',
+        error instanceof Error ? error.message : "Unknown error",
         error instanceof Error ? error : undefined
       );
     }
@@ -209,7 +190,7 @@ export class HarkenClient {
       return {
         error: {
           code: `http_${response.status}`,
-          message: response.statusText || 'Request failed',
+          message: response.statusText || "Request failed",
         },
       };
     }
@@ -220,7 +201,7 @@ export class HarkenClient {
    * Supports both delta-seconds and HTTP-date formats.
    */
   private parseRetryAfter(response: Response): number | undefined {
-    const retryAfter = response.headers.get('Retry-After');
+    const retryAfter = response.headers.get("Retry-After");
     if (!retryAfter) {
       return undefined;
     }

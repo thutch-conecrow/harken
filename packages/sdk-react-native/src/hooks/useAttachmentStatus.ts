@@ -4,9 +4,9 @@
  * Useful for components that display a single attachment with progress indicator.
  */
 
-import { useState, useEffect } from 'react';
-import { uploadQueueService } from '../services';
-import { UploadPhase, UploadProgress } from '../domain';
+import { useState, useEffect } from "react";
+import { uploadQueueService } from "../services";
+import type { UploadPhase, UploadProgress } from "../domain";
 
 /**
  * Status information for a single attachment.
@@ -52,9 +52,7 @@ export interface AttachmentStatus {
  * }
  * ```
  */
-export function useAttachmentStatus(
-  attachmentId: string
-): AttachmentStatus | null {
+export function useAttachmentStatus(attachmentId: string): AttachmentStatus | null {
   const [status, setStatus] = useState<AttachmentStatus | null>(() => {
     // Initialize with current state from queue
     const item = uploadQueueService.getItemByAttachmentId(attachmentId);
@@ -67,17 +65,15 @@ export function useAttachmentStatus(
   });
 
   useEffect(() => {
-    const unsubscribe = uploadQueueService.onProgress(
-      (progress: UploadProgress) => {
-        if (progress.attachmentId !== attachmentId) return;
+    const unsubscribe = uploadQueueService.onProgress((progress: UploadProgress) => {
+      if (progress.attachmentId !== attachmentId) return;
 
-        setStatus({
-          phase: progress.phase,
-          progress: progress.progress,
-          error: progress.error,
-        });
-      }
-    );
+      setStatus({
+        phase: progress.phase,
+        progress: progress.progress,
+        error: progress.error,
+      });
+    });
 
     return unsubscribe;
   }, [attachmentId]);

@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, Pressable } from 'react-native';
-import type { ViewStyle, StyleProp } from 'react-native';
-import { useHarkenTheme } from '../hooks';
-import { ThemedText } from './ThemedText';
-import type { FeedbackCategory } from '../types';
+import React from "react";
+import { View, Pressable } from "react-native";
+import type { ViewStyle, StyleProp } from "react-native";
+import { useHarkenTheme } from "../hooks";
+import { ThemedText } from "./ThemedText";
+import type { FeedbackCategory } from "../types";
 
 export interface CategoryOption {
   value: FeedbackCategory;
@@ -14,10 +14,10 @@ export interface CategoryOption {
 }
 
 export const DEFAULT_CATEGORIES: CategoryOption[] = [
-  { value: 'bug', label: 'Bug', emoji: '🐛' },
-  { value: 'idea', label: 'Idea', emoji: '💡' },
-  { value: 'ux', label: 'UX', emoji: '✨' },
-  { value: 'other', label: 'Other', emoji: '💬' },
+  { value: "bug", label: "Bug", emoji: "🐛" },
+  { value: "idea", label: "Idea", emoji: "💡" },
+  { value: "ux", label: "UX", emoji: "✨" },
+  { value: "other", label: "Other", emoji: "💬" },
 ];
 
 export interface CategorySelectorProps {
@@ -103,8 +103,8 @@ export function CategorySelector({
   const { chip } = theme.components;
 
   const containerStyle: ViewStyle = {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: chip.gap,
   };
 
@@ -124,8 +124,8 @@ export function CategorySelector({
         }
 
         const baseChipStyle: ViewStyle = {
-          flexDirection: 'row',
-          alignItems: 'center',
+          flexDirection: "row",
+          alignItems: "center",
           paddingVertical: chip.paddingVertical,
           paddingHorizontal: chip.paddingHorizontal,
           borderRadius: chip.radius,
@@ -146,19 +146,16 @@ export function CategorySelector({
               baseChipStyle,
               chipStyle,
               isSelected && selectedChipStyle,
-              pressed && !disabled && {
-                opacity: theme.opacity.pressed,
-              },
+              pressed &&
+                !disabled && {
+                  opacity: theme.opacity.pressed,
+                },
             ]}
           >
             {category.icon ? (
-              <View style={{ marginRight: theme.spacing.xs }}>
-                {category.icon}
-              </View>
+              <View style={{ marginRight: theme.spacing.xs }}>{category.icon}</View>
             ) : category.emoji ? (
-              <ThemedText style={{ marginRight: theme.spacing.xs }}>
-                {category.emoji}
-              </ThemedText>
+              <ThemedText style={{ marginRight: theme.spacing.xs }}>{category.emoji}</ThemedText>
             ) : null}
             <ThemedText variant="label" color={textColor}>
               {category.label}

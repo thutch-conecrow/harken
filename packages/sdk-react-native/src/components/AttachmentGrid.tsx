@@ -1,11 +1,11 @@
-import React from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
-import type { ViewStyle, StyleProp, ImageStyle } from 'react-native';
-import { useHarkenTheme } from '../hooks';
-import { ThemedText } from './ThemedText';
-import { AttachmentPreview } from './AttachmentPreview';
-import type { AttachmentState } from '../hooks/useAttachmentUpload';
-import type { UploadStatusLabels } from './UploadStatusOverlay';
+import React from "react";
+import { View, Pressable, StyleSheet } from "react-native";
+import type { ViewStyle, StyleProp, ImageStyle } from "react-native";
+import { useHarkenTheme } from "../hooks";
+import { ThemedText } from "./ThemedText";
+import { AttachmentPreview } from "./AttachmentPreview";
+import type { AttachmentState } from "../hooks/useAttachmentUpload";
+import type { UploadStatusLabels } from "./UploadStatusOverlay";
 
 export interface AttachmentGridProps {
   /** List of attachments to display */
@@ -119,10 +119,10 @@ export function AttachmentGrid({
   showAddButton = true,
   disabled = false,
   style,
-  addButtonLabel = 'Add',
-  addButtonIcon = '+',
+  addButtonLabel = "Add",
+  addButtonIcon = "+",
   addButtonStyle,
-  emptyText = 'No attachments',
+  emptyText = "No attachments",
   renderAddButton,
   renderTile,
   tileStyle,
@@ -141,13 +141,7 @@ export function AttachmentGrid({
   const shouldShowAddButton = showAddButton && canAddMore && onAdd;
 
   return (
-    <View
-      style={[
-        styles.container,
-        { gap: effectiveGap },
-        style,
-      ]}
-    >
+    <View style={[styles.container, { gap: effectiveGap }, style]}>
       {attachments.map((attachment) => {
         const handleRetry = onRetry ? () => onRetry(attachment.attachmentId) : undefined;
         const handleRemove = onRemove ? () => onRemove(attachment.attachmentId) : undefined;
@@ -182,8 +176,8 @@ export function AttachmentGrid({
         );
       })}
 
-      {shouldShowAddButton && (
-        renderAddButton ? (
+      {shouldShowAddButton &&
+        (renderAddButton ? (
           renderAddButton(onAdd, disabled)
         ) : (
           <Pressable
@@ -195,18 +189,16 @@ export function AttachmentGrid({
                 width: effectiveTileSize,
                 height: effectiveTileSize,
                 borderRadius: tile.radius,
-                backgroundColor: pressed
-                  ? addButton.backgroundPressed
-                  : addButton.background,
+                backgroundColor: pressed ? addButton.backgroundPressed : addButton.background,
                 borderWidth: 2,
                 borderColor: addButton.border,
-                borderStyle: 'dashed',
+                borderStyle: "dashed",
                 opacity: disabled ? theme.opacity.disabled : 1,
               },
               addButtonStyle,
             ]}
           >
-            {typeof addButtonIcon === 'string' ? (
+            {typeof addButtonIcon === "string" ? (
               <ThemedText
                 style={[
                   styles.addIcon,
@@ -222,15 +214,11 @@ export function AttachmentGrid({
             ) : (
               addButtonIcon
             )}
-            <ThemedText
-              variant="caption"
-              color={addButton.text}
-            >
+            <ThemedText variant="caption" color={addButton.text}>
               {addButtonLabel}
             </ThemedText>
           </Pressable>
-        )
-      )}
+        ))}
 
       {attachments.length === 0 && !shouldShowAddButton && (
         <View
@@ -252,17 +240,17 @@ export function AttachmentGrid({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   addButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   addIcon: {
-    fontWeight: '300',
+    fontWeight: "300",
   },
   emptyState: {
-    alignItems: 'center',
+    alignItems: "center",
   },
 });

@@ -6,33 +6,33 @@ import type {
   HarkenSizing,
   HarkenOpacity,
   HarkenTheme,
-} from './types';
+} from "./types";
 
 /**
  * Default light mode colors.
  * Neutral, accessible palette with no hard-coded branding.
  */
 export const lightColors: HarkenColors = {
-  primary: '#2563EB', // Blue 600
-  primaryPressed: '#1D4ED8', // Blue 700
-  background: '#FFFFFF',
-  surface: '#F9FAFB', // Gray 50 - container/modal surface
-  backgroundSecondary: '#F9FAFB', // Gray 50 - alias for surface (backwards compat)
-  text: '#111827', // Gray 900
-  textSecondary: '#6B7280', // Gray 500
-  textPlaceholder: '#9CA3AF', // Gray 400
-  textOnPrimary: '#FFFFFF',
-  border: '#E5E7EB', // Gray 200
-  borderFocused: '#2563EB', // Blue 600
-  error: '#DC2626', // Red 600
-  success: '#16A34A', // Green 600
-  warning: '#D97706', // Amber 600
-  info: '#2563EB', // Blue 600
-  overlay: 'rgba(0, 0, 0, 0.3)',
-  overlayDark: 'rgba(0, 0, 0, 0.6)',
-  accent1: '#2563EB', // Blue 600 (camera)
-  accent2: '#16A34A', // Green 600 (library)
-  accent3: '#D97706', // Amber 600 (files)
+  primary: "#2563EB", // Blue 600
+  primaryPressed: "#1D4ED8", // Blue 700
+  background: "#FFFFFF",
+  surface: "#F9FAFB", // Gray 50 - container/modal surface
+  backgroundSecondary: "#F9FAFB", // Gray 50 - alias for surface (backwards compat)
+  text: "#111827", // Gray 900
+  textSecondary: "#6B7280", // Gray 500
+  textPlaceholder: "#9CA3AF", // Gray 400
+  textOnPrimary: "#FFFFFF",
+  border: "#E5E7EB", // Gray 200
+  borderFocused: "#2563EB", // Blue 600
+  error: "#DC2626", // Red 600
+  success: "#16A34A", // Green 600
+  warning: "#D97706", // Amber 600
+  info: "#2563EB", // Blue 600
+  overlay: "rgba(0, 0, 0, 0.3)",
+  overlayDark: "rgba(0, 0, 0, 0.6)",
+  accent1: "#2563EB", // Blue 600 (camera)
+  accent2: "#16A34A", // Green 600 (library)
+  accent3: "#D97706", // Amber 600 (files)
 };
 
 /**
@@ -40,26 +40,26 @@ export const lightColors: HarkenColors = {
  * Inverted palette optimized for dark backgrounds.
  */
 export const darkColors: HarkenColors = {
-  primary: '#3B82F6', // Blue 500
-  primaryPressed: '#2563EB', // Blue 600
-  background: '#111827', // Gray 900
-  surface: '#1F2937', // Gray 800 - container/modal surface
-  backgroundSecondary: '#1F2937', // Gray 800 - alias for surface (backwards compat)
-  text: '#F9FAFB', // Gray 50
-  textSecondary: '#9CA3AF', // Gray 400
-  textPlaceholder: '#6B7280', // Gray 500
-  textOnPrimary: '#FFFFFF',
-  border: '#374151', // Gray 700
-  borderFocused: '#3B82F6', // Blue 500
-  error: '#EF4444', // Red 500
-  success: '#22C55E', // Green 500
-  warning: '#F59E0B', // Amber 500
-  info: '#3B82F6', // Blue 500
-  overlay: 'rgba(0, 0, 0, 0.5)',
-  overlayDark: 'rgba(0, 0, 0, 0.8)',
-  accent1: '#3B82F6', // Blue 500 (camera)
-  accent2: '#22C55E', // Green 500 (library)
-  accent3: '#F59E0B', // Amber 500 (files)
+  primary: "#3B82F6", // Blue 500
+  primaryPressed: "#2563EB", // Blue 600
+  background: "#111827", // Gray 900
+  surface: "#1F2937", // Gray 800 - container/modal surface
+  backgroundSecondary: "#1F2937", // Gray 800 - alias for surface (backwards compat)
+  text: "#F9FAFB", // Gray 50
+  textSecondary: "#9CA3AF", // Gray 400
+  textPlaceholder: "#6B7280", // Gray 500
+  textOnPrimary: "#FFFFFF",
+  border: "#374151", // Gray 700
+  borderFocused: "#3B82F6", // Blue 500
+  error: "#EF4444", // Red 500
+  success: "#22C55E", // Green 500
+  warning: "#F59E0B", // Amber 500
+  info: "#3B82F6", // Blue 500
+  overlay: "rgba(0, 0, 0, 0.5)",
+  overlayDark: "rgba(0, 0, 0, 0.8)",
+  accent1: "#3B82F6", // Blue 500 (camera)
+  accent2: "#22C55E", // Green 500 (library)
+  accent3: "#F59E0B", // Amber 500 (files)
 };
 
 /**
@@ -67,22 +67,22 @@ export const darkColors: HarkenColors = {
  * Uses system font for maximum compatibility.
  */
 export const defaultTypography: HarkenTypography = {
-  fontFamily: 'System',
+  fontFamily: "System",
   fontFamilyHeading: undefined, // Falls back to fontFamily
 
   titleSize: 20,
   titleLineHeight: 1.3,
-  titleWeight: '600',
+  titleWeight: "600",
 
   bodySize: 16,
   bodyLineHeight: 1.5,
-  bodyWeight: 'normal',
+  bodyWeight: "normal",
 
   labelSize: 14,
-  labelWeight: '500',
+  labelWeight: "500",
 
   captionSize: 12,
-  captionWeight: 'normal',
+  captionWeight: "normal",
 };
 
 /**
@@ -160,16 +160,14 @@ export function createTheme(
   // Merge sizing if either base or overrides has it
   const baseSizing = baseTheme.sizing;
   const overrideSizing = overrides.sizing;
-  const mergedSizing = (baseSizing || overrideSizing)
-    ? { ...baseSizing, ...overrideSizing }
-    : undefined;
+  const mergedSizing =
+    baseSizing || overrideSizing ? { ...baseSizing, ...overrideSizing } : undefined;
 
   // Merge opacity if either base or overrides has it
   const baseOpacity = baseTheme.opacity;
   const overrideOpacity = overrides.opacity;
-  const mergedOpacity = (baseOpacity || overrideOpacity)
-    ? { ...baseOpacity, ...overrideOpacity }
-    : undefined;
+  const mergedOpacity =
+    baseOpacity || overrideOpacity ? { ...baseOpacity, ...overrideOpacity } : undefined;
 
   return {
     colors: { ...baseTheme.colors, ...overrides.colors },

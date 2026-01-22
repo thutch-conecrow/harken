@@ -1,4 +1,4 @@
-import type { SecureStorage } from './types';
+import type { SecureStorage } from "./types";
 
 /**
  * Adapter for expo-secure-store.

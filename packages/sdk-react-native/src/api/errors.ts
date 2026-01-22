@@ -1,7 +1,7 @@
-import type { components } from '../types/index.js';
+import type { components } from "../types/index.js";
 
-type ErrorResponse = components['schemas']['ErrorResponse'];
-type ErrorDetail = components['schemas']['ErrorDetail'];
+type ErrorResponse = components["schemas"]["ErrorResponse"];
+type ErrorDetail = components["schemas"]["ErrorDetail"];
 
 /**
  * Base error class for Harken API errors.
@@ -9,7 +9,7 @@ type ErrorDetail = components['schemas']['ErrorDetail'];
 export class HarkenError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'HarkenError';
+    this.name = "HarkenError";
   }
 }
 
@@ -26,13 +26,9 @@ export class HarkenApiError extends HarkenError {
   /** Retry-After value in seconds (from 429 responses) */
   readonly retryAfter?: number;
 
-  constructor(
-    status: number,
-    response: ErrorResponse,
-    options?: { retryAfter?: number }
-  ) {
+  constructor(status: number, response: ErrorResponse, options?: { retryAfter?: number }) {
     super(response.error.message);
-    this.name = 'HarkenApiError';
+    this.name = "HarkenApiError";
     this.status = status;
     this.code = response.error.code;
     this.details = response.error.details;
@@ -73,7 +69,7 @@ export class HarkenNetworkError extends HarkenError {
 
   constructor(message: string, cause?: Error) {
     super(message);
-    this.name = 'HarkenNetworkError';
+    this.name = "HarkenNetworkError";
     this.cause = cause;
   }
 

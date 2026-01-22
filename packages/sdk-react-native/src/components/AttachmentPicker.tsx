@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 import {
   View,
   Modal,
@@ -7,13 +7,13 @@ import {
   Platform,
   ActionSheetIOS,
   StyleSheet,
-} from 'react-native';
-import type { ViewStyle, StyleProp } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useHarkenTheme } from '../hooks';
-import { ThemedText } from './ThemedText';
+} from "react-native";
+import type { ViewStyle, StyleProp } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useHarkenTheme } from "../hooks";
+import { ThemedText } from "./ThemedText";
 
-export type AttachmentSource = 'camera' | 'library' | 'document';
+export type AttachmentSource = "camera" | "library" | "document";
 
 /**
  * Configuration for a single picker option.
@@ -126,10 +126,10 @@ export function AttachmentPicker({
   onTakePhoto,
   onPickFromLibrary,
   onPickDocument,
-  title = 'Add Attachment',
+  title = "Add Attachment",
   renderIcon,
   options: optionOverrides,
-  cancelLabel = 'Cancel',
+  cancelLabel = "Cancel",
   overlayColor,
   sheetRadius,
   sheetStyle,
@@ -137,7 +137,7 @@ export function AttachmentPicker({
 }: AttachmentPickerProps): React.JSX.Element | null {
   const theme = useHarkenTheme();
   const { picker } = theme.components;
-  const screenHeight = Dimensions.get('window').height;
+  const screenHeight = Dimensions.get("window").height;
 
   // Prevent double-triggering ActionSheetIOS if callbacks change
   const isShowingRef = useRef(false);
@@ -145,37 +145,35 @@ export function AttachmentPicker({
   // Build options with defaults and overrides
   const options: PickerOption[] = [
     {
-      key: 'camera',
-      label: optionOverrides?.camera?.label ?? 'Camera',
-      description: optionOverrides?.camera?.description ?? 'Take a new photo',
+      key: "camera",
+      label: optionOverrides?.camera?.label ?? "Camera",
+      description: optionOverrides?.camera?.description ?? "Take a new photo",
       color: optionOverrides?.camera?.color ?? theme.colors.accent1,
       icon:
         optionOverrides?.camera?.icon ??
-        (renderIcon ? renderIcon('camera') : <DefaultIcon emoji="📷" />),
+        (renderIcon ? renderIcon("camera") : <DefaultIcon emoji="📷" />),
       action: onTakePhoto,
       hidden: optionOverrides?.camera?.hidden ?? false,
     },
     {
-      key: 'library',
-      label: optionOverrides?.library?.label ?? 'Photo Library',
-      description:
-        optionOverrides?.library?.description ?? 'Choose from existing photos',
+      key: "library",
+      label: optionOverrides?.library?.label ?? "Photo Library",
+      description: optionOverrides?.library?.description ?? "Choose from existing photos",
       color: optionOverrides?.library?.color ?? theme.colors.accent2,
       icon:
         optionOverrides?.library?.icon ??
-        (renderIcon ? renderIcon('library') : <DefaultIcon emoji="🖼️" />),
+        (renderIcon ? renderIcon("library") : <DefaultIcon emoji="🖼️" />),
       action: onPickFromLibrary,
       hidden: optionOverrides?.library?.hidden ?? false,
     },
     {
-      key: 'document',
-      label: optionOverrides?.document?.label ?? 'Files',
-      description:
-        optionOverrides?.document?.description ?? 'Browse documents and files',
+      key: "document",
+      label: optionOverrides?.document?.label ?? "Files",
+      description: optionOverrides?.document?.description ?? "Browse documents and files",
       color: optionOverrides?.document?.color ?? theme.colors.accent3,
       icon:
         optionOverrides?.document?.icon ??
-        (renderIcon ? renderIcon('document') : <DefaultIcon emoji="📄" />),
+        (renderIcon ? renderIcon("document") : <DefaultIcon emoji="📄" />),
       action: onPickDocument,
       hidden: optionOverrides?.document?.hidden ?? false,
     },
@@ -196,7 +194,7 @@ export function AttachmentPicker({
       return;
     }
 
-    if (visible && Platform.OS === 'ios' && !isShowingRef.current) {
+    if (visible && Platform.OS === "ios" && !isShowingRef.current) {
       isShowingRef.current = true;
 
       // Build iOS action sheet options from visible options
@@ -223,7 +221,7 @@ export function AttachmentPicker({
   }, [visible, onClose, visibleOptions, title, cancelLabel]);
 
   // iOS: Don't render modal - we use ActionSheetIOS instead
-  if (Platform.OS === 'ios') {
+  if (Platform.OS === "ios") {
     return null;
   }
 
@@ -232,12 +230,7 @@ export function AttachmentPicker({
 
   // Android: Use bottom sheet modal
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <SafeAreaView style={styles.modalContainer}>
         {/* Background overlay */}
         <Pressable
@@ -261,12 +254,7 @@ export function AttachmentPicker({
           >
             {/* Handle bar */}
             <View style={styles.handleContainer}>
-              <View
-                style={[
-                  styles.handle,
-                  { backgroundColor: picker.handle },
-                ]}
-              />
+              <View style={[styles.handle, { backgroundColor: picker.handle }]} />
             </View>
 
             {/* Title */}
@@ -340,13 +328,13 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   bottomSheet: {
     paddingBottom: 20,
   },
   handleContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 12,
   },
   handle: {
@@ -360,21 +348,21 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   title: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   optionsContainer: {
     paddingHorizontal: 20,
   },
   option: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 16,
     paddingHorizontal: 16,
     marginBottom: 8,
   },
   iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 16,
   },
   defaultIcon: {
@@ -386,7 +374,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     paddingVertical: 16,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 12,
   },
 });

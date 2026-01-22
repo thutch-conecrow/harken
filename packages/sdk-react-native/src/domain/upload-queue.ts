@@ -9,15 +9,15 @@
  */
 export enum UploadPhase {
   /** Waiting in queue to be processed */
-  QUEUED = 'queued',
+  QUEUED = "queued",
   /** Currently uploading to storage */
-  UPLOADING = 'uploading',
+  UPLOADING = "uploading",
   /** Upload complete, confirming with server */
-  CONFIRMING = 'confirming',
+  CONFIRMING = "confirming",
   /** Successfully uploaded and confirmed */
-  COMPLETED = 'completed',
+  COMPLETED = "completed",
   /** Failed after max retries */
-  FAILED = 'failed',
+  FAILED = "failed",
 }
 
 /**

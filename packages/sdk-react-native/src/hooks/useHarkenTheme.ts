@@ -1,6 +1,6 @@
-import { useContext } from 'react';
-import { HarkenContext } from '../context';
-import type { ResolvedHarkenTheme } from '../theme';
+import { useContext } from "react";
+import { HarkenContext } from "../context";
+import type { ResolvedHarkenTheme } from "../theme";
 
 /**
  * Hook to access the current Harken theme.
@@ -53,7 +53,7 @@ export function useHarkenTheme(): ResolvedHarkenTheme {
   const context = useContext(HarkenContext);
 
   if (!context) {
-    throw new Error('useHarkenTheme must be used within a HarkenProvider');
+    throw new Error("useHarkenTheme must be used within a HarkenProvider");
   }
 
   return context.theme;

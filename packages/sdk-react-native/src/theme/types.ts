@@ -186,17 +186,17 @@ export interface HarkenTypography {
 
 /** Font weight values supported across platforms */
 export type TextWeight =
-  | 'normal'
-  | 'bold'
-  | '100'
-  | '200'
-  | '300'
-  | '400'
-  | '500'
-  | '600'
-  | '700'
-  | '800'
-  | '900';
+  | "normal"
+  | "bold"
+  | "100"
+  | "200"
+  | "300"
+  | "400"
+  | "500"
+  | "600"
+  | "700"
+  | "800"
+  | "900";
 
 /**
  * Spacing tokens for consistent layout.
@@ -337,7 +337,7 @@ export type PartialHarkenTheme = {
 /**
  * Theme mode for automatic light/dark theming.
  */
-export type ThemeMode = 'light' | 'dark' | 'system';
+export type ThemeMode = "light" | "dark" | "system";
 
 // ============================================================================
 // RESOLVED THEME TYPES

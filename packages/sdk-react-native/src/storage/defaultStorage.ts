@@ -1,5 +1,5 @@
-import type { SecureStorage } from './types';
-import { createMemoryStorage } from './SecureStoreAdapter';
+import type { SecureStorage } from "./types";
+import { createMemoryStorage } from "./SecureStoreAdapter";
 
 /**
  * Cached default storage instance.
@@ -31,7 +31,7 @@ export async function getDefaultStorage(): Promise<SecureStorage> {
 
     try {
       // Dynamically import expo-secure-store
-      const SecureStore = await import('expo-secure-store');
+      const SecureStore = await import("expo-secure-store");
 
       defaultStorageInstance = {
         async getItem(key: string): Promise<string | null> {
@@ -49,9 +49,9 @@ export async function getDefaultStorage(): Promise<SecureStorage> {
     } catch {
       // expo-secure-store not available, fall back to memory storage
       console.warn(
-        '[Harken] expo-secure-store not available. Using in-memory storage. ' +
-          'Anonymous IDs will not persist across app restarts. ' +
-          'Install expo-secure-store for persistent storage.'
+        "[Harken] expo-secure-store not available. Using in-memory storage. " +
+          "Anonymous IDs will not persist across app restarts. " +
+          "Install expo-secure-store for persistent storage."
       );
     }
   }

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { TextInput, View } from 'react-native';
-import type { TextInputProps, ViewStyle, TextStyle, StyleProp } from 'react-native';
-import { useHarkenTheme } from '../hooks';
+import React, { useState } from "react";
+import { TextInput, View } from "react-native";
+import type { TextInputProps, ViewStyle, TextStyle, StyleProp } from "react-native";
+import { useHarkenTheme } from "../hooks";
 
 export interface ThemedTextInputProps extends TextInputProps {
   /** Error state */

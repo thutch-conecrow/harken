@@ -1,13 +1,13 @@
-import React, { useState, useCallback } from 'react';
-import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import type { ViewStyle } from 'react-native';
-import { useHarkenTheme } from '../hooks';
-import { ThemedText } from './ThemedText';
-import { ThemedTextInput } from './ThemedTextInput';
-import { ThemedButton } from './ThemedButton';
-import { CategorySelector } from './CategorySelector';
-import type { CategoryOption } from './CategorySelector';
-import type { FeedbackCategory } from '../types';
+import React, { useState, useCallback } from "react";
+import { View, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import type { ViewStyle } from "react-native";
+import { useHarkenTheme } from "../hooks";
+import { ThemedText } from "./ThemedText";
+import { ThemedTextInput } from "./ThemedTextInput";
+import { ThemedButton } from "./ThemedButton";
+import { CategorySelector } from "./CategorySelector";
+import type { CategoryOption } from "./CategorySelector";
+import type { FeedbackCategory } from "../types";
 
 export interface FeedbackFormData {
   message: string;
@@ -59,10 +59,10 @@ export interface FeedbackFormProps {
 export function FeedbackForm({
   onSubmit,
   onCancel,
-  title = 'Send Feedback',
-  placeholder = 'What would you like to share?',
-  submitLabel = 'Submit',
-  cancelLabel = 'Cancel',
+  title = "Send Feedback",
+  placeholder = "What would you like to share?",
+  submitLabel = "Submit",
+  cancelLabel = "Cancel",
   categories,
   requireCategory = false,
   minMessageLength = 1,
@@ -72,7 +72,7 @@ export function FeedbackForm({
 }: FeedbackFormProps): React.JSX.Element {
   const theme = useHarkenTheme();
 
-  const [message, setMessage] = useState(initialValues?.message ?? '');
+  const [message, setMessage] = useState(initialValues?.message ?? "");
   const [category, setCategory] = useState<FeedbackCategory | null>(
     initialValues?.category ?? null
   );
@@ -80,8 +80,7 @@ export function FeedbackForm({
 
   const trimmedMessage = message.trim();
   const isMessageValid =
-    trimmedMessage.length >= minMessageLength &&
-    trimmedMessage.length <= maxMessageLength;
+    trimmedMessage.length >= minMessageLength && trimmedMessage.length <= maxMessageLength;
   const isCategoryValid = !requireCategory || category !== null;
   const canSubmit = isMessageValid && isCategoryValid && !loading && !isSubmitting;
 
@@ -110,7 +109,7 @@ export function FeedbackForm({
   };
 
   const buttonRowStyle: ViewStyle = {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: theme.spacing.sm,
     marginTop: theme.spacing.md,
   };
@@ -120,13 +119,10 @@ export function FeedbackForm({
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        keyboardShouldPersistTaps="handled"
-      >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
         <View style={containerStyle}>
           {/* Title */}
           <View style={sectionStyle}>
@@ -135,12 +131,8 @@ export function FeedbackForm({
 
           {/* Category selector */}
           <View style={sectionStyle}>
-            <ThemedText
-              variant="label"
-              secondary
-              style={{ marginBottom: theme.spacing.sm }}
-            >
-              Category{requireCategory ? '' : ' (optional)'}
+            <ThemedText variant="label" secondary style={{ marginBottom: theme.spacing.sm }}>
+              Category{requireCategory ? "" : " (optional)"}
             </ThemedText>
             <CategorySelector
               value={category}
@@ -152,11 +144,7 @@ export function FeedbackForm({
 
           {/* Message input */}
           <View style={sectionStyle}>
-            <ThemedText
-              variant="label"
-              secondary
-              style={{ marginBottom: theme.spacing.sm }}
-            >
+            <ThemedText variant="label" secondary style={{ marginBottom: theme.spacing.sm }}>
               Message
             </ThemedText>
             <ThemedTextInput
@@ -178,7 +166,7 @@ export function FeedbackForm({
                     ? theme.colors.error
                     : theme.colors.textSecondary
                 }
-                style={{ marginTop: theme.spacing.xs, textAlign: 'right' }}
+                style={{ marginTop: theme.spacing.xs, textAlign: "right" }}
               >
                 {characterCount}/{maxMessageLength}
               </ThemedText>
