@@ -24,13 +24,36 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: read
-  id-token: write
+  contents: write # For git operations
+  id-token: write # For npm provenance
 
 jobs:
-  release:
+  # Path filtering via job (not on.push.paths) so workflow_dispatch can bypass filters.
+  # This provides a single, explicit filter definition that applies to automated runs
+  # while allowing manual releases regardless of what changed.
+  check-changes:
     runs-on: ubuntu-latest
-    environment: npm-publish
+    outputs:
+      should_publish: ${{ steps.filter.outputs.sdk }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            sdk:
+              - 'packages/sdk-react-native/src/**'
+              - 'packages/sdk-react-native/package.json'
+              - 'packages/sdk-react-native/tsconfig.json'
+              - 'packages/sdk-react-native/openapi.yaml'
+              - 'packages/sdk-react-native/app.plugin.cjs'
+              - 'packages/sdk-react-native/app.plugin.js'
+
+  release:
+    needs: check-changes
+    if: needs.check-changes.outputs.should_publish == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: npm-publish # Environment with npm trusted publishing configured
 
     steps:
       - name: Checkout
@@ -47,7 +70,6 @@ jobs:
         with:
           node-version: "20"
           cache: "pnpm"
-          registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -73,6 +95,7 @@ jobs:
           else
             RELEASE_TYPE="${{ github.event.inputs.release_type || 'patch' }}"
 
+            # Parse semver and increment
             IFS='.-' read -ra PARTS <<< "$CURRENT_VERSION"
             MAJOR=${PARTS[0]}
             MINOR=${PARTS[1]}
@@ -81,6 +104,7 @@ jobs:
             PRERELEASE_NUM="${PARTS[4]:-}"
 
             if [ -n "$PRERELEASE" ]; then
+              # If current is prerelease (e.g., 0.0.1-alpha.1), increment prerelease
               if [ -n "$PRERELEASE_NUM" ]; then
                 NEW_PRERELEASE_NUM=$((PRERELEASE_NUM + 1))
                 NEW_VERSION="$MAJOR.$MINOR.$PATCH-$PRERELEASE.$NEW_PRERELEASE_NUM"
@@ -88,6 +112,7 @@ jobs:
                 NEW_VERSION="$MAJOR.$MINOR.$PATCH-$PRERELEASE.1"
               fi
             else
+              # Standard semver increment
               case "$RELEASE_TYPE" in
                 major)
                   NEW_VERSION="$((MAJOR + 1)).0.0"
@@ -122,10 +147,29 @@ jobs:
           fi
           node -e "console.log('NODE_AUTH_TOKEN set:', !!process.env.NODE_AUTH_TOKEN)"
 
+      - name: Debug token env names
+        run: env | cut -d= -f1 | grep -i -E "token|npm" || true
+
+      - name: Force OIDC (remove npmrc)
+        run: |
+          unset NODE_AUTH_TOKEN NPM_TOKEN
+          if [ -n "${NPM_CONFIG_USERCONFIG:-}" ]; then
+            rm -f "$NPM_CONFIG_USERCONFIG"
+            unset NPM_CONFIG_USERCONFIG
+          fi
+          rm -f ~/.npmrc
+
       - name: Publish to npm
         working-directory: packages/sdk-react-native
-        run: npm publish
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ""
+          NPM_TOKEN: ""
+          NPM_CONFIG_USERCONFIG: ""
 
+      # Commit and tag ONLY after successful publish to avoid repo/npm state divergence.
+      # If publish fails, package.json has the bumped version locally but nothing is committed,
+      # so the next run will attempt the same version again (which is correct behavior).
       - name: Commit version bump
         run: |
           git config user.name "github-actions[bot]"
