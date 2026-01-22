@@ -133,6 +133,41 @@ jobs:
       - name: Debug npm provenance config
         run: npm config get provenance
 
+      - name: Debug npm config source
+        run: npm config list -l | grep -i -E "provenance|registry|userconfig" || true
+
+      - name: Debug OIDC claims (safe)
+        env:
+          AUDIENCE: npm
+        run: |
+          TOKEN_JSON=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${AUDIENCE}")
+          TOKEN=$(python - <<'PY'
+import json,sys
+print(json.load(sys.stdin)["value"])
+PY
+<<<"$TOKEN_JSON")
+
+          python - <<'PY'
+import base64, json, os
+token=os.environ["TOKEN"]
+payload=token.split(".")[1]
+pad="="*((4-len(payload)%4)%4)
+data=json.loads(base64.urlsafe_b64decode(payload+pad))
+for k in [
+    "repository",
+    "repository_owner",
+    "job_workflow_ref",
+    "workflow_ref",
+    "environment",
+    "ref",
+    "actor",
+    "sub",
+    "aud",
+]:
+    if k in data:
+        print(f"{k}: {data[k]}")
+PY
+
       - name: Force OIDC (remove npmrc)
         run: |
           unset NODE_AUTH_TOKEN NPM_TOKEN
