@@ -12,6 +12,15 @@ export interface ThemedTextInputProps extends TextInputProps {
 
 /**
  * Themed text input component with Harken styling.
+ *
+ * Uses the following theme tokens:
+ * - `colors.inputBackground` for background
+ * - `colors.inputBorder`, `inputBorderFocused`, `inputBorderError` for border states
+ * - `colors.inputText` for text color
+ * - `colors.inputPlaceholder` for placeholder
+ * - `spacing.inputPadding` for padding
+ * - `radii.input` for border radius
+ * - `sizing.inputMinHeight` for minimum height
  */
 export function ThemedTextInput({
   error = false,
@@ -22,34 +31,35 @@ export function ThemedTextInput({
   ...props
 }: ThemedTextInputProps): React.JSX.Element {
   const theme = useHarkenTheme();
+  const { input } = theme.components;
   const [isFocused, setIsFocused] = useState(false);
 
   const getBorderColor = () => {
-    if (error) return theme.colors.error;
-    if (isFocused) return theme.colors.borderFocused;
-    return theme.colors.border;
+    if (error) return input.borderError;
+    if (isFocused) return input.borderFocused;
+    return input.border;
   };
 
   const inputStyle: TextStyle = {
     fontSize: theme.typography.bodySize,
     fontFamily: theme.typography.fontFamily,
-    color: theme.colors.text,
-    padding: theme.spacing.md,
-    minHeight: 44,
+    color: input.text,
+    padding: input.padding,
+    minHeight: input.minHeight,
   };
 
   const containerStyles: ViewStyle = {
-    backgroundColor: theme.colors.backgroundSecondary,
+    backgroundColor: input.background,
     borderWidth: 1,
     borderColor: getBorderColor(),
-    borderRadius: theme.radii.md,
+    borderRadius: input.radius,
   };
 
   return (
     <View style={[containerStyles, containerStyle]}>
       <TextInput
         style={[inputStyle, style]}
-        placeholderTextColor={theme.colors.textPlaceholder}
+        placeholderTextColor={input.placeholder}
         onFocus={(e) => {
           setIsFocused(true);
           onFocus?.(e);

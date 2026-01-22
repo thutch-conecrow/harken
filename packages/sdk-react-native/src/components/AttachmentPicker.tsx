@@ -136,6 +136,7 @@ export function AttachmentPicker({
   optionStyle,
 }: AttachmentPickerProps): React.JSX.Element | null {
   const theme = useHarkenTheme();
+  const { picker } = theme.components;
   const screenHeight = Dimensions.get('window').height;
 
   // Prevent double-triggering ActionSheetIOS if callbacks change
@@ -226,8 +227,8 @@ export function AttachmentPicker({
     return null;
   }
 
-  const resolvedOverlayColor = overlayColor ?? theme.colors.overlay;
-  const resolvedSheetRadius = sheetRadius ?? theme.radii.xl;
+  const resolvedOverlayColor = overlayColor ?? picker.overlay;
+  const resolvedSheetRadius = sheetRadius ?? picker.radius;
 
   // Android: Use bottom sheet modal
   return (
@@ -248,7 +249,7 @@ export function AttachmentPicker({
             style={[
               styles.bottomSheet,
               {
-                backgroundColor: theme.colors.background,
+                backgroundColor: picker.background,
                 maxHeight: screenHeight * 0.6,
                 borderTopLeftRadius: resolvedSheetRadius,
                 borderTopRightRadius: resolvedSheetRadius,
@@ -263,7 +264,7 @@ export function AttachmentPicker({
               <View
                 style={[
                   styles.handle,
-                  { backgroundColor: theme.colors.textSecondary },
+                  { backgroundColor: picker.handle },
                 ]}
               />
             </View>
@@ -284,8 +285,8 @@ export function AttachmentPicker({
                     styles.option,
                     {
                       backgroundColor: pressed
-                        ? theme.colors.border
-                        : theme.colors.backgroundSecondary,
+                        ? picker.optionBackgroundPressed
+                        : picker.optionBackground,
                       borderRadius: theme.radii.md,
                     },
                     optionStyle,
@@ -296,6 +297,8 @@ export function AttachmentPicker({
                     style={[
                       styles.iconContainer,
                       {
+                        width: picker.iconSize,
+                        height: picker.iconSize,
                         backgroundColor: option.color,
                         borderRadius: theme.radii.full,
                       },
@@ -314,7 +317,7 @@ export function AttachmentPicker({
 
               {/* Cancel Button */}
               <Pressable style={styles.cancelButton} onPress={onClose}>
-                <ThemedText secondary>{cancelLabel}</ThemedText>
+                <ThemedText color={picker.cancelText}>{cancelLabel}</ThemedText>
               </Pressable>
             </View>
           </View>
@@ -370,8 +373,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   iconContainer: {
-    width: 44,
-    height: 44,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 16,

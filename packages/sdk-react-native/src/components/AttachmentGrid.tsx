@@ -61,6 +61,14 @@ export interface AttachmentGridProps {
  *
  * Shows attachment previews with upload status and an optional add button.
  *
+ * Uses the following theme tokens:
+ * - `colors.addButton*` for add button colors
+ * - `spacing.tileGap` for gap between tiles
+ * - `radii.tile` for tile border radius
+ * - `sizing.tileSize` for default tile size
+ * - `sizing.addButtonIconSize` for add icon size
+ * - `opacity.disabled` for disabled state
+ *
  * @example
  * ```tsx
  * // Basic usage
@@ -106,7 +114,7 @@ export function AttachmentGrid({
   onRemove,
   onAdd,
   maxAttachments = 10,
-  tileSize = 80,
+  tileSize,
   gap,
   showAddButton = true,
   disabled = false,
@@ -124,7 +132,10 @@ export function AttachmentGrid({
   renderPlaceholder,
 }: AttachmentGridProps): React.JSX.Element {
   const theme = useHarkenTheme();
-  const effectiveGap = gap ?? theme.spacing.sm;
+  const { tile, addButton } = theme.components;
+
+  const effectiveTileSize = tileSize ?? tile.size;
+  const effectiveGap = gap ?? tile.gap;
 
   const canAddMore = attachments.length < maxAttachments;
   const shouldShowAddButton = showAddButton && canAddMore && onAdd;
@@ -161,7 +172,7 @@ export function AttachmentGrid({
             error={attachment.error}
             onRetry={handleRetry}
             onRemove={handleRemove}
-            size={tileSize}
+            size={effectiveTileSize}
             style={tileStyle}
             imageStyle={tileImageStyle}
             statusLabels={statusLabels}
@@ -181,28 +192,40 @@ export function AttachmentGrid({
             style={({ pressed }) => [
               styles.addButton,
               {
-                width: tileSize,
-                height: tileSize,
-                borderRadius: theme.radii.md,
+                width: effectiveTileSize,
+                height: effectiveTileSize,
+                borderRadius: tile.radius,
                 backgroundColor: pressed
-                  ? theme.colors.border
-                  : theme.colors.backgroundSecondary,
+                  ? addButton.backgroundPressed
+                  : addButton.background,
                 borderWidth: 2,
-                borderColor: theme.colors.border,
+                borderColor: addButton.border,
                 borderStyle: 'dashed',
-                opacity: disabled ? 0.5 : 1,
+                opacity: disabled ? theme.opacity.disabled : 1,
               },
               addButtonStyle,
             ]}
           >
             {typeof addButtonIcon === 'string' ? (
-              <ThemedText style={[styles.addIcon, { color: theme.colors.textSecondary }]}>
+              <ThemedText
+                style={[
+                  styles.addIcon,
+                  {
+                    color: addButton.icon,
+                    fontSize: addButton.iconSize,
+                    lineHeight: addButton.iconSize * 1.15, // Scale lineHeight with iconSize
+                  },
+                ]}
+              >
                 {addButtonIcon}
               </ThemedText>
             ) : (
               addButtonIcon
             )}
-            <ThemedText variant="caption" secondary>
+            <ThemedText
+              variant="caption"
+              color={addButton.text}
+            >
               {addButtonLabel}
             </ThemedText>
           </Pressable>
@@ -237,9 +260,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   addIcon: {
-    fontSize: 28,
     fontWeight: '300',
-    lineHeight: 32,
   },
   emptyState: {
     alignItems: 'center',

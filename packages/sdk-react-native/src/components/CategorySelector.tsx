@@ -100,11 +100,12 @@ export function CategorySelector({
   selectedChipStyle,
 }: CategorySelectorProps): React.JSX.Element {
   const theme = useHarkenTheme();
+  const { chip } = theme.components;
 
   const containerStyle: ViewStyle = {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: theme.spacing.sm,
+    gap: chip.gap,
   };
 
   return (
@@ -125,20 +126,16 @@ export function CategorySelector({
         const baseChipStyle: ViewStyle = {
           flexDirection: 'row',
           alignItems: 'center',
-          paddingVertical: theme.spacing.sm,
-          paddingHorizontal: theme.spacing.md,
-          borderRadius: theme.radii.full,
+          paddingVertical: chip.paddingVertical,
+          paddingHorizontal: chip.paddingHorizontal,
+          borderRadius: chip.radius,
           borderWidth: 1,
-          borderColor: isSelected ? theme.colors.primary : theme.colors.border,
-          backgroundColor: isSelected
-            ? theme.colors.primary
-            : theme.colors.backgroundSecondary,
-          opacity: disabled ? 0.6 : 1,
+          borderColor: isSelected ? chip.borderSelected : chip.border,
+          backgroundColor: isSelected ? chip.backgroundSelected : chip.background,
+          opacity: disabled ? theme.opacity.disabled : 1,
         };
 
-        const textColor = isSelected
-          ? theme.colors.textOnPrimary
-          : theme.colors.text;
+        const textColor = isSelected ? chip.textSelected : chip.text;
 
         return (
           <Pressable
@@ -150,7 +147,7 @@ export function CategorySelector({
               chipStyle,
               isSelected && selectedChipStyle,
               pressed && !disabled && {
-                opacity: 0.8,
+                opacity: theme.opacity.pressed,
               },
             ]}
           >
