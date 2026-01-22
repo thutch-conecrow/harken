@@ -59,13 +59,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/harken-app/harken.git",
+    "url": "https://github.com/thutch-conecrow/harken.git",
     "directory": "packages/sdk-react-native"
   },
   "bugs": {
-    "url": "https://github.com/harken-app/harken/issues"
+    "url": "https://github.com/thutch-conecrow/harken/issues"
   },
-  "homepage": "https://github.com/harken-app/harken#readme",
+  "homepage": "https://github.com/thutch-conecrow/harken#readme",
   "sideEffects": false,
   "expo": {
     "configPlugin": "./app.plugin.cjs"

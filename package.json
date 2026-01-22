@@ -6,7 +6,7 @@
   "description": "Harken - Open source SDK and contracts for mobile feedback",
   "repository": {
     "type": "git",
-    "url": "https://github.com/harken-app/harken.git"
+    "url": "https://github.com/thutch-conecrow/harken.git"
   },
   "license": "Apache-2.0",
   "engines": {
