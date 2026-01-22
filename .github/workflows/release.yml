@@ -127,6 +127,12 @@ jobs:
       - name: Debug token env names
         run: env | cut -d= -f1 | grep -i -E "token|npm" || true
 
+      - name: Debug npm version
+        run: npm --version
+
+      - name: Debug npm provenance config
+        run: npm config get provenance
+
       - name: Force OIDC (remove npmrc)
         run: |
           unset NODE_AUTH_TOKEN NPM_TOKEN
@@ -143,6 +149,7 @@ jobs:
           NODE_AUTH_TOKEN: ""
           NPM_TOKEN: ""
           NPM_CONFIG_USERCONFIG: ""
+          NPM_CONFIG_PROVENANCE: "true"
 
       # Commit and tag ONLY after successful publish to avoid repo/npm state divergence.
       # If publish fails, package.json has the bumped version locally but nothing is committed,
