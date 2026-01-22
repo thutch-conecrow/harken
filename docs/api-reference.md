@@ -37,22 +37,38 @@ Batteries-included feedback form with attachments.
 import { FeedbackSheet } from '@harkenapp/sdk-react-native';
 
 <FeedbackSheet
+  // Callbacks
   onSuccess={(result) => {}}
   onError={(error) => {}}
   onCancel={() => {}}
-  title="Send Feedback"
+
+  // Labels
+  title="Send Feedback"         // Set to "" to hide title section
   placeholder="What would you like to share?"
   submitLabel="Submit"
   cancelLabel="Cancel"
+
+  // Categories
   categories={[{ value: 'bug', label: 'Bug' }]}
   requireCategory={false}
+
+  // Message
   minMessageLength={1}
   maxMessageLength={5000}
+
+  // Attachments
   enableAttachments={true}
   maxAttachments={5}
   attachmentSources={{ camera: true, library: true, files: true }}
+
+  // Behavior
   showSuccessAlert={true}
   clearOnSuccess={true}
+
+  // Layout (for modal embedding)
+  layout="flex"                 // 'flex' | 'auto' - use 'auto' for modals
+  containerStyle={{}}           // Outer container style
+  contentStyle={{}}             // Inner scrollable content style
 />
 ```
 
@@ -121,11 +137,24 @@ const {
 
 ### useHarkenTheme
 
-Access current theme.
+Access current resolved theme with all tokens populated.
 
 ```tsx
 const theme = useHarkenTheme();
-// theme.colors, theme.typography, theme.spacing, theme.radii
+
+// Flat token access
+theme.colors.primary
+theme.colors.chipBackground
+theme.spacing.md
+theme.radii.chip
+theme.sizing.buttonMinHeight
+theme.opacity.disabled
+
+// Structured component access (same values, better discoverability)
+theme.components.chip.background
+theme.components.input.border
+theme.components.button.primary.text
+theme.components.form.padding
 ```
 
 ### useHarkenContext
@@ -281,15 +310,38 @@ Upload progress overlay.
 ### Theme Types
 
 ```typescript
+// Input theme (what you provide)
 interface HarkenTheme {
-  colors: HarkenColors;
+  colors: HarkenColors;        // Base + optional component tokens
   typography: HarkenTypography;
-  spacing: HarkenSpacing;
-  radii: HarkenRadii;
+  spacing: HarkenSpacing;      // Base + optional component tokens
+  radii: HarkenRadii;          // Base + optional component tokens
+  sizing?: HarkenSizing;       // Optional sizing overrides
+  opacity?: HarkenOpacity;     // Optional opacity overrides
+}
+
+// Partial theme for overriding specific values
+interface PartialHarkenTheme {
+  colors?: Partial<HarkenColors>;
+  typography?: Partial<HarkenTypography>;
+  spacing?: Partial<HarkenSpacing>;
+  radii?: Partial<HarkenRadii>;
+  sizing?: Partial<HarkenSizing>;
+  opacity?: Partial<HarkenOpacity>;
+}
+
+// Resolved theme (what useHarkenTheme returns)
+interface ResolvedHarkenTheme {
+  colors: ResolvedHarkenColors;    // All tokens populated
+  typography: HarkenTypography;
+  spacing: ResolvedHarkenSpacing;
+  radii: ResolvedHarkenRadii;
+  sizing: ResolvedHarkenSizing;
+  opacity: ResolvedHarkenOpacity;
+  components: HarkenComponentTokens;  // Structured access
 }
 
 type ThemeMode = 'light' | 'dark' | 'system';
-type PartialHarkenTheme = DeepPartial<HarkenTheme>;
 ```
 
 ### Default Themes
@@ -304,10 +356,14 @@ import {
   defaultSpacing,
   defaultRadii,
   createTheme,
+  resolveTheme,
 } from '@harkenapp/sdk-react-native';
 
+// Create theme with overrides (for passing to HarkenProvider)
 const customTheme = createTheme(lightTheme, {
   colors: { primary: '#7C3AED' },
+  sizing: { buttonMinHeight: 52 },
+  opacity: { disabled: 0.5 },
 });
 ```
 

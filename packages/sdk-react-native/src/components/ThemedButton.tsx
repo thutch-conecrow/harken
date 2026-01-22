@@ -4,7 +4,7 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
-import type { PressableProps, ViewStyle, StyleProp } from 'react-native';
+import type { PressableProps, ViewStyle, TextStyle, StyleProp } from 'react-native';
 import { useHarkenTheme } from '../hooks';
 import { ThemedText } from './ThemedText';
 
@@ -24,10 +24,21 @@ export interface ThemedButtonProps extends Omit<PressableProps, 'children' | 'st
    * Note: Function styles are not supported; use static StyleProp<ViewStyle>.
    */
   style?: StyleProp<ViewStyle>;
+  /** Additional styles for the button text */
+  textStyle?: StyleProp<TextStyle>;
 }
 
 /**
  * Themed button component with Harken styling.
+ *
+ * Uses the following theme tokens:
+ * - `colors.buttonPrimary*` for primary variant
+ * - `colors.buttonSecondary*` for secondary variant
+ * - `colors.buttonGhostText` for ghost variant
+ * - `spacing.buttonPadding*` for padding
+ * - `radii.button` for border radius
+ * - `sizing.buttonMinHeight` for minimum height
+ * - `opacity.disabled` for disabled state
  */
 export function ThemedButton({
   title,
@@ -36,9 +47,11 @@ export function ThemedButton({
   fullWidth = false,
   disabled,
   style,
+  textStyle,
   ...props
 }: ThemedButtonProps): React.JSX.Element {
   const theme = useHarkenTheme();
+  const { button } = theme.components;
 
   const getBackgroundColor = (pressed: boolean): string => {
     if (disabled) {
@@ -49,11 +62,11 @@ export function ThemedButton({
 
     switch (variant) {
       case 'primary':
-        return pressed ? theme.colors.primaryPressed : theme.colors.primary;
+        return pressed ? button.primary.backgroundPressed : button.primary.background;
       case 'secondary':
-        return pressed ? theme.colors.border : theme.colors.backgroundSecondary;
+        return pressed ? theme.colors.border : button.secondary.background;
       case 'ghost':
-        return pressed ? theme.colors.backgroundSecondary : 'transparent';
+        return pressed ? theme.colors.surface : 'transparent';
     }
   };
 
@@ -64,17 +77,18 @@ export function ThemedButton({
 
     switch (variant) {
       case 'primary':
-        return theme.colors.textOnPrimary;
+        return button.primary.text;
       case 'secondary':
+        return button.secondary.text;
       case 'ghost':
-        return theme.colors.text;
+        return button.ghost.text;
     }
   };
 
   const getBorderColor = (): string => {
     switch (variant) {
       case 'secondary':
-        return theme.colors.border;
+        return button.secondary.border;
       default:
         return 'transparent';
     }
@@ -91,14 +105,14 @@ export function ThemedButton({
           backgroundColor: getBackgroundColor(pressed),
           borderWidth: variant === 'secondary' ? 1 : 0,
           borderColor: getBorderColor(),
-          borderRadius: theme.radii.md,
-          paddingVertical: theme.spacing.sm + 4,
-          paddingHorizontal: theme.spacing.md,
+          borderRadius: button.radius,
+          paddingVertical: button.paddingVertical + 4,
+          paddingHorizontal: button.paddingHorizontal,
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: 'row',
-          minHeight: 48,
-          opacity: disabled ? 0.6 : 1,
+          minHeight: button.minHeight,
+          opacity: disabled ? theme.opacity.disabled : 1,
         };
 
         if (fullWidth) {
@@ -118,6 +132,7 @@ export function ThemedButton({
         <ThemedText
           variant="label"
           color={getTextColor()}
+          style={textStyle}
         >
           {title}
         </ThemedText>

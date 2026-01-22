@@ -44,6 +44,12 @@ export interface AttachmentPreviewProps {
  * Shows image thumbnail for images, file icon for other types.
  * Includes upload status overlay with progress/retry/remove actions.
  *
+ * Uses the following theme tokens:
+ * - `colors.tileBackground` for background
+ * - `colors.tileBorder` for border
+ * - `radii.tile` for border radius
+ * - `sizing.tileSize` for default size
+ *
  * @example
  * ```tsx
  * // Basic usage
@@ -89,7 +95,7 @@ export function AttachmentPreview({
   error,
   onRetry,
   onRemove,
-  size = 80,
+  size,
   style,
   imageStyle,
   renderPlaceholder,
@@ -97,7 +103,10 @@ export function AttachmentPreview({
   statusLabels,
 }: AttachmentPreviewProps): React.JSX.Element {
   const theme = useHarkenTheme();
+  const { tile } = theme.components;
   const isImage = mimeType?.startsWith('image/') ?? true;
+
+  const effectiveSize = size ?? tile.size;
 
   const renderFileContent = () => {
     if (renderPlaceholder && mimeType) {
@@ -134,12 +143,12 @@ export function AttachmentPreview({
       style={[
         styles.container,
         {
-          width: size,
-          height: size,
-          borderRadius: theme.radii.md,
-          backgroundColor: theme.colors.backgroundSecondary,
+          width: effectiveSize,
+          height: effectiveSize,
+          borderRadius: tile.radius,
+          backgroundColor: tile.background,
           borderWidth: 1,
-          borderColor: theme.colors.border,
+          borderColor: tile.border,
           overflow: 'hidden',
         },
         style,
@@ -148,7 +157,15 @@ export function AttachmentPreview({
       {isImage ? (
         <Image
           source={{ uri }}
-          style={[styles.image, { width: size, height: size }, imageStyle]}
+          style={[
+            styles.image,
+            {
+              width: effectiveSize,
+              height: effectiveSize,
+              backgroundColor: tile.background,
+            },
+            imageStyle,
+          ]}
           resizeMode="cover"
         />
       ) : (
@@ -190,9 +207,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
   },
-  image: {
-    backgroundColor: '#f0f0f0',
-  },
+  image: {},
   filePreview: {
     flex: 1,
     alignItems: 'center',

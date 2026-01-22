@@ -59,6 +59,14 @@ export interface UploadStatusOverlayProps {
  * - Checkmark when complete
  * - Error with retry button when failed
  *
+ * Uses the following theme tokens:
+ * - `colors.uploadOverlay` for overlay background
+ * - `colors.uploadOverlayError` for error overlay background
+ * - `colors.uploadProgressTrack` for progress bar track
+ * - `colors.uploadProgressFill` for progress bar fill
+ * - `colors.uploadBadgeSuccess` for success badge
+ * - `colors.uploadText` for overlay text
+ *
  * @example
  * ```tsx
  * // Basic usage
@@ -101,6 +109,7 @@ export function UploadStatusOverlay({
   renderSuccess,
 }: UploadStatusOverlayProps): React.JSX.Element | null {
   const theme = useHarkenTheme();
+  const { upload } = theme.components;
 
   // Merge labels with defaults
   const resolvedLabels: Required<UploadStatusLabels> = {
@@ -126,12 +135,14 @@ export function UploadStatusOverlay({
           style={[
             styles.badge,
             {
-              backgroundColor: theme.colors.success,
+              backgroundColor: upload.badgeSuccess,
               borderRadius: theme.radii.full,
             },
           ]}
         >
-          <ThemedText style={styles.badgeIcon}>✓</ThemedText>
+          <ThemedText style={[styles.badgeIcon, { color: upload.text }]}>
+            ✓
+          </ThemedText>
         </View>
         {onRemove && (
           <Pressable
@@ -168,12 +179,12 @@ export function UploadStatusOverlay({
         style={[
           styles.overlay,
           styles.fullOverlay,
-          { backgroundColor: theme.colors.overlayDark },
+          { backgroundColor: upload.overlayError },
           style,
         ]}
       >
         <ThemedText style={styles.errorIcon}>⚠️</ThemedText>
-        <ThemedText style={styles.errorText} numberOfLines={2}>
+        <ThemedText style={[styles.errorText, { color: upload.text }]} numberOfLines={2}>
           {errorMessage}
         </ThemedText>
         <View style={styles.buttonRow}>
@@ -188,7 +199,7 @@ export function UploadStatusOverlay({
                 },
               ]}
             >
-              <ThemedText style={styles.actionButtonText}>
+              <ThemedText style={[styles.actionButtonText, { color: upload.text }]}>
                 {resolvedLabels.retry}
               </ThemedText>
             </Pressable>
@@ -204,7 +215,7 @@ export function UploadStatusOverlay({
                 },
               ]}
             >
-              <ThemedText style={styles.actionButtonText}>
+              <ThemedText style={[styles.actionButtonText, { color: upload.text }]}>
                 {resolvedLabels.remove}
               </ThemedText>
             </Pressable>
@@ -224,7 +235,7 @@ export function UploadStatusOverlay({
           style={[
             styles.overlay,
             styles.fullOverlay,
-            { backgroundColor: theme.colors.overlay },
+            { backgroundColor: upload.overlay },
             style,
           ]}
         >
@@ -238,16 +249,18 @@ export function UploadStatusOverlay({
         style={[
           styles.overlay,
           styles.fullOverlay,
-          { backgroundColor: theme.colors.overlay },
+          { backgroundColor: upload.overlay },
           style,
         ]}
       >
-        <ThemedText style={styles.progressText}>{progressPercent}%</ThemedText>
+        <ThemedText style={[styles.progressText, { color: upload.text }]}>
+          {progressPercent}%
+        </ThemedText>
         <View
           style={[
             styles.progressBarContainer,
             {
-              backgroundColor: 'rgba(255,255,255,0.3)',
+              backgroundColor: upload.progressTrack,
               borderRadius: theme.radii.sm,
             },
           ]}
@@ -257,7 +270,7 @@ export function UploadStatusOverlay({
               styles.progressBarFill,
               {
                 width: `${progressPercent}%`,
-                backgroundColor: theme.colors.primary,
+                backgroundColor: upload.progressFill,
                 borderRadius: theme.radii.sm,
               },
             ]}
@@ -269,11 +282,12 @@ export function UploadStatusOverlay({
             style={[
               styles.cancelButton,
               {
+                backgroundColor: upload.progressTrack,
                 borderRadius: theme.radii.sm,
               },
             ]}
           >
-            <ThemedText style={styles.cancelText}>
+            <ThemedText style={[styles.cancelText, { color: upload.text }]}>
               {resolvedLabels.cancel}
             </ThemedText>
           </Pressable>
@@ -289,12 +303,12 @@ export function UploadStatusOverlay({
         style={[
           styles.overlay,
           styles.fullOverlay,
-          { backgroundColor: theme.colors.overlay },
+          { backgroundColor: upload.overlay },
           style,
         ]}
       >
-        <ActivityIndicator color="#fff" size="small" />
-        <ThemedText style={styles.confirmingText}>
+        <ActivityIndicator color={upload.text} size="small" />
+        <ThemedText style={[styles.confirmingText, { color: upload.text }]}>
           {resolvedLabels.confirming}
         </ThemedText>
       </View>
@@ -308,12 +322,12 @@ export function UploadStatusOverlay({
         style={[
           styles.overlay,
           styles.fullOverlay,
-          { backgroundColor: theme.colors.overlay },
+          { backgroundColor: upload.overlay },
           style,
         ]}
       >
-        <ActivityIndicator color="#fff" size="small" />
-        <ThemedText style={styles.queuedText}>
+        <ActivityIndicator color={upload.text} size="small" />
+        <ThemedText style={[styles.queuedText, { color: upload.text }]}>
           {resolvedLabels.waiting}
         </ThemedText>
         {onRemove && (
@@ -322,11 +336,12 @@ export function UploadStatusOverlay({
             style={[
               styles.cancelButton,
               {
+                backgroundColor: upload.progressTrack,
                 borderRadius: theme.radii.sm,
               },
             ]}
           >
-            <ThemedText style={styles.cancelText}>
+            <ThemedText style={[styles.cancelText, { color: upload.text }]}>
               {resolvedLabels.cancel}
             </ThemedText>
           </Pressable>
@@ -360,7 +375,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   badgeIcon: {
-    color: '#fff',
     fontSize: 14,
     fontWeight: '700',
   },
@@ -381,7 +395,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   progressText: {
-    color: '#fff',
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 8,
@@ -398,19 +411,15 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingHorizontal: 12,
     paddingVertical: 4,
-    backgroundColor: 'rgba(255,255,255,0.2)',
   },
   cancelText: {
-    color: '#fff',
     fontSize: 12,
   },
   confirmingText: {
-    color: '#fff',
     fontSize: 12,
     marginTop: 4,
   },
   queuedText: {
-    color: '#fff',
     fontSize: 12,
     marginTop: 4,
   },
@@ -419,7 +428,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   errorText: {
-    color: '#fff',
     fontSize: 11,
     textAlign: 'center',
     marginBottom: 8,
@@ -433,7 +441,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   actionButtonText: {
-    color: '#fff',
     fontSize: 12,
     fontWeight: '600',
   },

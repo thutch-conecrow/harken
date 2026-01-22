@@ -1,7 +1,7 @@
 import React, { createContext, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
-import type { HarkenTheme, ThemeMode } from '../theme';
-import { lightTheme, darkTheme, createTheme } from '../theme';
+import type { ResolvedHarkenTheme, ThemeMode } from '../theme';
+import { lightTheme, darkTheme, resolveTheme } from '../theme';
 import type { HarkenConfig, HarkenProviderProps } from '../types';
 import { IdentityStore, createDefaultStorage } from '../storage';
 import { HarkenClient } from '../api/client';
@@ -10,8 +10,8 @@ import { HarkenClient } from '../api/client';
  * Context value provided by HarkenProvider.
  */
 export interface HarkenContextValue {
-  /** The resolved theme based on mode and overrides */
-  theme: HarkenTheme;
+  /** The resolved theme with all fallbacks applied */
+  theme: ResolvedHarkenTheme;
   /** Current theme mode */
   themeMode: ThemeMode;
   /** Whether dark mode is currently active */
@@ -52,14 +52,19 @@ export const HarkenContext = createContext<HarkenContextValue | null>(null);
  *
  * @example
  * ```tsx
- * // With custom storage implementation
- * import { HarkenProvider, createSecureStoreAdapter } from '@harkenapp/sdk-react-native';
- * import * as SecureStore from 'expo-secure-store';
- *
- * const storage = createSecureStoreAdapter(SecureStore);
- *
- * <HarkenProvider config={{ publishableKey: 'pk_live_xxxx' }} storage={storage}>
- *   <YourApp />
+ * // With custom theme for modal embedding
+ * <HarkenProvider
+ *   config={{ publishableKey: 'pk_live_xxxx' }}
+ *   themeMode="dark"
+ *   darkTheme={{
+ *     colors: {
+ *       surface: '#2d2d2d',
+ *       chipBackground: '#3d3d3d',
+ *       formBackground: 'transparent',
+ *     },
+ *   }}
+ * >
+ *   <FeedbackSheet layout="auto" />
  * </HarkenProvider>
  * ```
  */
@@ -82,11 +87,11 @@ export function HarkenProvider({
     return systemColorScheme === 'dark';
   }, [themeMode, systemColorScheme]);
 
-  // Build the resolved theme
+  // Build the resolved theme using the centralized resolver
   const theme = useMemo(() => {
     const baseTheme = isDarkMode ? darkTheme : lightTheme;
     const overrides = isDarkMode ? darkOverrides : lightOverrides;
-    return createTheme(baseTheme, overrides);
+    return resolveTheme(baseTheme, overrides);
   }, [isDarkMode, lightOverrides, darkOverrides]);
 
   // Create identity store (memoized to persist across re-renders)

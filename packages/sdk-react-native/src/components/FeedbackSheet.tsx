@@ -6,7 +6,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import type { ViewStyle } from 'react-native';
+import type { ViewStyle, StyleProp } from 'react-native';
 import type { components } from '../types/index.js';
 import { useHarkenTheme, useFeedback } from '../hooks';
 import { ThemedText } from './ThemedText';
@@ -26,7 +26,7 @@ export interface FeedbackSheetProps {
   /** Called when user cancels/dismisses the form */
   onCancel?: () => void;
 
-  /** Title text */
+  /** Title text. Set to empty string to hide title section entirely. */
   title?: string;
   /** Placeholder text for message input */
   placeholder?: string;
@@ -52,10 +52,21 @@ export interface FeedbackSheetProps {
   /** Whether to clear form on success. @default true */
   clearOnSuccess?: boolean;
 
-  /** Container style override */
-  containerStyle?: ViewStyle;
-  /** Form content style override */
-  formStyle?: ViewStyle;
+  /**
+   * Layout mode for the container.
+   * - 'flex': Uses flex: 1 (default, requires parent with explicit height)
+   * - 'auto': Content determines height (for bottom sheet modal embedding)
+   */
+  layout?: 'flex' | 'auto';
+
+  /** Container style override (outer KeyboardAvoidingView) */
+  containerStyle?: StyleProp<ViewStyle>;
+  /** Content style override (inner ScrollView content) */
+  contentStyle?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Use `contentStyle` instead
+   */
+  formStyle?: StyleProp<ViewStyle>;
 }
 
 /**
@@ -70,10 +81,23 @@ export interface FeedbackSheetProps {
  *
  * For attachment support, import from '@harkenapp/sdk-react-native/attachments'.
  *
+ * Uses the following theme tokens:
+ * - `colors.formBackground` for background
+ * - `spacing.formPadding` for padding
+ * - `spacing.sectionGap` for section gaps
+ * - `radii.form` for border radius
+ *
  * @example
  * ```tsx
  * // Minimal usage
  * <FeedbackSheet onSuccess={() => navigation.goBack()} />
+ *
+ * // For bottom sheet modal embedding
+ * <FeedbackSheet
+ *   layout="auto"
+ *   title=""
+ *   onSuccess={() => closeModal()}
+ * />
  *
  * // With customization
  * <FeedbackSheet
@@ -106,10 +130,13 @@ export function FeedbackSheet({
   successMessage = 'Thank you for your feedback!',
   showSuccessAlert = true,
   clearOnSuccess = true,
+  layout = 'flex',
   containerStyle,
+  contentStyle,
   formStyle,
 }: FeedbackSheetProps): React.JSX.Element {
   const theme = useHarkenTheme();
+  const { form } = theme.components;
   const { submitFeedback, isSubmitting, error, clearError, isInitializing } =
     useFeedback();
 
@@ -184,17 +211,18 @@ export function FeedbackSheet({
   }, [resetForm, onCancel]);
 
   const baseContainerStyle: ViewStyle = {
-    flex: 1,
-    backgroundColor: theme.colors.background,
+    ...(layout === 'flex' ? { flex: 1 } : {}),
+    backgroundColor: form.background,
+    borderRadius: form.radius,
   };
 
-  const contentStyle: ViewStyle = {
-    flexGrow: 1,
-    padding: theme.spacing.lg,
+  const scrollContentStyle: ViewStyle = {
+    ...(layout === 'flex' ? { flexGrow: 1 } : {}),
+    padding: form.padding,
   };
 
   const sectionStyle: ViewStyle = {
-    marginBottom: theme.spacing.lg,
+    marginBottom: form.sectionGap,
   };
 
   const buttonRowStyle: ViewStyle = {
@@ -205,6 +233,9 @@ export function FeedbackSheet({
 
   const characterCount = trimmedMessage.length;
   const showCharacterWarning = characterCount > maxMessageLength * 0.9;
+
+  // Support deprecated formStyle prop
+  const effectiveContentStyle = contentStyle ?? formStyle;
 
   if (isInitializing) {
     return (
@@ -222,13 +253,15 @@ export function FeedbackSheet({
       style={[baseContainerStyle, containerStyle]}
     >
       <ScrollView
-        contentContainerStyle={[contentStyle, formStyle]}
+        contentContainerStyle={[scrollContentStyle, effectiveContentStyle]}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Title */}
-        <View style={sectionStyle}>
-          <ThemedText variant="title">{title}</ThemedText>
-        </View>
+        {/* Title - only render if provided */}
+        {title ? (
+          <View style={sectionStyle}>
+            <ThemedText variant="title">{title}</ThemedText>
+          </View>
+        ) : null}
 
         {/* Category selector */}
         <View style={sectionStyle}>

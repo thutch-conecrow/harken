@@ -3,6 +3,8 @@ import type {
   HarkenTypography,
   HarkenSpacing,
   HarkenRadii,
+  HarkenSizing,
+  HarkenOpacity,
   HarkenTheme,
 } from './types';
 
@@ -14,7 +16,8 @@ export const lightColors: HarkenColors = {
   primary: '#2563EB', // Blue 600
   primaryPressed: '#1D4ED8', // Blue 700
   background: '#FFFFFF',
-  backgroundSecondary: '#F9FAFB', // Gray 50
+  surface: '#F9FAFB', // Gray 50 - container/modal surface
+  backgroundSecondary: '#F9FAFB', // Gray 50 - alias for surface (backwards compat)
   text: '#111827', // Gray 900
   textSecondary: '#6B7280', // Gray 500
   textPlaceholder: '#9CA3AF', // Gray 400
@@ -40,7 +43,8 @@ export const darkColors: HarkenColors = {
   primary: '#3B82F6', // Blue 500
   primaryPressed: '#2563EB', // Blue 600
   background: '#111827', // Gray 900
-  backgroundSecondary: '#1F2937', // Gray 800
+  surface: '#1F2937', // Gray 800 - container/modal surface
+  backgroundSecondary: '#1F2937', // Gray 800 - alias for surface (backwards compat)
   text: '#F9FAFB', // Gray 50
   textSecondary: '#9CA3AF', // Gray 400
   textPlaceholder: '#6B7280', // Gray 500
@@ -126,26 +130,53 @@ export const darkTheme: HarkenTheme = {
   radii: defaultRadii,
 };
 
+/** Extended theme type that includes optional sizing and opacity */
+type ExtendedHarkenTheme = HarkenTheme & {
+  sizing?: Partial<HarkenSizing>;
+  opacity?: Partial<HarkenOpacity>;
+};
+
 /**
  * Creates a theme by merging overrides with a base theme.
+ *
+ * Note: For full resolved theme with component aliases, use `resolveTheme` instead.
+ * This function creates a raw HarkenTheme suitable for passing to resolveTheme.
  */
 export function createTheme(
-  baseTheme: HarkenTheme,
+  baseTheme: ExtendedHarkenTheme,
   overrides?: {
     colors?: Partial<HarkenColors>;
     typography?: Partial<HarkenTypography>;
     spacing?: Partial<HarkenSpacing>;
     radii?: Partial<HarkenRadii>;
+    sizing?: Partial<HarkenSizing>;
+    opacity?: Partial<HarkenOpacity>;
   }
-): HarkenTheme {
+): ExtendedHarkenTheme {
   if (!overrides) {
     return baseTheme;
   }
+
+  // Merge sizing if either base or overrides has it
+  const baseSizing = baseTheme.sizing;
+  const overrideSizing = overrides.sizing;
+  const mergedSizing = (baseSizing || overrideSizing)
+    ? { ...baseSizing, ...overrideSizing }
+    : undefined;
+
+  // Merge opacity if either base or overrides has it
+  const baseOpacity = baseTheme.opacity;
+  const overrideOpacity = overrides.opacity;
+  const mergedOpacity = (baseOpacity || overrideOpacity)
+    ? { ...baseOpacity, ...overrideOpacity }
+    : undefined;
 
   return {
     colors: { ...baseTheme.colors, ...overrides.colors },
     typography: { ...baseTheme.typography, ...overrides.typography },
     spacing: { ...baseTheme.spacing, ...overrides.spacing },
     radii: { ...baseTheme.radii, ...overrides.radii },
+    ...(mergedSizing && { sizing: mergedSizing }),
+    ...(mergedOpacity && { opacity: mergedOpacity }),
   };
 }

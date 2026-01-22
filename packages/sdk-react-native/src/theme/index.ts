@@ -4,10 +4,20 @@ export type {
   HarkenTypography,
   HarkenSpacing,
   HarkenRadii,
+  HarkenSizing,
+  HarkenOpacity,
   HarkenTheme,
   PartialHarkenTheme,
   TextWeight,
   ThemeMode,
+  // Resolved theme types
+  ResolvedHarkenColors,
+  ResolvedHarkenSpacing,
+  ResolvedHarkenRadii,
+  ResolvedHarkenSizing,
+  ResolvedHarkenOpacity,
+  ResolvedHarkenTheme,
+  HarkenComponentTokens,
 } from './types';
 
 // Default theme exports
@@ -21,3 +31,6 @@ export {
   darkTheme,
   createTheme,
 } from './defaults';
+
+// Theme resolver
+export { resolveTheme } from './resolver';
