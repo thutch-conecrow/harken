@@ -146,7 +146,9 @@ describe("UploadQueueService", () => {
       // to QUEUED since processQueue() skips non-QUEUED items
       expect(progress.attachmentId).toBe("att_interrupted");
       // Should have progressed beyond initial state
-      expect([UploadPhase.UPLOADING, UploadPhase.CONFIRMING, UploadPhase.COMPLETED]).toContain(progress.phase);
+      expect([UploadPhase.UPLOADING, UploadPhase.CONFIRMING, UploadPhase.COMPLETED]).toContain(
+        progress.phase
+      );
     });
   });
 

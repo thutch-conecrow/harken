@@ -214,7 +214,14 @@ describe("useAttachmentUpload", () => {
     it("updates state only for tracked attachment IDs", async () => {
       mockLaunchCameraAsync.mockResolvedValue({
         canceled: false,
-        assets: [{ uri: "file:///photo.jpg", fileName: "photo.jpg", mimeType: "image/jpeg", fileSize: 1000 }],
+        assets: [
+          {
+            uri: "file:///photo.jpg",
+            fileName: "photo.jpg",
+            mimeType: "image/jpeg",
+            fileSize: 1000,
+          },
+        ],
       });
       mockEnqueue.mockResolvedValue({ attachmentId: "att_tracked", queueItemId: "queue_1" });
 
@@ -259,7 +266,14 @@ describe("useAttachmentUpload", () => {
     it("updates error state on failed upload", async () => {
       mockLaunchCameraAsync.mockResolvedValue({
         canceled: false,
-        assets: [{ uri: "file:///photo.jpg", fileName: "photo.jpg", mimeType: "image/jpeg", fileSize: 1000 }],
+        assets: [
+          {
+            uri: "file:///photo.jpg",
+            fileName: "photo.jpg",
+            mimeType: "image/jpeg",
+            fileSize: 1000,
+          },
+        ],
       });
       mockEnqueue.mockResolvedValue({ attachmentId: "att_fail", queueItemId: "queue_1" });
 
@@ -304,7 +318,14 @@ describe("useAttachmentUpload", () => {
     it("cancels service item and removes from local state", async () => {
       mockLaunchCameraAsync.mockResolvedValue({
         canceled: false,
-        assets: [{ uri: "file:///photo.jpg", fileName: "photo.jpg", mimeType: "image/jpeg", fileSize: 1000 }],
+        assets: [
+          {
+            uri: "file:///photo.jpg",
+            fileName: "photo.jpg",
+            mimeType: "image/jpeg",
+            fileSize: 1000,
+          },
+        ],
       });
       mockEnqueue.mockResolvedValue({ attachmentId: "att_remove", queueItemId: "queue_1" });
       mockCancelItem.mockResolvedValue(undefined);
@@ -332,7 +353,14 @@ describe("useAttachmentUpload", () => {
     it("returns true when uploads are in progress", async () => {
       mockLaunchCameraAsync.mockResolvedValue({
         canceled: false,
-        assets: [{ uri: "file:///photo.jpg", fileName: "photo.jpg", mimeType: "image/jpeg", fileSize: 1000 }],
+        assets: [
+          {
+            uri: "file:///photo.jpg",
+            fileName: "photo.jpg",
+            mimeType: "image/jpeg",
+            fileSize: 1000,
+          },
+        ],
       });
       mockEnqueue.mockResolvedValue({ attachmentId: "att_active", queueItemId: "queue_1" });
 
@@ -364,11 +392,25 @@ describe("useAttachmentUpload", () => {
     it("returns all attachment IDs", async () => {
       mockLaunchCameraAsync.mockResolvedValueOnce({
         canceled: false,
-        assets: [{ uri: "file:///photo1.jpg", fileName: "photo1.jpg", mimeType: "image/jpeg", fileSize: 1000 }],
+        assets: [
+          {
+            uri: "file:///photo1.jpg",
+            fileName: "photo1.jpg",
+            mimeType: "image/jpeg",
+            fileSize: 1000,
+          },
+        ],
       });
       mockLaunchCameraAsync.mockResolvedValueOnce({
         canceled: false,
-        assets: [{ uri: "file:///photo2.jpg", fileName: "photo2.jpg", mimeType: "image/jpeg", fileSize: 2000 }],
+        assets: [
+          {
+            uri: "file:///photo2.jpg",
+            fileName: "photo2.jpg",
+            mimeType: "image/jpeg",
+            fileSize: 2000,
+          },
+        ],
       });
       mockEnqueue.mockResolvedValueOnce({ attachmentId: "att_1", queueItemId: "queue_1" });
       mockEnqueue.mockResolvedValueOnce({ attachmentId: "att_2", queueItemId: "queue_2" });
@@ -388,7 +430,14 @@ describe("useAttachmentUpload", () => {
     it("removes completed attachments from local state", async () => {
       mockLaunchCameraAsync.mockResolvedValue({
         canceled: false,
-        assets: [{ uri: "file:///photo.jpg", fileName: "photo.jpg", mimeType: "image/jpeg", fileSize: 1000 }],
+        assets: [
+          {
+            uri: "file:///photo.jpg",
+            fileName: "photo.jpg",
+            mimeType: "image/jpeg",
+            fileSize: 1000,
+          },
+        ],
       });
       mockEnqueue.mockResolvedValue({ attachmentId: "att_completed", queueItemId: "queue_1" });
 
@@ -424,11 +473,25 @@ describe("useAttachmentUpload", () => {
       mockLaunchCameraAsync
         .mockResolvedValueOnce({
           canceled: false,
-          assets: [{ uri: "file:///photo1.jpg", fileName: "photo1.jpg", mimeType: "image/jpeg", fileSize: 1000 }],
+          assets: [
+            {
+              uri: "file:///photo1.jpg",
+              fileName: "photo1.jpg",
+              mimeType: "image/jpeg",
+              fileSize: 1000,
+            },
+          ],
         })
         .mockResolvedValueOnce({
           canceled: false,
-          assets: [{ uri: "file:///photo2.jpg", fileName: "photo2.jpg", mimeType: "image/jpeg", fileSize: 2000 }],
+          assets: [
+            {
+              uri: "file:///photo2.jpg",
+              fileName: "photo2.jpg",
+              mimeType: "image/jpeg",
+              fileSize: 2000,
+            },
+          ],
         });
       mockEnqueue
         .mockResolvedValueOnce({ attachmentId: "att_completed", queueItemId: "queue_1" })
@@ -468,7 +531,14 @@ describe("useAttachmentUpload", () => {
     it("removes failed attachments from local state", async () => {
       mockLaunchCameraAsync.mockResolvedValue({
         canceled: false,
-        assets: [{ uri: "file:///photo.jpg", fileName: "photo.jpg", mimeType: "image/jpeg", fileSize: 1000 }],
+        assets: [
+          {
+            uri: "file:///photo.jpg",
+            fileName: "photo.jpg",
+            mimeType: "image/jpeg",
+            fileSize: 1000,
+          },
+        ],
       });
       mockEnqueue.mockResolvedValue({ attachmentId: "att_failed", queueItemId: "queue_1" });
 
@@ -505,11 +575,25 @@ describe("useAttachmentUpload", () => {
       mockLaunchCameraAsync
         .mockResolvedValueOnce({
           canceled: false,
-          assets: [{ uri: "file:///photo1.jpg", fileName: "photo1.jpg", mimeType: "image/jpeg", fileSize: 1000 }],
+          assets: [
+            {
+              uri: "file:///photo1.jpg",
+              fileName: "photo1.jpg",
+              mimeType: "image/jpeg",
+              fileSize: 1000,
+            },
+          ],
         })
         .mockResolvedValueOnce({
           canceled: false,
-          assets: [{ uri: "file:///photo2.jpg", fileName: "photo2.jpg", mimeType: "image/jpeg", fileSize: 2000 }],
+          assets: [
+            {
+              uri: "file:///photo2.jpg",
+              fileName: "photo2.jpg",
+              mimeType: "image/jpeg",
+              fileSize: 2000,
+            },
+          ],
         });
       mockEnqueue
         .mockResolvedValueOnce({ attachmentId: "att_failed", queueItemId: "queue_1" })

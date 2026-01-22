@@ -20,11 +20,7 @@ function createMockIdentityStore() {
 // Helper to create a wrapper with HarkenContext
 function createWrapper(contextValue: unknown) {
   return function Wrapper({ children }: { children: React.ReactNode }) {
-    return React.createElement(
-      HarkenContext.Provider,
-      { value: contextValue as never },
-      children
-    );
+    return React.createElement(HarkenContext.Provider, { value: contextValue as never }, children);
   };
 }
 
@@ -183,9 +179,7 @@ describe("useAnonymousId", () => {
 
       // Verify no React warning about updating unmounted component was logged
       const reactWarnings = errorSpy.mock.calls.filter(
-        (call) =>
-          typeof call[0] === "string" &&
-          call[0].includes("unmounted component")
+        (call) => typeof call[0] === "string" && call[0].includes("unmounted component")
       );
       expect(reactWarnings).toHaveLength(0);
 

@@ -44,7 +44,9 @@ describe("defaultStorage", () => {
       const storage = await getDefaultStorage();
 
       // Should fall back to memory storage and warn
-      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("expo-secure-store not available"));
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("expo-secure-store not available")
+      );
 
       // Memory storage should work
       await storage.setItem("key", "value");
