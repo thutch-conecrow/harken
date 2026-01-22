@@ -123,7 +123,7 @@ jobs:
           node -e "console.log('NODE_AUTH_TOKEN set:', !!process.env.NODE_AUTH_TOKEN)"
 
       - name: Debug token env names
-        run: env | cut -d= -f1 | rg -i "token|npm"
+        run: env | cut -d= -f1 | grep -i -E "token|npm" || true
 
       - name: Force OIDC (no token auth)
         run: |
