@@ -1,6 +1,6 @@
 # Theming
 
-Harken's UI components are fully themeable. You can customize colors, typography, spacing, and border radii to match your app's design system.
+Harken's UI components are fully themeable. You can customize colors, typography, spacing, border radii, sizing, and opacity to match your app's design system.
 
 ## Theme Mode
 
@@ -39,14 +39,17 @@ Override specific colors while keeping defaults for the rest:
 >
 ```
 
-### Available Color Tokens
+### Base Color Tokens
+
+These tokens control the overall color scheme. Component tokens (below) fall back to these.
 
 | Token | Description | Light Default | Dark Default |
 |-------|-------------|---------------|--------------|
 | `primary` | Brand color for buttons, accents | `#2563EB` | `#3B82F6` |
 | `primaryPressed` | Pressed state of primary | `#1D4ED8` | `#2563EB` |
-| `background` | Main background | `#FFFFFF` | `#111827` |
-| `backgroundSecondary` | Cards, inputs | `#F9FAFB` | `#1F2937` |
+| `background` | Main app background | `#FFFFFF` | `#111827` |
+| `surface` | Container/modal surface | `#F9FAFB` | `#1F2937` |
+| `backgroundSecondary` | Alias for `surface` (backwards compat) | `#F9FAFB` | `#1F2937` |
 | `text` | Primary text | `#111827` | `#F9FAFB` |
 | `textSecondary` | Muted text | `#6B7280` | `#9CA3AF` |
 | `textPlaceholder` | Input placeholders | `#9CA3AF` | `#6B7280` |
@@ -62,6 +65,89 @@ Override specific colors while keeping defaults for the rest:
 | `accent1` | Camera option icon | `#2563EB` | `#3B82F6` |
 | `accent2` | Photo library icon | `#16A34A` | `#22C55E` |
 | `accent3` | Files option icon | `#D97706` | `#F59E0B` |
+
+### Component Color Tokens
+
+For granular control, override specific component colors. All are optional and fall back to base tokens.
+
+#### Category Chips
+
+| Token | Fallback |
+|-------|----------|
+| `chipBackground` | `surface` |
+| `chipBackgroundSelected` | `primary` |
+| `chipBorder` | `border` |
+| `chipBorderSelected` | `primary` |
+| `chipText` | `text` |
+| `chipTextSelected` | `textOnPrimary` |
+
+#### Text Inputs
+
+| Token | Fallback |
+|-------|----------|
+| `inputBackground` | `surface` |
+| `inputBorder` | `border` |
+| `inputBorderFocused` | `borderFocused` |
+| `inputBorderError` | `error` |
+| `inputText` | `text` |
+| `inputPlaceholder` | `textPlaceholder` |
+
+#### Buttons
+
+| Token | Fallback |
+|-------|----------|
+| `buttonPrimaryBackground` | `primary` |
+| `buttonPrimaryBackgroundPressed` | `primaryPressed` |
+| `buttonPrimaryText` | `textOnPrimary` |
+| `buttonSecondaryBackground` | `surface` |
+| `buttonSecondaryBorder` | `border` |
+| `buttonSecondaryText` | `text` |
+| `buttonGhostText` | `text` |
+
+#### Add Button (Attachment Grid)
+
+| Token | Fallback |
+|-------|----------|
+| `addButtonBackground` | `surface` |
+| `addButtonBackgroundPressed` | `border` |
+| `addButtonBorder` | `border` |
+| `addButtonIcon` | `textSecondary` |
+| `addButtonText` | `textSecondary` |
+
+#### Attachment Tiles
+
+| Token | Fallback |
+|-------|----------|
+| `tileBackground` | `surface` |
+| `tileBorder` | `border` |
+
+#### Upload Status Overlay
+
+| Token | Fallback |
+|-------|----------|
+| `uploadOverlay` | `overlay` |
+| `uploadOverlayError` | `overlayDark` |
+| `uploadProgressTrack` | `rgba(255,255,255,0.3)` |
+| `uploadProgressFill` | `primary` |
+| `uploadBadgeSuccess` | `success` |
+| `uploadText` | `textOnPrimary` |
+
+#### Attachment Picker
+
+| Token | Fallback |
+|-------|----------|
+| `pickerOverlay` | `overlay` |
+| `pickerBackground` | `background` |
+| `pickerHandle` | `textSecondary` |
+| `pickerOptionBackground` | `surface` |
+| `pickerOptionBackgroundPressed` | `border` |
+| `pickerCancelText` | `error` |
+
+#### Form Container
+
+| Token | Fallback |
+|-------|----------|
+| `formBackground` | `background` |
 
 ## Customizing Typography
 
@@ -98,10 +184,6 @@ Adjust fonts, sizes, and weights:
 | `captionSize` | Small text size | `12` |
 | `captionWeight` | Caption font weight | `'normal'` |
 
-### Font Weights
-
-Supported values: `'normal'`, `'bold'`, `'100'` through `'900'`
-
 ## Customizing Spacing
 
 Adjust the spacing scale (based on a 4px grid):
@@ -119,7 +201,7 @@ Adjust the spacing scale (based on a 4px grid):
 >
 ```
 
-### Spacing Tokens
+### Base Spacing Tokens
 
 | Token | Description | Default |
 |-------|-------------|---------|
@@ -129,6 +211,20 @@ Adjust the spacing scale (based on a 4px grid):
 | `lg` | Large | `24` |
 | `xl` | Extra large | `32` |
 | `xxl` | 2x extra large | `48` |
+
+### Component Spacing Tokens
+
+| Token | Fallback |
+|-------|----------|
+| `chipPaddingVertical` | `sm` (8) |
+| `chipPaddingHorizontal` | `md` (16) |
+| `chipGap` | `sm` (8) |
+| `inputPadding` | `md` (16) |
+| `buttonPaddingVertical` | `sm` (8) |
+| `buttonPaddingHorizontal` | `md` (16) |
+| `formPadding` | `lg` (24) |
+| `sectionGap` | `lg` (24) |
+| `tileGap` | `sm` (8) |
 
 ## Customizing Border Radii
 
@@ -147,7 +243,7 @@ Control corner rounding:
 >
 ```
 
-### Radii Tokens
+### Base Radii Tokens
 
 | Token | Description | Default |
 |-------|-------------|---------|
@@ -157,6 +253,66 @@ Control corner rounding:
 | `lg` | Modals, sheets | `16` |
 | `xl` | Bottom sheets | `20` |
 | `full` | Pill shape | `9999` |
+
+### Component Radii Tokens
+
+| Token | Fallback |
+|-------|----------|
+| `chip` | `full` (9999) |
+| `input` | `md` (8) |
+| `button` | `md` (8) |
+| `tile` | `md` (8) |
+| `form` | `lg` (16) |
+| `picker` | `xl` (20) |
+
+## Customizing Sizing
+
+Control component dimensions:
+
+```tsx
+<HarkenProvider
+  config={{ publishableKey: 'pk_live_xxx' }}
+  lightTheme={{
+    sizing: {
+      buttonMinHeight: 56,
+      tileSize: 100,
+    },
+  }}
+>
+```
+
+### Sizing Tokens
+
+| Token | Description | Default |
+|-------|-------------|---------|
+| `buttonMinHeight` | Minimum button height | `48` |
+| `inputMinHeight` | Minimum input height | `44` |
+| `tileSize` | Attachment tile size | `80` |
+| `addButtonIconSize` | Add button icon size | `28` |
+| `pickerIconSize` | Picker option icon size | `44` |
+
+## Customizing Opacity
+
+Control opacity states:
+
+```tsx
+<HarkenProvider
+  config={{ publishableKey: 'pk_live_xxx' }}
+  lightTheme={{
+    opacity: {
+      disabled: 0.5,
+      pressed: 0.7,
+    },
+  }}
+>
+```
+
+### Opacity Tokens
+
+| Token | Description | Default |
+|-------|-------------|---------|
+| `disabled` | Disabled element opacity | `0.6` |
+| `pressed` | Pressed state opacity | `0.8` |
 
 ## Using Theme in Custom Components
 
@@ -170,7 +326,7 @@ function CustomComponent() {
 
   return (
     <View style={{
-      backgroundColor: theme.colors.backgroundSecondary,
+      backgroundColor: theme.colors.surface,
       padding: theme.spacing.md,
       borderRadius: theme.radii.md,
     }}>
@@ -180,6 +336,102 @@ function CustomComponent() {
     </View>
   );
 }
+```
+
+### Structured Component Access
+
+For better discoverability, use the `components` namespace:
+
+```tsx
+const theme = useHarkenTheme();
+
+// These are equivalent:
+const chipBg = theme.colors.chipBackground;
+const chipBg = theme.components.chip.background;
+
+// Structured access groups related tokens:
+const { chip, input, button, form } = theme.components;
+
+<View style={{
+  backgroundColor: chip.background,
+  borderColor: chip.border,
+  borderRadius: chip.radius,
+  paddingVertical: chip.paddingVertical,
+  paddingHorizontal: chip.paddingHorizontal,
+}}>
+```
+
+Available component groups:
+- `theme.components.chip` - Category selector chips
+- `theme.components.input` - Text inputs
+- `theme.components.button` - Buttons (with `.primary`, `.secondary`, `.ghost`)
+- `theme.components.addButton` - Add attachment button
+- `theme.components.tile` - Attachment tiles
+- `theme.components.upload` - Upload status overlay
+- `theme.components.picker` - Attachment picker modal
+- `theme.components.form` - Form container
+
+## Modal Embedding
+
+When embedding `FeedbackSheet` in a bottom sheet modal, use these techniques:
+
+### Layout Mode
+
+Use `layout="auto"` to prevent the default `flex: 1` from collapsing:
+
+```tsx
+<FeedbackSheet
+  layout="auto"  // Content determines height
+  title=""       // Hide title (modal has its own)
+  onSuccess={() => closeModal()}
+/>
+```
+
+### Modal Theme Recipe
+
+For dark-themed modals, override these tokens to ensure visibility:
+
+```tsx
+const modalDarkTheme = {
+  colors: {
+    // Your modal's background color
+    surface: '#2d2d2d',
+
+    // Make chips stand out from surface
+    chipBackground: '#3d3d3d',
+    chipBorder: '#4d4d4d',
+
+    // Transparent to inherit modal background
+    formBackground: 'transparent',
+
+    // Text colors for dark mode
+    text: '#ffffff',
+    textSecondary: '#a0a0a0',
+    textPlaceholder: '#666666',
+
+    // Your brand primary
+    primary: '#0066ff',
+  },
+};
+
+<HarkenProvider
+  config={{ publishableKey: 'pk_live_xxx' }}
+  themeMode="dark"
+  darkTheme={modalDarkTheme}
+>
+  <FeedbackSheet layout="auto" title="" />
+</HarkenProvider>
+```
+
+### Style Escape Hatches
+
+For one-off layout adjustments, use style props:
+
+```tsx
+<FeedbackSheet
+  containerStyle={{ maxHeight: 500 }}
+  contentStyle={{ paddingTop: 8 }}
+/>
 ```
 
 ## Creating a Complete Custom Theme
@@ -209,21 +461,13 @@ const myLightTheme = createTheme(lightTheme, {
   radii: {
     md: 12,
   },
-});
-
-const myDarkTheme = createTheme(darkTheme, {
-  colors: {
-    primary: '#A78BFA',
-    primaryPressed: '#8B5CF6',
+  sizing: {
+    buttonMinHeight: 52,
   },
-  typography: {
-    fontFamily: 'Inter',
-    titleSize: 22,
+  opacity: {
+    disabled: 0.5,
   },
 });
-
-// Note: When using createTheme, pass the full theme objects
-// The provider's lightTheme/darkTheme props expect partial overrides
 ```
 
 ## Themed Components
@@ -232,9 +476,10 @@ The SDK provides pre-themed components that automatically use your theme:
 
 - `ThemedText` - Text with variant support (title, body, label, caption)
 - `ThemedTextInput` - Styled text input
-- `ThemedButton` - Primary/secondary buttons
+- `ThemedButton` - Primary/secondary/ghost buttons
 - `CategorySelector` - Feedback category picker
 - `AttachmentGrid` - Attachment preview grid
 - `AttachmentPicker` - Source selection modal
+- `FeedbackSheet` - Complete feedback form
 
 All these components respect your theme customizations automatically.

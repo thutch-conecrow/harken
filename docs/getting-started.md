@@ -135,7 +135,7 @@ That's it! Users can now submit feedback with optional category selection and fi
 | `onSuccess` | `(result) => void` | - | Called on successful submission |
 | `onError` | `(error) => void` | - | Called on submission failure |
 | `onCancel` | `() => void` | - | Called when user cancels (shows cancel button) |
-| `title` | `string` | `'Send Feedback'` | Form title |
+| `title` | `string` | `'Send Feedback'` | Form title (set to `""` to hide) |
 | `placeholder` | `string` | `'What would you like to share?'` | Message placeholder |
 | `submitLabel` | `string` | `'Submit'` | Submit button text |
 | `cancelLabel` | `string` | `'Cancel'` | Cancel button text |
@@ -148,6 +148,9 @@ That's it! Users can now submit feedback with optional category selection and fi
 | `attachmentSources` | `object` | All enabled | Configure attachment sources |
 | `showSuccessAlert` | `boolean` | `true` | Show success alert |
 | `clearOnSuccess` | `boolean` | `true` | Clear form after success |
+| `layout` | `'flex' \| 'auto'` | `'flex'` | Layout mode (use `'auto'` for modal embedding) |
+| `containerStyle` | `StyleProp<ViewStyle>` | - | Outer container style override |
+| `contentStyle` | `StyleProp<ViewStyle>` | - | Inner content style override |
 
 ## Verified User Identity (Optional)
 
