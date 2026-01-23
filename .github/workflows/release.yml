@@ -58,6 +58,7 @@ jobs:
           node-version: "20"
           cache: "pnpm"
           registry-url: "https://registry.npmjs.org/"
+          token: ""
 
       - name: Debug token after setup-node
         run: node -e "console.log('NODE_AUTH_TOKEN set:', !!process.env.NODE_AUTH_TOKEN)"
@@ -203,7 +204,13 @@ jobs:
           touch "${NPM_CONFIG_USERCONFIG}"
           echo "NPM_CONFIG_USERCONFIG=${NPM_CONFIG_USERCONFIG}"
           ls -l "${NPM_CONFIG_USERCONFIG}"
-          env -i PATH="$PATH" HOME="$HOME" NPM_CONFIG_USERCONFIG="${NPM_CONFIG_USERCONFIG}" NPM_CONFIG_PROVENANCE="true" \
+          env -i \
+            PATH="$PATH" \
+            HOME="$HOME" \
+            ACTIONS_ID_TOKEN_REQUEST_TOKEN="$ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            ACTIONS_ID_TOKEN_REQUEST_URL="$ACTIONS_ID_TOKEN_REQUEST_URL" \
+            NPM_CONFIG_USERCONFIG="${NPM_CONFIG_USERCONFIG}" \
+            NPM_CONFIG_PROVENANCE="true" \
             npm publish --provenance --access public --loglevel verbose
 
       # Commit and tag ONLY after successful publish to avoid repo/npm state divergence.
