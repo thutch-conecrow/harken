@@ -39,6 +39,11 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Debug token at job start
+        run: |
+          echo "JOB_START_NODE_AUTH_TOKEN present: ${NODE_AUTH_TOKEN:+true}"
+          echo "JOB_START_NPM_TOKEN present: ${NPM_TOKEN:+true}"
+
       - name: Clear npm auth env
         run: |
           echo "NODE_AUTH_TOKEN=" >> $GITHUB_ENV
@@ -198,7 +203,8 @@ jobs:
           touch "${NPM_CONFIG_USERCONFIG}"
           echo "NPM_CONFIG_USERCONFIG=${NPM_CONFIG_USERCONFIG}"
           ls -l "${NPM_CONFIG_USERCONFIG}"
-          env -u NODE_AUTH_TOKEN -u NPM_TOKEN npm publish --provenance --access public --loglevel verbose
+          env -i PATH="$PATH" HOME="$HOME" NPM_CONFIG_USERCONFIG="${NPM_CONFIG_USERCONFIG}" NPM_CONFIG_PROVENANCE="true" \
+            npm publish --provenance --access public --loglevel verbose
 
       # Commit and tag ONLY after successful publish to avoid repo/npm state divergence.
       # If publish fails, package.json has the bumped version locally but nothing is committed,
