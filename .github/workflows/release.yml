@@ -57,8 +57,6 @@ jobs:
         with:
           node-version: "20"
           cache: "pnpm"
-          registry-url: "https://registry.npmjs.org/"
-          token: ""
 
       - name: Debug token after setup-node
         run: node -e "console.log('NODE_AUTH_TOKEN set:', !!process.env.NODE_AUTH_TOKEN)"
@@ -211,7 +209,7 @@ jobs:
             ACTIONS_ID_TOKEN_REQUEST_URL="$ACTIONS_ID_TOKEN_REQUEST_URL" \
             NPM_CONFIG_USERCONFIG="${NPM_CONFIG_USERCONFIG}" \
             NPM_CONFIG_PROVENANCE="true" \
-            npm publish --provenance --access public --loglevel verbose
+            npm publish --provenance --access public --registry https://registry.npmjs.org/ --loglevel verbose
 
       # Commit and tag ONLY after successful publish to avoid repo/npm state divergence.
       # If publish fails, package.json has the bumped version locally but nothing is committed,
