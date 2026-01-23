@@ -158,6 +158,33 @@ jobs:
           export TOKEN_JSON
           python -c 'import os,json,base64; token=json.loads(os.environ["TOKEN_JSON"])["value"]; payload=token.split(".")[1]; pad="="*((4-len(payload)%4)%4); data=json.loads(base64.urlsafe_b64decode(payload+pad)); keys=["repository","repository_owner","job_workflow_ref","workflow_ref","environment","ref","actor","sub","aud"]; [print(f"{k}: {data[k]}") for k in keys if k in data]'
 
+      - name: Debug npm auth/config (expanded)
+        run: |
+          echo "NODE_AUTH_TOKEN present: ${NODE_AUTH_TOKEN:+true}"
+          echo "NPM_TOKEN present: ${NPM_TOKEN:+true}"
+          echo "NPM_CONFIG_USERCONFIG: ${NPM_CONFIG_USERCONFIG:-<unset>}"
+          echo "npm config get userconfig: $(npm config get userconfig)"
+          echo "npm config get globalconfig: $(npm config get globalconfig)"
+          echo "npm config get prefix: $(npm config get prefix)"
+          echo "npm config get registry: $(npm config get registry)"
+          echo "npm config get always-auth: $(npm config get always-auth)"
+          echo "npm config get auth-type: $(npm config get auth-type)"
+          echo "npm config get provenance: $(npm config get provenance)"
+          echo "npm config get provenance-file: $(npm config get provenance-file)"
+          echo "npm config list (sanitized):"
+          npm config list -l | sed -E 's#(//.*:_authToken=).*#\\1<redacted>#'
+          echo "npmrc files (sanitized):"
+          for f in "$NPM_CONFIG_USERCONFIG" "$(npm config get userconfig)" "$(npm config get globalconfig)" "$HOME/.npmrc"; do
+            if [ -n "$f" ] && [ -f "$f" ]; then
+              echo "--- $f"
+              sed -E 's#(//.*:_authToken=).*#\\1<redacted>#' "$f"
+            fi
+          done
+          echo "npm whoami (may fail):"
+          npm whoami --registry "$(npm config get registry)" || true
+          echo "npm ping:"
+          npm ping --registry "$(npm config get registry)" || true
+
       - name: Force OIDC (clear tokens)
         run: |
           unset NODE_AUTH_TOKEN NPM_TOKEN
