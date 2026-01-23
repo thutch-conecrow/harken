@@ -120,7 +120,9 @@ jobs:
         working-directory: packages/sdk-react-native
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public --registry https://registry.npmjs.org/
+        run: |
+          npm whoami --registry https://registry.npmjs.org/
+          npm publish --access public --registry https://registry.npmjs.org/ --tag alpha
 
       # Commit and tag ONLY after successful publish to avoid repo/npm state divergence.
       # If publish fails, package.json has the bumped version locally but nothing is committed,
