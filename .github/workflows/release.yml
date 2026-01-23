@@ -47,6 +47,7 @@ jobs:
         with:
           node-version: "20"
           cache: "pnpm"
+          registry-url: "https://registry.npmjs.org/"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -149,22 +150,16 @@ jobs:
           export TOKEN_JSON
           python -c 'import os,json,base64; token=json.loads(os.environ["TOKEN_JSON"])["value"]; payload=token.split(".")[1]; pad="="*((4-len(payload)%4)%4); data=json.loads(base64.urlsafe_b64decode(payload+pad)); keys=["repository","repository_owner","job_workflow_ref","workflow_ref","environment","ref","actor","sub","aud"]; [print(f"{k}: {data[k]}") for k in keys if k in data]'
 
-      - name: Force OIDC (remove npmrc)
+      - name: Force OIDC (clear tokens)
         run: |
           unset NODE_AUTH_TOKEN NPM_TOKEN
-          if [ -n "${NPM_CONFIG_USERCONFIG:-}" ]; then
-            rm -f "$NPM_CONFIG_USERCONFIG"
-            unset NPM_CONFIG_USERCONFIG
-          fi
-          rm -f ~/.npmrc
 
       - name: Publish to npm
         working-directory: packages/sdk-react-native
-        run: npm publish --provenance --access public
+        run: npm publish --provenance --access public --loglevel verbose
         env:
           NODE_AUTH_TOKEN: ""
           NPM_TOKEN: ""
-          NPM_CONFIG_USERCONFIG: ""
           NPM_CONFIG_PROVENANCE: "true"
 
       # Commit and tag ONLY after successful publish to avoid repo/npm state divergence.
