@@ -28,7 +28,30 @@ permissions:
   id-token: write # For npm provenance
 
 jobs:
+  # Path filtering via job (not on.push.paths) so workflow_dispatch can bypass filters.
+  # This provides a single, explicit filter definition that applies to automated runs
+  # while allowing manual releases regardless of what changed.
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      should_publish: ${{ steps.filter.outputs.sdk }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            sdk:
+              - 'packages/sdk-react-native/src/**'
+              - 'packages/sdk-react-native/package.json'
+              - 'packages/sdk-react-native/tsconfig.json'
+              - 'packages/sdk-react-native/openapi.yaml'
+              - 'packages/sdk-react-native/app.plugin.cjs'
+              - 'packages/sdk-react-native/app.plugin.js'
+
   release:
+    needs: check-changes
+    if: needs.check-changes.outputs.should_publish == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     environment: npm-publish # Environment with npm trusted publishing configured
 
