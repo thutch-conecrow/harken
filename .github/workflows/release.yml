@@ -156,11 +156,16 @@ jobs:
 
       - name: Publish to npm
         working-directory: packages/sdk-react-native
-        run: npm publish --provenance --access public --loglevel verbose
         env:
           NODE_AUTH_TOKEN: ""
           NPM_TOKEN: ""
+          NPM_CONFIG_USERCONFIG: "${{ runner.temp }}/empty.npmrc"
           NPM_CONFIG_PROVENANCE: "true"
+        run: |
+          touch "${NPM_CONFIG_USERCONFIG}"
+          echo "NPM_CONFIG_USERCONFIG=${NPM_CONFIG_USERCONFIG}"
+          ls -l "${NPM_CONFIG_USERCONFIG}"
+          npm publish --provenance --access public --loglevel verbose
 
       # Commit and tag ONLY after successful publish to avoid repo/npm state divergence.
       # If publish fails, package.json has the bumped version locally but nothing is committed,
