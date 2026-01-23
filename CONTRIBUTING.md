@@ -77,8 +77,17 @@ Releases are automated via GitHub Actions. When changes are merged to `main`:
 3. **Version bump** - Automatically increments based on current version:
    - Prerelease (e.g., `0.0.1-alpha.1`) → `0.0.1-alpha.2`
    - Stable (e.g., `0.1.0`) → `0.1.1` (patch)
-4. **npm publish** - With OIDC-based provenance
+4. **npm publish** - Prerelease versions publish with `--tag alpha`
 5. **Git tag** - Creates release tag and GitHub release
+
+### npm Authentication
+
+Publishing uses a granular npm access token stored as the `NPM_TOKEN` repository secret.
+The token is scoped to `@harkenapp/sdk-react-native` with read/write permissions.
+
+**Token rotation**: The token expires periodically and must be rotated:
+1. Generate a new token at npmjs.com → Access Tokens
+2. Update the `NPM_TOKEN` secret in GitHub repository settings
 
 ### Manual Releases
 
@@ -91,6 +100,7 @@ Use `workflow_dispatch` on the Release workflow to:
 
 - Prerelease versions auto-increment the prerelease number
 - Stable versions auto-increment patch by default
+- All releases currently publish with `alpha` tag (update workflow for `latest` when graduating to stable)
 - To graduate from prerelease, manually set version via workflow_dispatch
 
 ## Code Style
