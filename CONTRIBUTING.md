@@ -86,6 +86,7 @@ Publishing uses a granular npm access token stored as the `NPM_TOKEN` repository
 The token is scoped to `@harkenapp/sdk-react-native` with read/write permissions.
 
 **Token rotation**: The token expires periodically and must be rotated:
+
 1. Generate a new token at npmjs.com → Access Tokens
 2. Update the `NPM_TOKEN` secret in GitHub repository settings
 
