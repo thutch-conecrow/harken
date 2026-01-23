@@ -39,16 +39,6 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Debug token at job start
-        run: |
-          echo "JOB_START_NODE_AUTH_TOKEN present: ${NODE_AUTH_TOKEN:+true}"
-          echo "JOB_START_NPM_TOKEN present: ${NPM_TOKEN:+true}"
-
-      - name: Clear npm auth env
-        run: |
-          echo "NODE_AUTH_TOKEN=" >> $GITHUB_ENV
-          echo "NPM_TOKEN=" >> $GITHUB_ENV
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
@@ -57,9 +47,7 @@ jobs:
         with:
           node-version: "20"
           cache: "pnpm"
-
-      - name: Debug token after setup-node
-        run: node -e "console.log('NODE_AUTH_TOKEN set:', !!process.env.NODE_AUTH_TOKEN)"
+          registry-url: "https://registry.npmjs.org/"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -128,88 +116,11 @@ jobs:
       - name: Rebuild with new version
         run: pnpm build
 
-      - name: Debug npm auth presence
-        run: |
-          if [ -f ~/.npmrc ]; then
-            grep -q "_authToken" ~/.npmrc && echo "authToken present in ~/.npmrc" || echo "no authToken in ~/.npmrc"
-          else
-            echo "~/.npmrc not present"
-          fi
-          node -e "console.log('NODE_AUTH_TOKEN set:', !!process.env.NODE_AUTH_TOKEN)"
-
-      - name: Debug token env names
-        run: env | cut -d= -f1 | grep -i -E "token|npm" || true
-
-      - name: Debug npm version
-        run: npm --version
-
-      - name: Debug npm provenance config
-        run: npm config get provenance
-
-      - name: Debug npm config source
-        run: npm config list -l | grep -i -E "provenance|registry|userconfig" || true
-
-      - name: Debug npm registry metadata
-        run: |
-          npm view @harkenapp/sdk-react-native repository --json || true
-          npm view @harkenapp/sdk-react-native@0.0.1-alpha.2 repository --json || true
-
-      - name: Debug OIDC claims (safe)
-        env:
-          AUDIENCE: npm
-        run: |
-          TOKEN_JSON=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${AUDIENCE}")
-          export TOKEN_JSON
-          python -c 'import os,json,base64; token=json.loads(os.environ["TOKEN_JSON"])["value"]; payload=token.split(".")[1]; pad="="*((4-len(payload)%4)%4); data=json.loads(base64.urlsafe_b64decode(payload+pad)); keys=["repository","repository_owner","job_workflow_ref","workflow_ref","environment","ref","actor","sub","aud"]; [print(f"{k}: {data[k]}") for k in keys if k in data]'
-
-      - name: Debug npm auth/config (expanded)
-        run: |
-          echo "NODE_AUTH_TOKEN present: ${NODE_AUTH_TOKEN:+true}"
-          echo "NPM_TOKEN present: ${NPM_TOKEN:+true}"
-          echo "NPM_CONFIG_USERCONFIG: ${NPM_CONFIG_USERCONFIG:-<unset>}"
-          echo "npm config get userconfig: $(npm config get userconfig)"
-          echo "npm config get globalconfig: $(npm config get globalconfig)"
-          echo "npm config get prefix: $(npm config get prefix)"
-          echo "npm config get registry: $(npm config get registry)"
-          echo "npm config get always-auth: $(npm config get always-auth)"
-          echo "npm config get auth-type: $(npm config get auth-type)"
-          echo "npm config get provenance: $(npm config get provenance)"
-          echo "npm config get provenance-file: $(npm config get provenance-file)"
-          echo "npm config list (sanitized):"
-          npm config list -l | sed -E 's#(//.*:_authToken=).*#\\1<redacted>#'
-          echo "npmrc files (sanitized):"
-          for f in "$NPM_CONFIG_USERCONFIG" "$(npm config get userconfig)" "$(npm config get globalconfig)" "$HOME/.npmrc"; do
-            if [ -n "$f" ] && [ -f "$f" ]; then
-              echo "--- $f"
-              sed -E 's#(//.*:_authToken=).*#\\1<redacted>#' "$f"
-            fi
-          done
-          echo "npm whoami (may fail):"
-          npm whoami --registry "$(npm config get registry)" || true
-          echo "npm ping:"
-          npm ping --registry "$(npm config get registry)" || true
-
-      - name: Force OIDC (clear tokens)
-        run: |
-          unset NODE_AUTH_TOKEN NPM_TOKEN
-
       - name: Publish to npm
         working-directory: packages/sdk-react-native
         env:
-          NPM_CONFIG_USERCONFIG: "${{ runner.temp }}/empty.npmrc"
-          NPM_CONFIG_PROVENANCE: "true"
-        run: |
-          touch "${NPM_CONFIG_USERCONFIG}"
-          echo "NPM_CONFIG_USERCONFIG=${NPM_CONFIG_USERCONFIG}"
-          ls -l "${NPM_CONFIG_USERCONFIG}"
-          env -i \
-            PATH="$PATH" \
-            HOME="$HOME" \
-            ACTIONS_ID_TOKEN_REQUEST_TOKEN="$ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            ACTIONS_ID_TOKEN_REQUEST_URL="$ACTIONS_ID_TOKEN_REQUEST_URL" \
-            NPM_CONFIG_USERCONFIG="${NPM_CONFIG_USERCONFIG}" \
-            NPM_CONFIG_PROVENANCE="true" \
-            npm publish --provenance --access public --registry https://registry.npmjs.org/ --loglevel verbose
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --registry https://registry.npmjs.org/
 
       # Commit and tag ONLY after successful publish to avoid repo/npm state divergence.
       # If publish fails, package.json has the bumped version locally but nothing is committed,
