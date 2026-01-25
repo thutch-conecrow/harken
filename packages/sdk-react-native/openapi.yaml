@@ -379,6 +379,17 @@ components:
               code: "internal_error"
               message: "An unexpected error occurred"
 
+    PaymentRequired:
+      description: Free tier limit exceeded.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            error:
+              code: "FEEDBACK_LIMIT_EXCEEDED"
+              message: "Free tier is limited to 100 feedback items. Upgrade to collect more feedback."
+
 paths:
   /v1/feedback:
     post:
@@ -414,6 +425,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/PaymentRequired"
         "429":
           $ref: "#/components/responses/TooManyRequests"
         "500":

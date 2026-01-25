@@ -438,6 +438,23 @@ export interface components {
                 "application/json": components["schemas"]["ErrorResponse"];
             };
         };
+        /** @description Free tier limit exceeded. */
+        PaymentRequired: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                /**
+                 * @example {
+                 *       "error": {
+                 *         "code": "FEEDBACK_LIMIT_EXCEEDED",
+                 *         "message": "Free tier is limited to 100 feedback items. Upgrade to collect more feedback."
+                 *       }
+                 *     }
+                 */
+                "application/json": components["schemas"]["ErrorResponse"];
+            };
+        };
     };
     parameters: never;
     requestBodies: never;
@@ -470,6 +487,7 @@ export interface operations {
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorized"];
+            402: components["responses"]["PaymentRequired"];
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalError"];
         };

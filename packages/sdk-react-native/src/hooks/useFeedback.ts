@@ -119,12 +119,21 @@ export function useFeedback(): UseFeedbackResult {
                 e instanceof Error ? e : undefined
               );
         setError(harkenError);
+
+        // Call the onError callback if configured
+        config.onError?.(harkenError);
+
+        // Call the onRateLimited callback for 429 responses
+        if (harkenError instanceof HarkenApiError && harkenError.isRateLimited) {
+          config.onRateLimited?.(harkenError.retryAfter ?? 60);
+        }
+
         throw harkenError;
       } finally {
         setIsSubmitting(false);
       }
     },
-    [anonymousId, client]
+    [anonymousId, client, config]
   );
 
   return {

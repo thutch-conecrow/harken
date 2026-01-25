@@ -20,12 +20,17 @@ vi.mock("../api/client", () => ({
   },
 }));
 
+const mockOnError = vi.fn();
+const mockOnRateLimited = vi.fn();
+
 vi.mock("./useHarkenContext", () => ({
   useHarkenContext: vi.fn(() => ({
     config: {
       publishableKey: "pk_test_123",
       userToken: undefined,
       apiBaseUrl: "https://api.harken.app",
+      onError: mockOnError,
+      onRateLimited: mockOnRateLimited,
     },
   })),
 }));
@@ -42,6 +47,8 @@ vi.mock("./useAnonymousId", () => ({
 describe("useFeedback", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockOnError.mockClear();
+    mockOnRateLimited.mockClear();
   });
 
   describe("payload construction", () => {
@@ -308,6 +315,96 @@ describe("useFeedback", () => {
       });
 
       expect(result.current.error).toBeNull();
+    });
+
+    it("calls onError callback on any error", async () => {
+      const apiError = new HarkenApiError(400, {
+        error: { code: "validation_error", message: "Invalid" },
+      });
+      mockSubmitFeedback.mockRejectedValue(apiError);
+
+      const { result } = renderHook(() => useFeedback());
+
+      await act(async () => {
+        try {
+          await result.current.submitFeedback({
+            message: "Test",
+            category: "idea" as FeedbackCategory,
+          });
+        } catch {
+          // Expected
+        }
+      });
+
+      expect(mockOnError).toHaveBeenCalledWith(apiError);
+    });
+
+    it("calls onRateLimited callback on 429 response", async () => {
+      const rateLimitError = new HarkenApiError(
+        429,
+        { error: { code: "RATE_LIMIT_EXCEEDED", message: "Too many requests" } },
+        { retryAfter: 45 }
+      );
+      mockSubmitFeedback.mockRejectedValue(rateLimitError);
+
+      const { result } = renderHook(() => useFeedback());
+
+      await act(async () => {
+        try {
+          await result.current.submitFeedback({
+            message: "Test",
+            category: "idea" as FeedbackCategory,
+          });
+        } catch {
+          // Expected
+        }
+      });
+
+      expect(mockOnRateLimited).toHaveBeenCalledWith(45);
+    });
+
+    it("uses default retryAfter of 60 if not provided in 429 response", async () => {
+      const rateLimitError = new HarkenApiError(429, {
+        error: { code: "RATE_LIMIT_EXCEEDED", message: "Too many requests" },
+      });
+      mockSubmitFeedback.mockRejectedValue(rateLimitError);
+
+      const { result } = renderHook(() => useFeedback());
+
+      await act(async () => {
+        try {
+          await result.current.submitFeedback({
+            message: "Test",
+            category: "idea" as FeedbackCategory,
+          });
+        } catch {
+          // Expected
+        }
+      });
+
+      expect(mockOnRateLimited).toHaveBeenCalledWith(60);
+    });
+
+    it("does not call onRateLimited for non-429 errors", async () => {
+      const apiError = new HarkenApiError(500, {
+        error: { code: "server_error", message: "Internal error" },
+      });
+      mockSubmitFeedback.mockRejectedValue(apiError);
+
+      const { result } = renderHook(() => useFeedback());
+
+      await act(async () => {
+        try {
+          await result.current.submitFeedback({
+            message: "Test",
+            category: "idea" as FeedbackCategory,
+          });
+        } catch {
+          // Expected
+        }
+      });
+
+      expect(mockOnRateLimited).not.toHaveBeenCalled();
     });
   });
 
