@@ -83,6 +83,48 @@ describe("HarkenApiError", () => {
     });
   });
 
+  describe("isPaymentRequired", () => {
+    it("returns true for 402 status", () => {
+      const error = new HarkenApiError(402, {
+        error: { code: "FEEDBACK_LIMIT_EXCEEDED", message: "Feedback limit exceeded" },
+      });
+      expect(error.isPaymentRequired).toBe(true);
+    });
+
+    it("returns false for other statuses", () => {
+      const error = new HarkenApiError(403, {
+        error: { code: "forbidden", message: "Forbidden" },
+      });
+      expect(error.isPaymentRequired).toBe(false);
+    });
+  });
+
+  describe("isFeedbackLimitExceeded", () => {
+    it("returns true for FEEDBACK_LIMIT_EXCEEDED code", () => {
+      const error = new HarkenApiError(402, {
+        error: {
+          code: "FEEDBACK_LIMIT_EXCEEDED",
+          message: "Free tier is limited to 100 feedback items",
+        },
+      });
+      expect(error.isFeedbackLimitExceeded).toBe(true);
+    });
+
+    it("returns false for other codes", () => {
+      const error = new HarkenApiError(402, {
+        error: { code: "payment_required", message: "Payment required" },
+      });
+      expect(error.isFeedbackLimitExceeded).toBe(false);
+    });
+
+    it("returns false for other limit exceeded codes", () => {
+      const error = new HarkenApiError(403, {
+        error: { code: "APP_LIMIT_EXCEEDED", message: "App limit exceeded" },
+      });
+      expect(error.isFeedbackLimitExceeded).toBe(false);
+    });
+  });
+
   describe("isRateLimited", () => {
     it("returns true for 429 status", () => {
       const error = new HarkenApiError(429, {

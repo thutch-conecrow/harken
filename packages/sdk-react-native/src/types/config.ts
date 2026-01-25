@@ -1,5 +1,6 @@
 import type { PartialHarkenTheme, ThemeMode } from "../theme";
 import type { SecureStorage } from "../storage";
+import type { HarkenApiError, HarkenNetworkError } from "../api/errors";
 
 /**
  * Configuration options for the Harken SDK.
@@ -29,6 +30,39 @@ export interface HarkenConfig {
    * @default false
    */
   debug?: boolean;
+
+  /**
+   * Optional callback invoked when an API error occurs.
+   * Useful for handling specific errors like payment required (402) for limit exceeded.
+   *
+   * @example
+   * ```tsx
+   * onError: (error) => {
+   *   if (error.isPaymentRequired && error.isFeedbackLimitExceeded) {
+   *     // Show upgrade prompt to user
+   *   }
+   * }
+   * ```
+   */
+  onError?: (error: HarkenApiError | HarkenNetworkError) => void;
+
+  /**
+   * Optional callback invoked when a request fails due to rate limiting (429).
+   * The retryAfter parameter indicates how many seconds until the rate limit resets.
+   *
+   * Note: The SDK automatically retries rate-limited requests with exponential backoff.
+   * This callback only fires when all retries are exhausted and the request ultimately
+   * fails due to rate limiting - not on every transient 429 response. This makes it
+   * useful for alerting developers when rate limiting actually impacts their users.
+   *
+   * @example
+   * ```tsx
+   * onRateLimited: (retryAfter) => {
+   *   console.warn(`Rate limited. Retry after ${retryAfter}s`);
+   * }
+   * ```
+   */
+  onRateLimited?: (retryAfter: number) => void;
 }
 
 /**

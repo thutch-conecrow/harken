@@ -45,6 +45,16 @@ export class HarkenApiError extends HarkenError {
     return this.status === 401;
   }
 
+  /** True if this is a payment required error (402) - typically limit exceeded */
+  get isPaymentRequired(): boolean {
+    return this.status === 402;
+  }
+
+  /** True if this error is specifically the feedback limit exceeded error */
+  get isFeedbackLimitExceeded(): boolean {
+    return this.code === "FEEDBACK_LIMIT_EXCEEDED";
+  }
+
   /** True if this is a rate limit error (429) */
   get isRateLimited(): boolean {
     return this.status === 429;
