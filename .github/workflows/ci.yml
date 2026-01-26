@@ -40,3 +40,30 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+  examples:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        example: [expo-basic, expo-nativewind]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        working-directory: examples/${{ matrix.example }}
+        run: npm install
+
+      - name: TypeScript check
+        working-directory: examples/${{ matrix.example }}
+        run: npm run typecheck
+
+      - name: Format check
+        working-directory: examples/${{ matrix.example }}
+        run: npm run format:check

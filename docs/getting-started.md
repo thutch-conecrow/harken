@@ -217,6 +217,30 @@ function CustomFeedbackForm() {
 }
 ```
 
+## Troubleshooting
+
+### Stutter on First Modal Load (Metro Lazy Bundling)
+
+If you experience UI stutter the first time the feedback modal loads, this is likely caused by Metro's lazy bundling feature. Metro defers loading some modules (like `expo-secure-store`) until they're first accessed, which can cause a brief pause.
+
+**Solution:** Disable lazy bundling when starting Metro:
+
+```bash
+EXPO_NO_METRO_LAZY=1 npx expo start
+```
+
+Or add it to your npm scripts:
+
+```json
+{
+  "scripts": {
+    "start": "EXPO_NO_METRO_LAZY=1 expo start"
+  }
+}
+```
+
+This pre-loads all modules at startup, eliminating the stutter on first modal open.
+
 ## Next Steps
 
 - [Theming](./theming.md) - Customize colors, typography, and styling
