@@ -217,11 +217,12 @@ Button with theme support.
 ```tsx
 <ThemedButton
   title="Submit"
-  variant="primary" // 'primary' | 'secondary'
+  variant="primary" // 'primary' | 'secondary' | 'ghost'
   onPress={handlePress}
   disabled={false}
   loading={false}
   fullWidth
+  textStyle={{ fontSize: 18 }} // Override button text style
 />
 ```
 
@@ -323,7 +324,7 @@ interface PartialHarkenTheme {
 // Resolved theme (what useHarkenTheme returns)
 interface ResolvedHarkenTheme {
   colors: ResolvedHarkenColors; // All tokens populated
-  typography: HarkenTypography;
+  typography: ResolvedHarkenTypography; // With buttonTextSize/Weight resolved
   spacing: ResolvedHarkenSpacing;
   radii: ResolvedHarkenRadii;
   sizing: ResolvedHarkenSizing;

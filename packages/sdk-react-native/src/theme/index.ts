@@ -12,6 +12,7 @@ export type {
   ThemeMode,
   // Resolved theme types
   ResolvedHarkenColors,
+  ResolvedHarkenTypography,
   ResolvedHarkenSpacing,
   ResolvedHarkenRadii,
   ResolvedHarkenSizing,
