@@ -42,7 +42,11 @@ export default function App() {
 ## Getting Help
 
 - [GitHub Issues](https://github.com/thutch-conecrow/harken/issues) - Bug reports and feature requests
-- [Example App](../examples/expo-basic) - Working example with all features
+
+### Example Apps
+
+- [Basic Example](../examples/expo-basic) - Standard Expo app with all SDK features
+- [NativeWind Example](../examples/expo-nativewind) - Integration with NativeWind 4.x and Tailwind CSS
 
 ## License
 
