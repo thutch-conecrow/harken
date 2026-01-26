@@ -173,7 +173,7 @@ export interface HarkenTypography {
   /** Body font weight */
   bodyWeight: TextWeight;
 
-  /** Label text size (for buttons, form labels) */
+  /** Label text size (for form labels, chips) */
   labelSize: number;
   /** Label font weight */
   labelWeight: TextWeight;
@@ -182,6 +182,13 @@ export interface HarkenTypography {
   captionSize: number;
   /** Caption font weight */
   captionWeight: TextWeight;
+
+  // === COMPONENT TOKENS (optional, fall back to base tokens) ===
+
+  /** Button text size (falls back to labelSize) */
+  buttonTextSize?: number;
+  /** Button text weight (falls back to labelWeight) */
+  buttonTextWeight?: TextWeight;
 }
 
 /** Font weight values supported across platforms */
@@ -344,6 +351,29 @@ export type ThemeMode = "light" | "dark" | "system";
 // These types represent the fully-resolved theme after fallback resolution.
 // Components should use these types - all values are guaranteed to exist.
 // ============================================================================
+
+/**
+ * Fully resolved typography tokens with all component tokens populated.
+ */
+export interface ResolvedHarkenTypography {
+  // Base tokens
+  fontFamily: string;
+  fontFamilyHeading?: string;
+  titleSize: number;
+  titleLineHeight: number;
+  titleWeight: TextWeight;
+  bodySize: number;
+  bodyLineHeight: number;
+  bodyWeight: TextWeight;
+  labelSize: number;
+  labelWeight: TextWeight;
+  captionSize: number;
+  captionWeight: TextWeight;
+
+  // Component tokens (all resolved)
+  buttonTextSize: number;
+  buttonTextWeight: TextWeight;
+}
 
 /**
  * Fully resolved color tokens with all component tokens populated.
@@ -531,6 +561,8 @@ export interface HarkenComponentTokens {
     paddingHorizontal: number;
     radius: number;
     minHeight: number;
+    textSize: number;
+    textWeight: TextWeight;
   };
   addButton: {
     background: string;
@@ -580,8 +612,8 @@ export interface HarkenComponentTokens {
 export interface ResolvedHarkenTheme {
   /** Flat color tokens (for compatibility) */
   colors: ResolvedHarkenColors;
-  /** Typography tokens */
-  typography: HarkenTypography;
+  /** Typography tokens (with component tokens resolved) */
+  typography: ResolvedHarkenTypography;
   /** Flat spacing tokens (for compatibility) */
   spacing: ResolvedHarkenSpacing;
   /** Flat radii tokens (for compatibility) */

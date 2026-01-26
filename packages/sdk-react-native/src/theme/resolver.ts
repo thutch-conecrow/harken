@@ -8,6 +8,7 @@ import type {
   HarkenTheme,
   PartialHarkenTheme,
   ResolvedHarkenColors,
+  ResolvedHarkenTypography,
   ResolvedHarkenSpacing,
   ResolvedHarkenRadii,
   ResolvedHarkenSizing,
@@ -280,14 +281,18 @@ function resolveOpacity(input: Partial<HarkenOpacity> | undefined): ResolvedHark
 // ============================================================================
 
 /**
- * Resolves typography tokens.
- * Typography doesn't have component-specific tokens, just base overrides.
+ * Resolves typography tokens, applying fallbacks for component tokens.
  */
 function resolveTypography(
   input: Partial<HarkenTypography> | undefined,
   defaults: HarkenTypography
-): HarkenTypography {
+): ResolvedHarkenTypography {
+  // Resolve base tokens
+  const labelSize = input?.labelSize ?? defaults.labelSize;
+  const labelWeight = input?.labelWeight ?? defaults.labelWeight;
+
   return {
+    // Base tokens
     fontFamily: input?.fontFamily ?? defaults.fontFamily,
     fontFamilyHeading: input?.fontFamilyHeading ?? defaults.fontFamilyHeading,
     titleSize: input?.titleSize ?? defaults.titleSize,
@@ -296,10 +301,14 @@ function resolveTypography(
     bodySize: input?.bodySize ?? defaults.bodySize,
     bodyLineHeight: input?.bodyLineHeight ?? defaults.bodyLineHeight,
     bodyWeight: input?.bodyWeight ?? defaults.bodyWeight,
-    labelSize: input?.labelSize ?? defaults.labelSize,
-    labelWeight: input?.labelWeight ?? defaults.labelWeight,
+    labelSize,
+    labelWeight,
     captionSize: input?.captionSize ?? defaults.captionSize,
     captionWeight: input?.captionWeight ?? defaults.captionWeight,
+
+    // Component tokens with fallbacks
+    buttonTextSize: input?.buttonTextSize ?? labelSize,
+    buttonTextWeight: input?.buttonTextWeight ?? labelWeight,
   };
 }
 
@@ -313,6 +322,7 @@ function resolveTypography(
  */
 function buildComponentAliases(
   colors: ResolvedHarkenColors,
+  typography: ResolvedHarkenTypography,
   spacing: ResolvedHarkenSpacing,
   radii: ResolvedHarkenRadii,
   sizing: ResolvedHarkenSizing
@@ -359,6 +369,8 @@ function buildComponentAliases(
       paddingHorizontal: spacing.buttonPaddingHorizontal,
       radius: radii.button,
       minHeight: sizing.buttonMinHeight,
+      textSize: typography.buttonTextSize,
+      textWeight: typography.buttonTextWeight,
     },
     addButton: {
       background: colors.addButtonBackground,
@@ -432,7 +444,7 @@ export function resolveTheme(
   const opacity = resolveOpacity(overrides?.opacity);
 
   // Build component aliases
-  const components = buildComponentAliases(colors, spacing, radii, sizing);
+  const components = buildComponentAliases(colors, typography, spacing, radii, sizing);
 
   return {
     colors,

@@ -162,12 +162,15 @@ Adjust fonts, sizes, and weights:
       fontFamilyHeading: 'Inter-Bold',
       titleSize: 24,
       bodySize: 15,
+      // Button-specific typography
+      buttonTextSize: 16,
+      buttonTextWeight: '600',
     },
   }}
 >
 ```
 
-### Typography Tokens
+### Base Typography Tokens
 
 | Token               | Description                             | Default     |
 | ------------------- | --------------------------------------- | ----------- |
@@ -179,10 +182,17 @@ Adjust fonts, sizes, and weights:
 | `bodySize`          | Body text size                          | `16`        |
 | `bodyLineHeight`    | Body line height multiplier             | `1.5`       |
 | `bodyWeight`        | Body font weight                        | `'normal'`  |
-| `labelSize`         | Label/button text size                  | `14`        |
+| `labelSize`         | Label text size (chips, form labels)    | `14`        |
 | `labelWeight`       | Label font weight                       | `'500'`     |
 | `captionSize`       | Small text size                         | `12`        |
 | `captionWeight`     | Caption font weight                     | `'normal'`  |
+
+### Component Typography Tokens
+
+| Token              | Description        | Fallback      |
+| ------------------ | ------------------ | ------------- |
+| `buttonTextSize`   | Button text size   | `labelSize`   |
+| `buttonTextWeight` | Button font weight | `labelWeight` |
 
 ## Customizing Spacing
 
@@ -365,12 +375,37 @@ Available component groups:
 
 - `theme.components.chip` - Category selector chips
 - `theme.components.input` - Text inputs
-- `theme.components.button` - Buttons (with `.primary`, `.secondary`, `.ghost`)
+- `theme.components.button` - Buttons (with `.primary`, `.secondary`, `.ghost`, plus `textSize`, `textWeight`)
 - `theme.components.addButton` - Add attachment button
 - `theme.components.tile` - Attachment tiles
 - `theme.components.upload` - Upload status overlay
 - `theme.components.picker` - Attachment picker modal
 - `theme.components.form` - Form container
+
+Example button tokens:
+
+```tsx
+const { button } = theme.components;
+
+// Color variants
+button.primary.background;
+button.primary.backgroundPressed;
+button.primary.text;
+button.secondary.background;
+button.secondary.border;
+button.secondary.text;
+button.ghost.text;
+
+// Layout
+button.paddingVertical;
+button.paddingHorizontal;
+button.radius;
+button.minHeight;
+
+// Typography
+button.textSize;
+button.textWeight;
+```
 
 ## Modal Embedding
 

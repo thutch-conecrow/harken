@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Pressable, ActivityIndicator, StyleSheet } from "react-native";
+import { Pressable, ActivityIndicator, StyleSheet, Text } from "react-native";
 import type {
   PressableProps,
   ViewStyle,
@@ -9,7 +9,6 @@ import type {
 } from "react-native";
 import { useHarkenTheme } from "../hooks";
 import { usePressedState } from "../hooks/usePressedState";
-import { ThemedText } from "./ThemedText";
 
 export type ButtonVariant = "primary" | "secondary" | "ghost";
 
@@ -140,6 +139,13 @@ export function ThemedButton({
     baseStyle.width = "100%";
   }
 
+  const buttonTextStyle: TextStyle = {
+    fontSize: button.textSize,
+    fontWeight: button.textWeight,
+    fontFamily: theme.typography.fontFamily,
+    color: getTextColor(),
+  };
+
   return (
     <Pressable
       disabled={disabled || loading}
@@ -151,9 +157,7 @@ export function ThemedButton({
       {loading ? (
         <ActivityIndicator color={getTextColor()} size="small" />
       ) : (
-        <ThemedText variant="label" color={getTextColor()} style={textStyle}>
-          {title}
-        </ThemedText>
+        <Text style={[buttonTextStyle, textStyle]}>{title}</Text>
       )}
     </Pressable>
   );
