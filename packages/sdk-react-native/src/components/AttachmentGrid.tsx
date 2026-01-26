@@ -2,6 +2,7 @@ import React from "react";
 import { View, Pressable, StyleSheet } from "react-native";
 import type { ViewStyle, StyleProp, ImageStyle } from "react-native";
 import { useHarkenTheme } from "../hooks";
+import { usePressedState } from "../hooks/usePressedState";
 import { ThemedText } from "./ThemedText";
 import { AttachmentPreview } from "./AttachmentPreview";
 import type { AttachmentState } from "../hooks/useAttachmentUpload";
@@ -54,6 +55,77 @@ export interface AttachmentGridProps {
   getFileIcon?: (mimeType: string) => React.ReactNode | string;
   /** Custom placeholder renderer (passed to AttachmentPreview) */
   renderPlaceholder?: (mimeType: string, fileName?: string) => React.ReactNode;
+}
+
+/**
+ * Internal add button component with pressed state management.
+ * Extracted for NativeWind compatibility.
+ */
+interface AddButtonProps {
+  onAdd: () => void;
+  disabled: boolean;
+  tileSize: number;
+  tileRadius: number;
+  addButtonLabel: string;
+  addButtonIcon: React.ReactNode | string;
+  addButtonStyle?: StyleProp<ViewStyle>;
+}
+
+function AddButton({
+  onAdd,
+  disabled,
+  tileSize,
+  tileRadius,
+  addButtonLabel,
+  addButtonIcon,
+  addButtonStyle,
+}: AddButtonProps): React.JSX.Element {
+  const theme = useHarkenTheme();
+  const { addButton } = theme.components;
+  const { isPressed, onPressIn, onPressOut } = usePressedState(disabled);
+
+  return (
+    <Pressable
+      onPress={onAdd}
+      disabled={disabled}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      style={[
+        styles.addButton,
+        {
+          width: tileSize,
+          height: tileSize,
+          borderRadius: tileRadius,
+          backgroundColor: isPressed ? addButton.backgroundPressed : addButton.background,
+          borderWidth: 2,
+          borderColor: addButton.border,
+          borderStyle: "dashed",
+          opacity: disabled ? theme.opacity.disabled : 1,
+        },
+        addButtonStyle,
+      ]}
+    >
+      {typeof addButtonIcon === "string" ? (
+        <ThemedText
+          style={[
+            styles.addIcon,
+            {
+              color: addButton.icon,
+              fontSize: addButton.iconSize,
+              lineHeight: addButton.iconSize * 1.15,
+            },
+          ]}
+        >
+          {addButtonIcon}
+        </ThemedText>
+      ) : (
+        addButtonIcon
+      )}
+      <ThemedText variant="caption" color={addButton.text}>
+        {addButtonLabel}
+      </ThemedText>
+    </Pressable>
+  );
 }
 
 /**
@@ -132,7 +204,7 @@ export function AttachmentGrid({
   renderPlaceholder,
 }: AttachmentGridProps): React.JSX.Element {
   const theme = useHarkenTheme();
-  const { tile, addButton } = theme.components;
+  const { tile } = theme.components;
 
   const effectiveTileSize = tileSize ?? tile.size;
   const effectiveGap = gap ?? tile.gap;
@@ -180,44 +252,15 @@ export function AttachmentGrid({
         (renderAddButton ? (
           renderAddButton(onAdd, disabled)
         ) : (
-          <Pressable
-            onPress={onAdd}
+          <AddButton
+            onAdd={onAdd}
             disabled={disabled}
-            style={({ pressed }) => [
-              styles.addButton,
-              {
-                width: effectiveTileSize,
-                height: effectiveTileSize,
-                borderRadius: tile.radius,
-                backgroundColor: pressed ? addButton.backgroundPressed : addButton.background,
-                borderWidth: 2,
-                borderColor: addButton.border,
-                borderStyle: "dashed",
-                opacity: disabled ? theme.opacity.disabled : 1,
-              },
-              addButtonStyle,
-            ]}
-          >
-            {typeof addButtonIcon === "string" ? (
-              <ThemedText
-                style={[
-                  styles.addIcon,
-                  {
-                    color: addButton.icon,
-                    fontSize: addButton.iconSize,
-                    lineHeight: addButton.iconSize * 1.15, // Scale lineHeight with iconSize
-                  },
-                ]}
-              >
-                {addButtonIcon}
-              </ThemedText>
-            ) : (
-              addButtonIcon
-            )}
-            <ThemedText variant="caption" color={addButton.text}>
-              {addButtonLabel}
-            </ThemedText>
-          </Pressable>
+            tileSize={effectiveTileSize}
+            tileRadius={tile.radius}
+            addButtonLabel={addButtonLabel}
+            addButtonIcon={addButtonIcon}
+            addButtonStyle={addButtonStyle}
+          />
         ))}
 
       {attachments.length === 0 && !shouldShowAddButton && (

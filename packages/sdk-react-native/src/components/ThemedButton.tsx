@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Pressable, ActivityIndicator, StyleSheet } from "react-native";
-import type { PressableProps, ViewStyle, TextStyle, StyleProp } from "react-native";
+import type {
+  PressableProps,
+  ViewStyle,
+  TextStyle,
+  StyleProp,
+  GestureResponderEvent,
+} from "react-native";
 import { useHarkenTheme } from "../hooks";
+import { usePressedState } from "../hooks/usePressedState";
 import { ThemedText } from "./ThemedText";
 
 export type ButtonVariant = "primary" | "secondary" | "ghost";
@@ -44,23 +51,47 @@ export function ThemedButton({
   disabled,
   style,
   textStyle,
+  onPressIn: onPressInProp,
+  onPressOut: onPressOutProp,
   ...props
 }: ThemedButtonProps): React.JSX.Element {
   const theme = useHarkenTheme();
   const { button } = theme.components;
+  const {
+    isPressed,
+    onPressIn: onPressInHook,
+    onPressOut: onPressOutHook,
+  } = usePressedState(disabled || loading);
 
-  const getBackgroundColor = (pressed: boolean): string => {
+  // Compose press handlers to support both internal state and consumer callbacks
+  const handlePressIn = useCallback(
+    (e: GestureResponderEvent) => {
+      onPressInHook();
+      onPressInProp?.(e);
+    },
+    [onPressInHook, onPressInProp]
+  );
+
+  const handlePressOut = useCallback(
+    (e: GestureResponderEvent) => {
+      onPressOutHook();
+      onPressOutProp?.(e);
+    },
+    [onPressOutHook, onPressOutProp]
+  );
+
+  const getBackgroundColor = (): string => {
     if (disabled) {
       return variant === "primary" ? theme.colors.border : "transparent";
     }
 
     switch (variant) {
       case "primary":
-        return pressed ? button.primary.backgroundPressed : button.primary.background;
+        return isPressed ? button.primary.backgroundPressed : button.primary.background;
       case "secondary":
-        return pressed ? theme.colors.border : button.secondary.background;
+        return isPressed ? theme.colors.border : button.secondary.background;
       case "ghost":
-        return pressed ? theme.colors.surface : "transparent";
+        return isPressed ? theme.colors.surface : "transparent";
     }
   };
 
@@ -91,30 +122,30 @@ export function ThemedButton({
   // Flatten the style prop to handle arrays and registered styles
   const flattenedStyle = style ? StyleSheet.flatten(style) : undefined;
 
+  const baseStyle: ViewStyle = {
+    backgroundColor: getBackgroundColor(),
+    borderWidth: variant === "secondary" ? 1 : 0,
+    borderColor: getBorderColor(),
+    borderRadius: button.radius,
+    paddingVertical: button.paddingVertical,
+    paddingHorizontal: button.paddingHorizontal,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    minHeight: button.minHeight,
+    opacity: disabled ? theme.opacity.disabled : 1,
+  };
+
+  if (fullWidth) {
+    baseStyle.width = "100%";
+  }
+
   return (
     <Pressable
       disabled={disabled || loading}
-      style={({ pressed }) => {
-        const baseStyle: ViewStyle = {
-          backgroundColor: getBackgroundColor(pressed),
-          borderWidth: variant === "secondary" ? 1 : 0,
-          borderColor: getBorderColor(),
-          borderRadius: button.radius,
-          paddingVertical: button.paddingVertical + 4,
-          paddingHorizontal: button.paddingHorizontal,
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "row",
-          minHeight: button.minHeight,
-          opacity: disabled ? theme.opacity.disabled : 1,
-        };
-
-        if (fullWidth) {
-          baseStyle.width = "100%";
-        }
-
-        return [baseStyle, flattenedStyle];
-      }}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={[baseStyle, flattenedStyle]}
       {...props}
     >
       {loading ? (

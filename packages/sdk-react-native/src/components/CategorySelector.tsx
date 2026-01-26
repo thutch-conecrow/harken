@@ -2,6 +2,7 @@ import React from "react";
 import { View, Pressable } from "react-native";
 import type { ViewStyle, StyleProp } from "react-native";
 import { useHarkenTheme } from "../hooks";
+import { usePressedState } from "../hooks/usePressedState";
 import { ThemedText } from "./ThemedText";
 import type { FeedbackCategory } from "../types";
 
@@ -89,6 +90,72 @@ export interface CategorySelectorProps {
  * />
  * ```
  */
+/**
+ * Internal chip component with pressed state management.
+ * Extracted to allow each chip to have its own pressed state for NativeWind compatibility.
+ */
+interface CategoryChipProps {
+  category: CategoryOption;
+  isSelected: boolean;
+  onSelect: () => void;
+  disabled: boolean;
+  chipStyle?: StyleProp<ViewStyle>;
+  selectedChipStyle?: StyleProp<ViewStyle>;
+}
+
+function CategoryChip({
+  category,
+  isSelected,
+  onSelect,
+  disabled,
+  chipStyle,
+  selectedChipStyle,
+}: CategoryChipProps): React.JSX.Element {
+  const theme = useHarkenTheme();
+  const { chip } = theme.components;
+  const { isPressed, onPressIn, onPressOut } = usePressedState(disabled);
+
+  const baseChipStyle: ViewStyle = {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: chip.paddingVertical,
+    paddingHorizontal: chip.paddingHorizontal,
+    borderRadius: chip.radius,
+    borderWidth: 1,
+    borderColor: isSelected ? chip.borderSelected : chip.border,
+    backgroundColor: isSelected ? chip.backgroundSelected : chip.background,
+  };
+
+  const textColor = isSelected ? chip.textSelected : chip.text;
+
+  // Apply opacity last to guarantee visual feedback even if user styles set opacity
+  const pressedOpacity = disabled ? theme.opacity.disabled : isPressed ? theme.opacity.pressed : 1;
+
+  return (
+    <Pressable
+      onPress={onSelect}
+      disabled={disabled}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      style={[
+        baseChipStyle,
+        chipStyle,
+        isSelected && selectedChipStyle,
+        { opacity: pressedOpacity },
+      ]}
+    >
+      {category.icon ? (
+        <View style={{ marginRight: theme.spacing.xs }}>{category.icon}</View>
+      ) : category.emoji ? (
+        <ThemedText style={{ marginRight: theme.spacing.xs }}>{category.emoji}</ThemedText>
+      ) : null}
+      <ThemedText variant="label" color={textColor}>
+        {category.label}
+      </ThemedText>
+    </Pressable>
+  );
+}
+
 export function CategorySelector({
   value,
   onChange,
@@ -123,44 +190,16 @@ export function CategorySelector({
           );
         }
 
-        const baseChipStyle: ViewStyle = {
-          flexDirection: "row",
-          alignItems: "center",
-          paddingVertical: chip.paddingVertical,
-          paddingHorizontal: chip.paddingHorizontal,
-          borderRadius: chip.radius,
-          borderWidth: 1,
-          borderColor: isSelected ? chip.borderSelected : chip.border,
-          backgroundColor: isSelected ? chip.backgroundSelected : chip.background,
-          opacity: disabled ? theme.opacity.disabled : 1,
-        };
-
-        const textColor = isSelected ? chip.textSelected : chip.text;
-
         return (
-          <Pressable
+          <CategoryChip
             key={category.value}
-            onPress={onSelect}
+            category={category}
+            isSelected={isSelected}
+            onSelect={onSelect}
             disabled={disabled}
-            style={({ pressed }) => [
-              baseChipStyle,
-              chipStyle,
-              isSelected && selectedChipStyle,
-              pressed &&
-                !disabled && {
-                  opacity: theme.opacity.pressed,
-                },
-            ]}
-          >
-            {category.icon ? (
-              <View style={{ marginRight: theme.spacing.xs }}>{category.icon}</View>
-            ) : category.emoji ? (
-              <ThemedText style={{ marginRight: theme.spacing.xs }}>{category.emoji}</ThemedText>
-            ) : null}
-            <ThemedText variant="label" color={textColor}>
-              {category.label}
-            </ThemedText>
-          </Pressable>
+            chipStyle={chipStyle}
+            selectedChipStyle={selectedChipStyle}
+          />
         );
       })}
     </View>
