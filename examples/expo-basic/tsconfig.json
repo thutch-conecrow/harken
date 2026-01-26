@@ -2,9 +2,7 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "paths": {
-      "@harkenapp/sdk-react-native": ["../../packages/sdk-react-native/src"]
-    }
+    "skipLibCheck": true
   },
   "include": ["**/*.ts", "**/*.tsx"]
 }
