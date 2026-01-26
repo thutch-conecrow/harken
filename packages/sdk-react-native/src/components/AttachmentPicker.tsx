@@ -11,6 +11,7 @@ import {
 import type { ViewStyle, StyleProp } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useHarkenTheme } from "../hooks";
+import { usePressedState } from "../hooks/usePressedState";
 import { ThemedText } from "./ThemedText";
 
 export type AttachmentSource = "camera" | "library" | "document";
@@ -75,6 +76,58 @@ interface PickerOption {
   icon: React.ReactNode;
   action: () => void;
   hidden: boolean;
+}
+
+/**
+ * Internal option row component with pressed state management.
+ * Extracted for NativeWind compatibility.
+ */
+interface OptionRowProps {
+  option: PickerOption;
+  onPress: () => void;
+  optionStyle?: StyleProp<ViewStyle>;
+}
+
+function OptionRow({ option, onPress, optionStyle }: OptionRowProps): React.JSX.Element {
+  const theme = useHarkenTheme();
+  const { picker } = theme.components;
+  const { isPressed, onPressIn, onPressOut } = usePressedState(false);
+
+  return (
+    <Pressable
+      onPress={onPress}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      style={[
+        styles.option,
+        {
+          backgroundColor: isPressed ? picker.optionBackgroundPressed : picker.optionBackground,
+          borderRadius: theme.radii.md,
+        },
+        optionStyle,
+      ]}
+    >
+      <View
+        style={[
+          styles.iconContainer,
+          {
+            width: picker.iconSize,
+            height: picker.iconSize,
+            backgroundColor: option.color,
+            borderRadius: theme.radii.full,
+          },
+        ]}
+      >
+        {option.icon}
+      </View>
+      <View style={styles.optionText}>
+        <ThemedText variant="label">{option.label}</ThemedText>
+        <ThemedText variant="caption" secondary>
+          {option.description}
+        </ThemedText>
+      </View>
+    </Pressable>
+  );
 }
 
 /**
@@ -267,40 +320,12 @@ export function AttachmentPicker({
             {/* Options */}
             <View style={styles.optionsContainer}>
               {visibleOptions.map((option) => (
-                <Pressable
+                <OptionRow
                   key={option.key}
-                  style={({ pressed }) => [
-                    styles.option,
-                    {
-                      backgroundColor: pressed
-                        ? picker.optionBackgroundPressed
-                        : picker.optionBackground,
-                      borderRadius: theme.radii.md,
-                    },
-                    optionStyle,
-                  ]}
+                  option={option}
                   onPress={() => handleOptionPress(option.action)}
-                >
-                  <View
-                    style={[
-                      styles.iconContainer,
-                      {
-                        width: picker.iconSize,
-                        height: picker.iconSize,
-                        backgroundColor: option.color,
-                        borderRadius: theme.radii.full,
-                      },
-                    ]}
-                  >
-                    {option.icon}
-                  </View>
-                  <View style={styles.optionText}>
-                    <ThemedText variant="label">{option.label}</ThemedText>
-                    <ThemedText variant="caption" secondary>
-                      {option.description}
-                    </ThemedText>
-                  </View>
-                </Pressable>
+                  optionStyle={optionStyle}
+                />
               ))}
 
               {/* Cancel Button */}
