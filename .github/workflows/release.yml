@@ -88,7 +88,7 @@ jobs:
         working-directory: packages/sdk-react-native
         run: |
           CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "current_version(2)=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
           if [ -n "${{ github.event.inputs.version_override }}" ]; then
             NEW_VERSION="${{ github.event.inputs.version_override }}"
@@ -96,36 +96,22 @@ jobs:
           else
             RELEASE_TYPE="${{ github.event.inputs.release_type || 'patch' }}"
 
-            # Parse semver and increment
-            IFS='.-' read -ra PARTS <<< "$CURRENT_VERSION"
+            IFS='.' read -ra PARTS <<< "$CURRENT_VERSION"
             MAJOR=${PARTS[0]}
             MINOR=${PARTS[1]}
             PATCH=${PARTS[2]}
-            PRERELEASE="${PARTS[3]:-}"
-            PRERELEASE_NUM="${PARTS[4]:-}"
 
-            if [ -n "$PRERELEASE" ]; then
-              # If current is prerelease (e.g., 0.0.1-alpha.1), increment prerelease
-              if [ -n "$PRERELEASE_NUM" ]; then
-                NEW_PRERELEASE_NUM=$((PRERELEASE_NUM + 1))
-                NEW_VERSION="$MAJOR.$MINOR.$PATCH-$PRERELEASE.$NEW_PRERELEASE_NUM"
-              else
-                NEW_VERSION="$MAJOR.$MINOR.$PATCH-$PRERELEASE.1"
-              fi
-            else
-              # Standard semver increment
-              case "$RELEASE_TYPE" in
-                major)
-                  NEW_VERSION="$((MAJOR + 1)).0.0"
-                  ;;
-                minor)
-                  NEW_VERSION="$MAJOR.$((MINOR + 1)).0"
-                  ;;
-                patch)
-                  NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
-                  ;;
-              esac
-            fi
+            case "$RELEASE_TYPE" in
+              major)
+                NEW_VERSION="$((MAJOR + 1)).0.0"
+                ;;
+              minor)
+                NEW_VERSION="$MAJOR.$((MINOR + 1)).0"
+                ;;
+              patch)
+                NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+                ;;
+            esac
             echo "Auto-incrementing $RELEASE_TYPE: $CURRENT_VERSION -> $NEW_VERSION"
           fi
 
@@ -145,7 +131,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           npm whoami --registry https://registry.npmjs.org/
-          npm publish --access public --registry https://registry.npmjs.org/ --tag alpha
+          npm publish --access public --registry https://registry.npmjs.org/
 
       # Commit and tag ONLY after successful publish to avoid repo/npm state divergence.
       # If publish fails, package.json has the bumped version locally but nothing is committed,
