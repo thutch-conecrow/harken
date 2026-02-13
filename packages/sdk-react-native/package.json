@@ -1,6 +1,6 @@
 {
   "name": "@harkenapp/sdk-react-native",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Harken React Native / Expo SDK for in-app feedback",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
