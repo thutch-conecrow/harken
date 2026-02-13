@@ -114,6 +114,28 @@ describe("useFeedback", () => {
       );
     });
 
+    it("allows overriding platform to web via metadata", async () => {
+      mockSubmitFeedback.mockResolvedValue({ id: "feedback_123" });
+
+      const { result } = renderHook(() => useFeedback());
+
+      await act(async () => {
+        await result.current.submitFeedback({
+          message: "Web feedback",
+          category: "idea" as FeedbackCategory,
+          metadata: { platform: "web" },
+        });
+      });
+
+      expect(mockSubmitFeedback).toHaveBeenCalledWith(
+        expect.objectContaining({
+          metadata: expect.objectContaining({
+            platform: "web",
+          }),
+        })
+      );
+    });
+
     it("merges custom metadata with platform", async () => {
       mockSubmitFeedback.mockResolvedValue({ id: "feedback_123" });
 

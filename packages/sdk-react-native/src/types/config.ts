@@ -127,7 +127,7 @@ export type FeedbackCategory = "bug" | "idea" | "ux" | "other";
 /**
  * Platform type for device metadata.
  */
-export type Platform = "ios" | "android";
+export type Platform = "ios" | "android" | "web";
 
 /**
  * Device metadata collected with feedback submissions.
@@ -135,7 +135,7 @@ export type Platform = "ios" | "android";
 export interface DeviceMetadata {
   /** App version string */
   appVersion?: string;
-  /** Platform (ios or android) */
+  /** Platform (ios, android, or web) */
   platform?: Platform;
   /** Device model/name */
   device?: string;
