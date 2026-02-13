@@ -69,6 +69,18 @@ npx expo prebuild
 
 Or if using EAS Build, permissions are applied automatically during the build process.
 
+## Web Platform
+
+The SDK auto-detects `"ios"` and `"android"` platforms. When using React Native Web or integrating from a web app, pass `platform: "web"` in the metadata:
+
+```tsx
+await submitFeedback({
+  message: "Feedback from web",
+  category: "idea",
+  metadata: { platform: "web" },
+});
+```
+
 ## Development
 
 See the root [CONTRIBUTING.md](../../CONTRIBUTING.md) for development setup.

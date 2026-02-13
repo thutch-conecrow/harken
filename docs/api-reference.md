@@ -429,7 +429,7 @@ type FeedbackCategory = "bug" | "idea" | "ux" | "other";
 ### Platform
 
 ```typescript
-type Platform = "ios" | "android";
+type Platform = "ios" | "android" | "web";
 ```
 
 ## Constants

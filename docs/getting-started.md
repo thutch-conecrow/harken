@@ -1,10 +1,11 @@
 # Getting Started
 
-This guide will help you integrate Harken into your React Native or Expo application.
+This guide will help you integrate Harken into your React Native, Expo, or web application.
 
 ## Prerequisites
 
-- React Native 0.72+ or Expo SDK 54+
+- **Mobile:** React Native 0.72+ or Expo SDK 54+
+- **Web:** Any browser environment with `fetch` and `localStorage`
 - A Harken account with an app created ([sign up here](https://harken.app))
 
 ## Installation
@@ -240,6 +241,35 @@ Or add it to your npm scripts:
 ```
 
 This pre-loads all modules at startup, eliminating the stutter on first modal open.
+
+## Web Integration
+
+For web apps, you don't need the React Native SDK — call the Harken API directly with `fetch`. See the [web-vanilla](../examples/web-vanilla) example for a copy-paste client, or [web-nextjs](../examples/web-nextjs) for a Next.js + Tailwind widget.
+
+The key difference from mobile: set `platform: "web"` in your metadata and use `localStorage` for the anonymous ID instead of SecureStore.
+
+```ts
+// Get or create a stable anonymous ID
+let anonId = localStorage.getItem("harken_anon_id");
+if (!anonId) {
+  anonId = crypto.randomUUID();
+  localStorage.setItem("harken_anon_id", anonId);
+}
+
+await fetch("https://api.harken.app/v1/feedback", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-Publishable-Key": "pk_live_your_key",
+  },
+  body: JSON.stringify({
+    message: "Feedback from the web",
+    category: "idea",
+    anon_id: anonId,
+    metadata: { platform: "web" },
+  }),
+});
+```
 
 ## Next Steps
 

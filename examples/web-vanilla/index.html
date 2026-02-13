@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Harken Web Feedback Example</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #f5f5f5;
+        color: #1a1a1a;
+        display: flex;
+        justify-content: center;
+        padding: 4rem 1rem;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        width: 100%;
+        max-width: 420px;
+      }
+
+      h1 {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.375rem;
+      }
+
+      .categories {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .categories button {
+        flex: 1;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fff;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+
+      .categories button:hover {
+        border-color: #999;
+      }
+
+      .categories button.selected {
+        background: #1a1a1a;
+        color: #fff;
+        border-color: #1a1a1a;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 0.875rem;
+        resize: vertical;
+        margin-bottom: 1rem;
+      }
+
+      textarea:focus {
+        outline: none;
+        border-color: #1a1a1a;
+      }
+
+      button[type="submit"] {
+        width: 100%;
+        padding: 0.75rem;
+        background: #1a1a1a;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: opacity 0.15s;
+      }
+
+      button[type="submit"]:hover {
+        opacity: 0.9;
+      }
+
+      button[type="submit"]:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .status {
+        margin-top: 1rem;
+        padding: 0.75rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        display: none;
+      }
+
+      .status.success {
+        display: block;
+        background: #ecfdf5;
+        color: #065f46;
+      }
+
+      .status.error {
+        display: block;
+        background: #fef2f2;
+        color: #991b1b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Send Feedback</h1>
+
+      <form id="feedback-form">
+        <label>Category</label>
+        <div class="categories">
+          <button type="button" data-category="bug">Bug</button>
+          <button type="button" data-category="idea" class="selected">Idea</button>
+          <button type="button" data-category="ux">UX</button>
+          <button type="button" data-category="other">Other</button>
+        </div>
+
+        <label for="message">Message</label>
+        <textarea id="message" placeholder="What's on your mind?" required></textarea>
+
+        <button type="submit">Send Feedback</button>
+      </form>
+
+      <div id="status" class="status"></div>
+    </div>
+
+    <script type="module">
+      import { submitFeedback } from "./src/harken.js";
+
+      // Replace with your publishable key
+      const PUBLISHABLE_KEY = "pk_live_your_key_here";
+
+      let selectedCategory = "idea";
+
+      // Category selection
+      document.querySelectorAll("[data-category]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelector(".categories .selected")?.classList.remove("selected");
+          btn.classList.add("selected");
+          selectedCategory = btn.dataset.category;
+        });
+      });
+
+      // Form submission
+      document.getElementById("feedback-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const messageEl = document.getElementById("message");
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const statusEl = document.getElementById("status");
+
+        const message = messageEl.value.trim();
+        if (!message) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending...";
+        statusEl.className = "status";
+
+        try {
+          await submitFeedback({
+            publishableKey: PUBLISHABLE_KEY,
+            message,
+            category: selectedCategory,
+          });
+          statusEl.textContent = "Thanks for your feedback!";
+          statusEl.className = "status success";
+          messageEl.value = "";
+        } catch (err) {
+          statusEl.textContent = "Failed to send feedback. Please try again.";
+          statusEl.className = "status error";
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Send Feedback";
+        }
+      });
+    </script>
+  </body>
+</html>
