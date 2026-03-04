@@ -19,7 +19,20 @@ export interface ImagePickerResult {
   }> | null;
 }
 
+export interface PermissionResponse {
+  granted: boolean;
+  status: "granted" | "denied" | "undetermined";
+}
+
 let mockResult: ImagePickerResult = { canceled: true, assets: null };
+
+export async function requestCameraPermissionsAsync(): Promise<PermissionResponse> {
+  return { granted: true, status: "granted" };
+}
+
+export async function requestMediaLibraryPermissionsAsync(): Promise<PermissionResponse> {
+  return { granted: true, status: "granted" };
+}
 
 export async function launchCameraAsync(_options?: ImagePickerOptions): Promise<ImagePickerResult> {
   return mockResult;
@@ -41,6 +54,8 @@ export function __resetMock(): void {
 }
 
 export default {
+  requestCameraPermissionsAsync,
+  requestMediaLibraryPermissionsAsync,
   launchCameraAsync,
   launchImageLibraryAsync,
   __setMockResult,

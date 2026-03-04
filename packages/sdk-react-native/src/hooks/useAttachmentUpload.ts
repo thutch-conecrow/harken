@@ -209,6 +209,15 @@ export function useAttachmentUpload(): UseAttachmentUploadResult {
         quality: 0.8,
       };
 
+      const permission =
+        source === "camera"
+          ? await ImagePicker.requestCameraPermissionsAsync()
+          : await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (!permission.granted) {
+        return null;
+      }
+
       const result =
         source === "camera"
           ? await ImagePicker.launchCameraAsync(options)
