@@ -34,10 +34,15 @@ vi.mock("../services", () => ({
 }));
 
 // Mock ImagePicker
+const mockRequestCameraPermissionsAsync = vi.fn();
+const mockRequestMediaLibraryPermissionsAsync = vi.fn();
 const mockLaunchCameraAsync = vi.fn();
 const mockLaunchImageLibraryAsync = vi.fn();
 
 vi.mock("expo-image-picker", () => ({
+  requestCameraPermissionsAsync: (...args: unknown[]) => mockRequestCameraPermissionsAsync(...args),
+  requestMediaLibraryPermissionsAsync: (...args: unknown[]) =>
+    mockRequestMediaLibraryPermissionsAsync(...args),
   launchCameraAsync: (...args: unknown[]) => mockLaunchCameraAsync(...args),
   launchImageLibraryAsync: (...args: unknown[]) => mockLaunchImageLibraryAsync(...args),
 }));
@@ -66,6 +71,12 @@ describe("useAttachmentUpload", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockProgressCallback = null;
+    // Default: permissions granted
+    mockRequestCameraPermissionsAsync.mockResolvedValue({ granted: true, status: "granted" });
+    mockRequestMediaLibraryPermissionsAsync.mockResolvedValue({
+      granted: true,
+      status: "granted",
+    });
   });
 
   describe("pickImage", () => {
@@ -150,6 +161,42 @@ describe("useAttachmentUpload", () => {
       });
 
       expect(attachment).toBeNull();
+      expect(mockEnqueue).not.toHaveBeenCalled();
+    });
+
+    it("returns null when camera permission is denied", async () => {
+      mockRequestCameraPermissionsAsync.mockResolvedValue({
+        granted: false,
+        status: "denied",
+      });
+
+      const { result } = renderHook(() => useAttachmentUpload());
+
+      let attachment: unknown;
+      await act(async () => {
+        attachment = await result.current.pickImage("camera");
+      });
+
+      expect(attachment).toBeNull();
+      expect(mockLaunchCameraAsync).not.toHaveBeenCalled();
+      expect(mockEnqueue).not.toHaveBeenCalled();
+    });
+
+    it("returns null when media library permission is denied", async () => {
+      mockRequestMediaLibraryPermissionsAsync.mockResolvedValue({
+        granted: false,
+        status: "denied",
+      });
+
+      const { result } = renderHook(() => useAttachmentUpload());
+
+      let attachment: unknown;
+      await act(async () => {
+        attachment = await result.current.pickImage("library");
+      });
+
+      expect(attachment).toBeNull();
+      expect(mockLaunchImageLibraryAsync).not.toHaveBeenCalled();
       expect(mockEnqueue).not.toHaveBeenCalled();
     });
   });
